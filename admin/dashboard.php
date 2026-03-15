@@ -18,33 +18,14 @@ $stats = [
 $feeStmt = $pdo->query("SELECT SettingValue FROM Settings WHERE SettingKey = 'visit_fee'");
 $currentFee = $feeStmt->fetchColumn() ?: 500;
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+<?php
+$pageTitle = 'Admin Dashboard';
+include '../includes/header.php';
+?>
 <body class="bg-gray-50 flex h-screen overflow-hidden">
     
     <!-- Sidebar -->
-    <aside class="w-64 bg-gray-900 text-white flex-col hidden md:flex shadow-2xl z-10">
-        <div class="p-6 border-b border-gray-800">
-            <h1 class="text-2xl font-black tracking-tight text-white">Clinic System</h1>
-            <p class="text-sm font-semibold text-teal-400 mt-1 uppercase tracking-widest">Administrator</p>
-        </div>
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <a href="dashboard.php" class="flex items-center gap-3 p-3 bg-gray-800 rounded-lg font-bold text-white transition">Dashboard</a>
-            <a href="patients.php" class="flex items-center gap-3 p-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg font-bold transition">All Patients</a>
-            <a href="backup.php" class="flex items-center gap-3 p-3 text-gray-400 hover:text-green-400 hover:bg-gray-800 rounded-lg font-bold transition">Backup DB</a>
-            <a href="import.php" class="flex items-center gap-3 p-3 text-gray-400 hover:text-blue-400 hover:bg-gray-800 rounded-lg font-bold transition">Import DB</a>
-        </nav>
-        <div class="p-4 border-t border-gray-800">
-            <a href="../index.php" class="block w-full text-center p-3 text-gray-400 hover:text-white bg-gray-800 rounded-lg font-bold transition text-sm">Main Menu</a>
-            <a href="logout.php" class="block w-full text-center p-3 mt-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition shadow-md">Logout</a>
-        </div>
-    </aside>
+    <?php include '../includes/sidebar_admin.php'; ?>
 
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <!-- Mobile Nav Header -->
@@ -91,7 +72,7 @@ $currentFee = $feeStmt->fetchColumn() ?: 500;
                             <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">!</div>
                             <h2 class="font-black text-lg text-gray-800">Daily Operations</h2>
                         </div>
-                        <p class="text-sm text-gray-500 mb-4 font-medium">Removes all Unvisited patients from today's active queue. Execute at the end of the day.</p>
+                        <p class="text-sm text-gray-500 mb-4 font-medium">Permanently removes ALL patients from today's queue and resets tokens to #1. Use for a fresh start or at end of day.</p>
                         <button onclick="resetQueue()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold p-3 rounded-xl transition shadow-md shadow-red-500/30">
                             Reset Today's Queue
                         </button>
@@ -181,12 +162,14 @@ $currentFee = $feeStmt->fetchColumn() ?: 500;
         });
 
         async function resetQueue() {
-            if(!confirm("Are you sure? This will permanently remove all waiting patients from today's active queue!")) return;
+            if(!confirm("Are you sure? This will permanently wipe today's entire queue and reset token numbers to 1!")) return;
             const res = await fetch('../api/reset_queue.php');
             const data = await res.json();
             if(data.success) {
-                showToast('Daily queue has been reset.');
+                showToast('Daily queue has been thoroughly reset.');
                 setTimeout(() => window.location.reload(), 2000);
+            } else {
+                showToast(data.error || 'Failed to reset queue', 'error');
             }
         }
 

@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if ($action === 'add') {
-            $stmt = $pdo->prepare("INSERT INTO Drugs (DrugName, BatchNumber, Quantity, UnitPrice) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$data['drug_name'], $data['batch_number'], $data['quantity'], $data['unit_price']]);
+            $stmt = $pdo->prepare("INSERT INTO Drugs (DrugName, Dose, BatchNumber, Quantity, UnitPrice) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$data['drug_name'], $data['dose'] ?? '', $data['batch_number'], $data['quantity'], $data['unit_price']]);
             echo json_encode(['success' => true]);
         } elseif ($action === 'update_stock') {
             $stmt = $pdo->prepare("UPDATE Drugs SET Quantity = Quantity + ? WHERE DrugID = ?");

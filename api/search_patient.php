@@ -11,7 +11,13 @@ if (empty($query)) {
 
 try {
     $searchTerm = "%$query%";
-    $stmt = $pdo->prepare("SELECT * FROM Patients WHERE FirstName LIKE ? OR LastName LIKE ? OR Phone LIKE ? OR NIC LIKE ? OR PatientNumber LIKE ? ORDER BY FirstName ASC LIMIT 50");
+    $stmt = $pdo->prepare("
+        SELECT p.*,
+               (SELECT COUNT(*) FROM Visits v WHERE v.PatientID = p.PatientID) as PreviousVisits
+        FROM Patients p
+        WHERE p.FirstName LIKE ? OR p.LastName LIKE ? OR p.Phone LIKE ? OR p.NIC LIKE ? OR p.PatientNumber LIKE ? 
+        ORDER BY p.FirstName ASC LIMIT 50
+    ");
     $stmt->execute([$searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm]);
     $results = $stmt->fetchAll();
     

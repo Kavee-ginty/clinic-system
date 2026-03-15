@@ -7,15 +7,11 @@ if (!isset($_SESSION['doctor_logged_in']) && !isset($_SESSION['admin_logged_in']
 $patientId = $_GET['patient_id'] ?? null;
 if (!$patientId) die("Patient ID required.");
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient History</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen">
+<?php
+$pageTitle = 'Patient History';
+include '../includes/header.php';
+?>
+<body class="bg-gray-50 min-h-screen dark:bg-gray-900 transition-colors">
     <nav class="bg-teal-600 text-white p-4 shadow-md flex justify-between items-center">
         <h1 class="text-2xl font-bold">Patient History</h1>
         <div>

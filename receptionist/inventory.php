@@ -1,26 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drug Inventory (Receptionist)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 flex h-screen overflow-hidden">
-    
-    <aside class="w-64 bg-blue-900 text-white flex-col hidden md:flex shadow-2xl z-10">
-        <div class="p-6 border-b border-blue-800">
-            <h1 class="text-2xl font-black tracking-tight text-white">Clinic System</h1>
-            <p class="text-sm font-semibold text-blue-300 mt-1 uppercase tracking-widest">Front Desk</p>
-        </div>
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <a href="dashboard.php" class="flex items-center gap-3 p-3 text-blue-200 hover:text-white hover:bg-blue-800 rounded-lg font-bold transition">Live Register</a>
-            <a href="inventory.php" class="flex items-center gap-3 p-3 bg-blue-800 rounded-lg font-bold text-white transition">Drug Inventory</a>
-        </nav>
-        <div class="p-4 border-t border-blue-800 space-y-2">
-            <a href="../index.php" class="block w-full text-center p-3 text-blue-300 hover:text-white bg-blue-800 rounded-lg font-bold transition text-sm">Home Menu</a>
-        </div>
-    </aside>
+<?php
+$pageTitle = 'Drug Inventory (Receptionist)';
+include '../includes/header.php';
+?>
+<body class="bg-gray-50 flex h-screen overflow-hidden dark:bg-gray-900 transition-colors">
+    <!-- Sidebar -->
+    <?php include '../includes/sidebar_receptionist.php'; ?>
 
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <nav class="bg-blue-900 text-white p-4 md:hidden flex justify-between items-center shadow-md">
@@ -45,6 +29,7 @@
                     <h2 class="text-xl font-black text-gray-800 mb-4 border-b border-gray-200 pb-2">Add New Drug</h2>
                     <form id="addDrugForm" class="space-y-4">
                         <input type="text" id="dName" placeholder="Drug Name *" required class="w-full border-2 border-gray-200 p-3 rounded-lg font-bold focus:border-blue-500">
+                        <input type="text" id="dDose" placeholder="Dose (e.g., 500mg) *" required class="w-full border-2 border-gray-200 p-3 rounded-lg font-bold focus:border-blue-500">
                         <input type="text" id="dBatch" placeholder="Batch Number *" required class="w-full border-2 border-gray-200 p-3 rounded-lg font-bold focus:border-blue-500">
                         <input type="number" id="dQty" placeholder="Initial Quantity *" required class="w-full border-2 border-gray-200 p-3 rounded-lg font-bold focus:border-blue-500">
                         <input type="number" step="0.01" id="dPrice" placeholder="Unit Price (Rs.) *" required class="w-full border-2 border-gray-200 p-3 rounded-lg font-bold focus:border-blue-500">
@@ -59,7 +44,7 @@
                         <table class="w-full text-left">
                             <thead class="bg-gray-50 sticky top-0">
                                 <tr>
-                                    <th class="p-3 font-bold text-gray-500 uppercase text-xs">Name & Batch</th>
+                                    <th class="p-3 font-bold text-gray-500 uppercase text-xs">Name & Dose & Batch</th>
                                     <th class="p-3 font-bold text-gray-500 uppercase text-xs">Stock</th>
                                     <th class="p-3 font-bold text-gray-500 uppercase text-xs">Unit Price</th>
                                     <th class="p-3 font-bold text-gray-500 uppercase text-xs text-right">Actions</th>
@@ -84,14 +69,15 @@
             list.innerHTML = data.map(d => `
                 <tr class="border-b border-gray-100 hover:bg-gray-50">
                     <td class="p-3">
-                        <div class="font-black text-gray-800">${d.DrugName}</div>
-                        <div class="text-xs text-gray-500 font-bold uppercase">Batch: ${d.BatchNumber}</div>
+                        <div class="font-black text-gray-800">${d.DrugName} <span class="text-xs text-blue-600 ml-1">(${d.Dose || 'N/A'})</span></div>
+                        <div class="text-xs text-gray-500 font-bold uppercase mt-1">Batch: ${d.BatchNumber}</div>
                     </td>
                     <td class="p-3 font-bold ${parseInt(d.Quantity) < 10 ? 'text-red-600' : 'text-green-600'}">${d.Quantity}</td>
                     <td class="p-3 font-black text-gray-600">Rs. ${d.UnitPrice}</td>
                     <td class="p-3 text-right space-x-2">
                         <button onclick="updateStock(${d.DrugID})" class="px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 text-xs font-bold rounded">Add Stock</button>
                         <button onclick="updatePrice(${d.DrugID})" class="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-bold rounded">Edit Price</button>
+                        <button onclick="deleteDrug(${d.DrugID})" class="px-3 py-1 bg-red-100 text-red-600 text-xs hover:bg-red-200 font-bold rounded">Delete</button>
                     </td>
                 </tr>
             `).join('');
@@ -102,6 +88,7 @@
             const payload = {
                 action: 'add',
                 drug_name: document.getElementById('dName').value,
+                dose: document.getElementById('dDose').value,
                 batch_number: document.getElementById('dBatch').value,
                 quantity: document.getElementById('dQty').value,
                 unit_price: document.getElementById('dPrice').value
@@ -124,6 +111,18 @@
             if(!price || isNaN(price)) return;
             await fetch('../api/inventory.php', { method: 'POST', body: JSON.stringify({action: 'update_price', drug_id: id, price: price}) });
             loadInventory();
+        }
+
+        async function deleteDrug(id) {
+            if(!confirm("Are you sure you want to permanently delete this drug from inventory?")) return;
+            const res = await fetch('../api/inventory.php', { method: 'POST', body: JSON.stringify({action: 'delete', drug_id: id}) });
+            const data = await res.json();
+            if(data.success) {
+                showToast("Drug successfully deleted.");
+                loadInventory();
+            } else {
+                showToast(data.error || "Cannot delete. May be tied to existing patient records.", "error");
+            }
         }
 
         loadInventory();

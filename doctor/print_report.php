@@ -36,119 +36,109 @@ while ($row = $settingsStmt->fetch()) {
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @page {
-            size: <?= htmlspecialchars($settings['print_page_size'] ?? 'A4') ?>;
-            margin: 15mm;
+            size: A5 portrait;
+            margin: 10mm;
         }
         body {
-            font-size: <?= htmlspecialchars($settings['print_text_size'] ?? '14px') ?>;
+            font-size: 13px;
         }
         @media print {
             .no-print { display: none !important; }
             body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .print-border { border: 1px solid #000; box-shadow: none; }
+            .print-border { border: 1px solid #000; box-shadow: none; p-6 }
         }
     </style>
 </head>
-<body class="bg-gray-100 p-8">
+<body class="bg-gray-100 p-4">
 
-    <div class="max-w-3xl mx-auto bg-white p-10 shadow-lg print-border">
+    <div class="max-w-2xl mx-auto bg-white p-6 shadow-lg print-border text-sm">
         
-        <div class="flex justify-between items-start border-b-2 border-gray-800 pb-6 mb-6">
+        <div class="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-4">
             <div>
-                <h1 class="text-4xl font-black text-gray-800"><?= htmlspecialchars($settings['clinic_name']) ?></h1>
-                <p class="text-gray-600 font-semibold mt-1"><?= htmlspecialchars($settings['doctor_name']) ?></p>
-                <p class="text-sm text-gray-500"><?= htmlspecialchars($settings['clinic_address']) ?></p>
-                <p class="text-sm text-gray-500"><?= htmlspecialchars($settings['clinic_phone']) ?></p>
+                <h1 class="text-2xl font-black text-gray-800"><?= htmlspecialchars($settings['clinic_name']) ?></h1>
+                <p class="text-gray-600 font-bold mt-1 text-sm"><?= htmlspecialchars($settings['doctor_name']) ?></p>
+                <p class="text-xs text-gray-500 max-w-xs leading-tight"><?= htmlspecialchars($settings['clinic_address']) ?></p>
+                <p class="text-xs text-gray-500 font-bold"><?= htmlspecialchars($settings['clinic_phone']) ?></p>
             </div>
-            <div class="text-right">
+            <div class="text-right text-xs">
                 <p class="font-bold">Date: <?= date('d M Y', strtotime($visit['VisitDateTime'])) ?></p>
                 <p class="font-bold text-gray-500">Time: <?= date('h:i A', strtotime($visit['VisitDateTime'])) ?></p>
-                <p class="text-xl font-bold mt-2">Visit ID: #<?= str_pad($visit['VisitID'], 5, '0', STR_PAD_LEFT) ?></p>
+                <p class="text-sm font-bold mt-1">Visit: #<?= str_pad($visit['VisitID'], 5, '0', STR_PAD_LEFT) ?></p>
             </div>
         </div>
 
-        <div class="border-b border-gray-300 pb-4 mb-6">
-            <h2 class="text-lg font-bold border-b inline-block mb-2">Patient Details</h2>
-            <div class="grid grid-cols-2 gap-4 mt-2">
+        <div class="border-b border-gray-300 pb-3 mb-4">
+            <h2 class="text-sm font-bold border-b inline-block mb-1">Patient Details</h2>
+            <div class="grid grid-cols-2 gap-2 mt-1 text-xs">
                 <p><span class="font-bold">Name:</span> <?= htmlspecialchars($visit['FirstName'] . ' ' . $visit['LastName']) ?></p>
-                <p><span class="font-bold">Age/DOB:</span> <?= htmlspecialchars($visit['DOB']) ?></p>
+                <p><span class="font-bold">Age/DOB:</span> <?= htmlspecialchars($visit['Age']) ?> yrs (<?= htmlspecialchars($visit['DOB']) ?>)</p>
                 <p><span class="font-bold">Gender:</span> <?= htmlspecialchars($visit['Gender']) ?></p>
                 <p><span class="font-bold">Phone:</span> <?= htmlspecialchars($visit['Phone']) ?></p>
             </div>
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-4">
             <?php if (!empty($visit['Complaint'])): ?>
             <div>
-                <h3 class="font-bold text-gray-800 text-lg border-l-4 border-gray-800 pl-2 mb-2">Presenting Complaint</h3>
-                <p class="pl-3 whitespace-pre-line"><?= htmlspecialchars($visit['Complaint']) ?></p>
+                <h3 class="font-bold text-gray-800 text-sm border-l-4 border-gray-800 pl-2 mb-1">Presenting Complaint</h3>
+                <p class="pl-3 whitespace-pre-line text-xs"><?= htmlspecialchars($visit['Complaint']) ?></p>
             </div>
             <?php endif; ?>
 
             <?php if (!empty($visit['Examination'])): ?>
             <div>
-                <h3 class="font-bold text-gray-800 text-lg border-l-4 border-gray-800 pl-2 mb-2">Examination</h3>
-                <p class="pl-3 whitespace-pre-line"><?= htmlspecialchars($visit['Examination']) ?></p>
+                <h3 class="font-bold text-gray-800 text-sm border-l-4 border-gray-800 pl-2 mb-1">Examination</h3>
+                <p class="pl-3 whitespace-pre-line text-xs"><?= htmlspecialchars($visit['Examination']) ?></p>
             </div>
             <?php endif; ?>
 
             <?php if (!empty($visit['Diagnosis'])): ?>
             <div>
-                <h3 class="font-bold text-gray-800 text-lg border-l-4 border-gray-800 pl-2 mb-2">Diagnosis</h3>
-                <p class="pl-3 whitespace-pre-line font-bold"><?= htmlspecialchars($visit['Diagnosis']) ?></p>
+                <h3 class="font-bold text-gray-800 text-sm border-l-4 border-gray-800 pl-2 mb-1">Diagnosis</h3>
+                <p class="pl-3 whitespace-pre-line font-bold text-xs"><?= htmlspecialchars($visit['Diagnosis']) ?></p>
             </div>
             <?php endif; ?>
 
             <?php if (!empty($visit['Treatment'])): ?>
-            <div class="bg-gray-50 p-4 border rounded">
-                <h3 class="font-bold text-gray-800 text-lg border-b-2 border-gray-800 pb-1 mb-2 inline-block">Rx / Treatment</h3>
-                <p class="whitespace-pre-line mt-2 font-mono text-lg"><?= htmlspecialchars($visit['Treatment']) ?></p>
+            <div class="bg-gray-50 p-3 border rounded">
+                <h3 class="font-bold text-gray-800 text-sm border-b-2 border-gray-800 pb-1 mb-1 inline-block">Rx / Treatment</h3>
+                <p class="whitespace-pre-line mt-1 font-mono text-sm leading-relaxed"><?= htmlspecialchars($visit['Treatment']) ?></p>
             </div>
             <?php endif; ?>
 
-            <?php if (!empty($visit['Referals']) || !empty($visit['Advice'])): ?>
+            <?php if (!empty($visit['Referals']) || !empty($visit['Notes'])): ?>
             <div>
-                <h3 class="font-bold text-gray-800 text-lg border-l-4 border-gray-800 pl-2 mb-2">Referrals & Advice</h3>
-                <p class="pl-3 whitespace-pre-line"><?= htmlspecialchars($visit['Referals'] . "\n" . ($visit['Notes']??'')) ?></p>
+                <h3 class="font-bold text-gray-800 text-sm border-l-4 border-gray-800 pl-2 mb-1">Referrals & Advice</h3>
+                <p class="pl-3 whitespace-pre-line text-xs"><?= htmlspecialchars($visit['Referals'] . "\n" . ($visit['Notes']??'')) ?></p>
             </div>
             <?php endif; ?>
         </div>
 
-        <!-- Billed Items Table -->
+        <!-- Prescription Items Table -->
         <div class="mt-8 border-t-2 border-gray-800 pt-6">
-            <h3 class="font-black text-lg mb-2 uppercase tracking-wide">Pharmacy & Billing</h3>
+            <h3 class="font-black text-lg mb-2 uppercase tracking-wide">Prescription</h3>
             <table class="w-full text-left text-sm mb-4">
                 <tr class="border-b border-gray-300 bg-gray-50">
-                    <th class="p-2 font-bold">Item Description</th>
-                    <th class="p-2 font-bold text-center">Qty</th>
-                    <th class="p-2 font-bold text-right">Cost (Rs.)</th>
+                    <th class="p-2 font-bold">Drug Name & Instructions</th>
+                    <th class="p-2 font-bold text-center">Qty to Dispense</th>
                 </tr>
                 <?php foreach($drugs as $d): ?>
                     <tr class="border-b border-gray-100">
                         <td class="p-2">
-                            <span class="font-bold"><?= htmlspecialchars($d['DrugName']) ?></span>
+                            <span class="font-bold text-lg"><?= htmlspecialchars($d['DrugName']) ?></span>
                             <?php 
                                 $instructions = array_filter([$d['Dose'], $d['Frequency'], $d['Duration']]);
                                 if(!empty($instructions)): 
                             ?>
-                                <span class="block text-xs text-teal-700 italic mt-1 font-bold leading-relaxed mb-1">
-                                    <?= htmlspecialchars(implode(' • ', $instructions)) ?>
+                                <span class="block text-sm text-gray-700 mt-1 font-bold leading-relaxed mb-1">
+                                    Sig: <?= htmlspecialchars(implode(' • ', $instructions)) ?>
                                 </span>
                             <?php endif; ?>
                         </td>
-                        <td class="p-2 text-center align-top"><?= $d['Quantity'] ?></td>
-                        <td class="p-2 text-right align-top"><?= number_format($d['TotalCost'], 2) ?></td>
+                        <td class="p-2 text-center align-middle font-bold text-lg"><?= $d['Quantity'] ?></td>
                     </tr>
                 <?php endforeach; ?>
-                <tr class="border-b border-gray-100">
-                    <td class="p-2 font-bold" colspan="2">Professional Visit / Consultation Fee</td>
-                    <td class="p-2 text-right font-bold"><?= number_format($visit['VisitFee'] ?? 0, 2) ?></td>
-                </tr>
             </table>
-            <div class="flex justify-between items-center bg-gray-100 p-4 rounded mt-4">
-                <span class="font-black text-xl">TOTAL BILL</span>
-                <span class="font-black text-2xl tracking-tight">Rs. <?= number_format($visit['TotalBill'] ?? 0, 2) ?></span>
-            </div>
         </div>
 
         <div class="mt-20 pt-10 border-t border-gray-400 flex justify-between">

@@ -5,41 +5,13 @@ if (!isset($_SESSION['doctor_logged_in'])) {
     exit;
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 flex h-screen overflow-hidden">
-    
+<?php
+$pageTitle = 'Doctor Dashboard';
+include '../includes/header.php';
+?>
+<body class="bg-gray-50 flex h-screen overflow-hidden dark:bg-gray-900 transition-colors">
     <!-- Sidebar -->
-    <aside class="w-64 bg-teal-900 text-white flex-col hidden md:flex shadow-2xl z-10">
-        <div class="p-6 border-b border-teal-800">
-            <h1 class="text-2xl font-black tracking-tight text-white">Clinic System</h1>
-            <p class="text-sm font-semibold text-teal-300 mt-1 uppercase tracking-widest">Medical Staff</p>
-        </div>
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <a href="dashboard.php" class="flex items-center gap-3 p-3 bg-teal-800 rounded-lg font-bold text-white transition">Live Dashboard</a>
-            <a href="search.php" class="flex items-center gap-3 p-3 text-teal-200 hover:text-white hover:bg-teal-800 rounded-lg font-bold transition">Search Patient</a>
-            <a href="inventory.php" class="flex items-center gap-3 p-3 text-teal-200 hover:text-white hover:bg-teal-800 rounded-lg font-bold transition">Manage Inventory</a>
-            <a href="settings.php" class="flex items-center gap-3 p-3 text-teal-200 hover:text-white hover:bg-teal-800 rounded-lg font-bold transition">Print Settings</a>
-        </nav>
-        
-        <div class="p-4 border-t border-teal-800 space-y-2">
-            <!-- Doctor Security Module -->
-            <div class="p-3 bg-teal-950 rounded-lg mb-4 hidden" id="passwordModule">
-                <input type="password" id="docPass" class="w-full bg-teal-900 text-white border border-teal-700 p-2 mb-2 rounded font-bold text-sm placeholder-teal-600" placeholder="New Password">
-                <button onclick="changeDoctorPassword()" class="w-full bg-teal-700 hover:bg-teal-600 text-white font-bold p-2 rounded text-xs transition">Save Password</button>
-            </div>
-            <button onclick="document.getElementById('passwordModule').classList.toggle('hidden')" class="block w-full text-center p-3 text-teal-300 hover:text-white bg-teal-800 rounded-lg font-bold transition text-sm">Security / Password</button>
-            
-            <a href="../index.php" class="block w-full text-center p-3 text-teal-300 hover:text-white bg-teal-800 rounded-lg font-bold transition text-sm">Home Menu</a>
-            <a href="logout.php" class="block w-full text-center p-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition shadow-md">Logout</a>
-        </div>
-    </aside>
+    <?php include '../includes/sidebar_doctor.php'; ?>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
@@ -108,6 +80,7 @@ if (!isset($_SESSION['doctor_logged_in'])) {
     </div>
 
     <script>
+        let lastQueueHTML = '';
         async function fetchQueueAndStats() {
             try {
                 // Fetch Stats
@@ -125,11 +98,15 @@ if (!isset($_SESSION['doctor_logged_in'])) {
                 const tbody = document.getElementById('queueTableBody');
                 
                 if(queue.length === 0) {
-                     tbody.innerHTML = '<tr><td colspan="4" class="p-20 text-center font-black text-gray-300 text-2xl">The queue is currently empty.</td></tr>';
+                     const emptyHTML = '<tr><td colspan="4" class="p-20 text-center font-black text-gray-300 text-2xl">The queue is currently empty.</td></tr>';
+                     if (lastQueueHTML !== emptyHTML) {
+                         tbody.innerHTML = emptyHTML;
+                         lastQueueHTML = emptyHTML;
+                     }
                      return;
                 }
 
-                tbody.innerHTML = queue.map(q => {
+                const newHTML = queue.map(q => {
                     let statusBadge = '';
                     let actionButtons = '';
                     
@@ -162,7 +139,10 @@ if (!isset($_SESSION['doctor_logged_in'])) {
                         <td class="p-4 font-black text-3xl text-gray-300 group-hover:text-teal-500 transition">${q.QueueNumber}</td>
                         <td class="p-4">
                             <div class="font-bold text-lg text-gray-800">${q.FirstName} ${q.LastName}</div>
-                            <div class="text-xs text-gray-500 font-semibold uppercase tracking-wider mt-1">${q.Gender} &bull; DOB: ${q.DOB}</div>
+                            <div class="text-xs text-gray-500 font-semibold uppercase tracking-wider mt-1">
+                                ${q.Gender} &bull; DOB: ${q.DOB} &bull; 
+                                <span class="text-teal-600 font-bold ml-1 bg-teal-50 px-2 py-0.5 rounded border border-teal-100">Visits: ${q.PreviousVisits || 0}</span>
+                            </div>
                         </td>
                         <td class="p-4">${statusBadge}</td>
                         <td class="p-4 text-right space-x-2">
@@ -171,6 +151,11 @@ if (!isset($_SESSION['doctor_logged_in'])) {
                     </tr>
                     `;
                 }).join('');
+                
+                if (lastQueueHTML !== newHTML) {
+                    tbody.innerHTML = newHTML;
+                    lastQueueHTML = newHTML;
+                }
             } catch(e) {}
         }
 

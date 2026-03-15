@@ -31,7 +31,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $visitId = $pdo->lastInsertId();
 
-        // Mark queue as completed
+        // 2) Process Drugs Array
+        $drugsPayload = $data['drugs'] ?? [];
+        $drugCostSubtotal = 0;
+
+        // Fetch settings for default fee
+        $stmtSettings = $pdo->query("SELECT SettingValue FROM Settings WHERE SettingKey = 'visit_fee'");
+        $defaultVisitFee = (float)$stmtSettings->fetchColumn() ?: 500;
+
+        if (!empty($drugsPayload)) {
+            $vdStmt = $pdo->prepare("INSERT INTO VisitDrugs (VisitID, DrugID, DrugName, Quantity, TotalCost, Frequency, Dose, Duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $invUpdateStmt = $pdo->prepare("UPDATE Drugs SET Quantity = Quantity - ? WHERE DrugID = ?");
+            
+            foreach ($drugsPayload as $d) {
+                $qty = (int)$d['qty'];
+                $cost = (float)$d['cost'];
+                $drugCostSubtotal += $cost;
+                $drugId = !empty($d['id']) ? $d['id'] : null;
+
+                $vdStmt->execute([
+                    $visitId,
+                    $drugId,
+                    $d['name'],
+                    $qty,
+                    $cost,
+                    $d['frequency'] ?? '',
+                    $d['dose'] ?? '',
+                    $d['duration'] ?? ''
+                ]);
+
+                if ($drugId) {
+                    $invUpdateStmt->execute([$qty, $drugId]);
+                }
+            }
+        }
+
+        $totalBill = $defaultVisitFee + $drugCostSubtotal;
+        $updVisitStmt = $pdo->prepare("UPDATE Visits SET VisitFee = ?, TotalBill = ? WHERE VisitID = ?");
+        $updVisitStmt->execute([$defaultVisitFee, $totalBill, $visitId]);
+
+        // 3) Mark queue as completed
         $updStmt = $pdo->prepare("UPDATE Queue SET Status = 'completed' WHERE QueueID = ?");
         $updStmt->execute([$queueId]);
 

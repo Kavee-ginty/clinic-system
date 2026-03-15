@@ -12,24 +12,24 @@ while ($row = $settingsStmt->fetch()) {
     $settings[$row['SettingKey']] = $row['SettingValue'];
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Settings - Doctor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen">
-    <nav class="bg-teal-600 text-white p-4 shadow-md flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Customize Print Header</h1>
-        <div>
-            <a href="../index.php" class="px-4 py-2 bg-teal-800 hover:bg-teal-900 rounded font-semibold mr-2 transition">Dashboard</a>
-            <a href="dashboard.php" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 rounded font-semibold transition">Back</a>
-        </div>
-    </nav>
+<?php
+$pageTitle = 'Print Settings - Doctor';
+include '../includes/header.php';
+?>
+<body class="bg-gray-50 flex h-screen overflow-hidden dark:bg-gray-900 transition-colors">
+    <!-- Sidebar -->
+    <?php include '../includes/sidebar_doctor.php'; ?>
 
-    <div class="container mx-auto p-4 mt-10 max-w-2xl">
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <nav class="bg-teal-900 text-white p-4 md:hidden flex justify-between items-center shadow-md">
+            <h1 class="text-xl font-bold">Customize Print Settings</h1>
+            <div>
+                <a href="../index.php" class="px-3 py-1 bg-teal-600 hover:bg-teal-800 rounded font-bold text-sm mr-2 transition">Dashboard</a>
+                <a href="dashboard.php" class="px-3 py-1 bg-teal-700 hover:bg-teal-800 rounded font-bold text-sm transition">Back</a>
+            </div>
+        </nav>
+
+        <main class="flex-1 overflow-y-auto p-4 md:p-8">
         <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-500">
             <h2 class="text-xl font-bold mb-6 text-gray-800">Edit Clinic Data (Shows on printed reports)</h2>
             <form id="settingsForm" class="space-y-4">
@@ -79,7 +79,8 @@ while ($row = $settingsStmt->fetch()) {
                 </div>
             </form>
         </div>
-    </div>
+        </div>
+    </main>
 
     <script>
         document.getElementById('settingsForm').addEventListener('submit', async (e) => {

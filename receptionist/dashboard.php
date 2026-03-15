@@ -1,27 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receptionist Desk</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 flex h-screen overflow-hidden">
-    
+<?php
+$pageTitle = 'Receptionist Desk';
+include '../includes/header.php';
+?>
+<body class="bg-gray-50 flex h-screen overflow-hidden dark:bg-gray-900 transition-colors">
     <!-- Sidebar -->
-    <aside class="w-64 bg-blue-900 text-white flex-col hidden md:flex shadow-2xl z-10">
-        <div class="p-6 border-b border-blue-800">
-            <h1 class="text-2xl font-black tracking-tight text-white">Clinic System</h1>
-            <p class="text-sm font-semibold text-blue-300 mt-1 uppercase tracking-widest">Front Desk</p>
-        </div>
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <a href="dashboard.php" class="flex items-center gap-3 p-3 bg-blue-800 rounded-lg font-bold text-white transition">Live Register</a>
-            <a href="inventory.php" class="flex items-center gap-3 p-3 text-blue-200 hover:text-white hover:bg-blue-800 rounded-lg font-bold transition">Drug Inventory</a>
-        </nav>
-        <div class="p-4 border-t border-blue-800 space-y-2">
-            <a href="../index.php" class="block w-full text-center p-3 text-blue-300 hover:text-white bg-blue-800 rounded-lg font-bold transition text-sm">Home Menu</a>
-        </div>
-    </aside>
+    <?php include '../includes/sidebar_receptionist.php'; ?>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
@@ -175,8 +158,8 @@
             }
         });
 
-        // Search
-        document.getElementById('searchInput').addEventListener('input', async (e) => {
+        // Search (Debounced)
+        document.getElementById('searchInput').addEventListener('input', debounce(async (e) => {
             const query = e.target.value;
             const resBox = document.getElementById('searchResults');
             if(query.length < 2) { resBox.innerHTML = ''; return; }
@@ -198,10 +181,32 @@
                     <button onclick="addToQueue(${p.PatientID}, true)" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition transform active:scale-95">Send Queue</button>
                 </div>
             `).join('');
-        });
+        }, 300));
 
         // Add to Queue
         async function addToQueue(patientId, showAlert) {
+            // Optimistic UI Ghost Row
+            const tbody = document.getElementById('queueTableBody');
+            const ghostRow = `
+                <tr class="bg-purple-50 transition border-b border-purple-100 animate-pulse">
+                    <td class="p-3 font-black text-2xl text-purple-300 w-16">--</td>
+                    <td class="p-3">
+                        <div class="font-bold text-gray-400">Syncing to Dispatch Line...</div>
+                        <div class="text-[10px] text-gray-300 font-bold uppercase tracking-wider mt-1">Sending to Doctor</div>
+                    </td>
+                    <td class="p-3 text-right">
+                        <span class="px-3 py-1 bg-purple-100 text-purple-500 rounded-full text-[10px] font-bold uppercase tracking-widest border border-purple-200">Dispatching</span>
+                    </td>
+                </tr>
+            `;
+            // If table has empty message, replace it, else append
+            if (tbody.innerHTML.includes('Waiting line is empty')) {
+                tbody.innerHTML = ghostRow;
+            } else {
+                tbody.insertAdjacentHTML('beforeend', ghostRow);
+            }
+            lastQueueHTML = ''; // Force next poll to overwrite
+
             const res = await fetch('../api/add_queue.php', {
                 method: 'POST',
                 body: JSON.stringify({patient_id: patientId}),
@@ -213,10 +218,12 @@
                 fetchQueueAndStats();
             } else {
                 if(showAlert) showToast(`Error: ${result.error}`, 'error');
+                fetchQueueAndStats();
             }
         }
 
         // Fetch Queue & Stats Polling
+        let lastQueueHTML = '';
         async function fetchQueueAndStats() {
             try {
                 // Polled Stats
@@ -234,11 +241,15 @@
                 const tbody = document.getElementById('queueTableBody');
 
                 if(queue.length === 0) {
-                     tbody.innerHTML = '<tr><td colspan="3" class="p-10 text-center font-black text-gray-300 text-xl">Waiting line is empty.</td></tr>';
+                     const emptyHTML = '<tr><td colspan="3" class="p-10 text-center font-black text-gray-300 text-xl">Waiting line is empty.</td></tr>';
+                     if (lastQueueHTML !== emptyHTML) {
+                         tbody.innerHTML = emptyHTML;
+                         lastQueueHTML = emptyHTML;
+                     }
                      return;
                 }
 
-                tbody.innerHTML = queue.map(q => {
+                const newHTML = queue.map(q => {
                     let statusBadge = '';
                     if(q.Status === 'waiting') statusBadge = '<span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-[10px] font-bold uppercase tracking-widest border border-yellow-200">Wait Area</span>';
                     else if(q.Status === 'with_doctor') statusBadge = '<span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-[10px] font-bold uppercase tracking-widest border border-blue-200 animate-pulse">In Room</span>';
@@ -251,12 +262,20 @@
                         <td class="p-3 font-black text-2xl text-purple-600 w-16">${q.QueueNumber}</td>
                         <td class="p-3">
                             <div class="font-bold text-gray-800">${q.FirstName} ${q.LastName}</div>
-                            <div class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">${q.Gender} &bull; ${q.DOB}</div>
+                            <div class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mt-1">
+                                ${q.Gender} &bull; ${q.DOB} &bull; 
+                                <span class="text-blue-600 font-black ml-1 bg-blue-50 px-1 py-0.5 rounded border border-blue-100">Visits: ${q.PreviousVisits || 0}</span>
+                            </div>
                         </td>
                         <td class="p-3 text-right">${statusBadge}</td>
                     </tr>
                     `;
                 }).join('');
+                
+                if (lastQueueHTML !== newHTML) {
+                    tbody.innerHTML = newHTML;
+                    lastQueueHTML = newHTML;
+                }
             } catch(e) {}
         }
 

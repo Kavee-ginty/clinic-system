@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
 }
 
 try {
-    $stmt = $pdo->prepare("DELETE FROM Queue WHERE QueueDate = CURRENT_DATE AND Status = 'waiting'");
+    $stmt = $pdo->prepare("DELETE FROM Queue WHERE QueueDate = CURRENT_DATE");
     $stmt->execute();
     echo json_encode(['success' => true]);
 } catch (Exception $e) {

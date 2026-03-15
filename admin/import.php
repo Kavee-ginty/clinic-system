@@ -22,32 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['backup_file'])) {
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Import Database - Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+<?php
+$pageTitle = 'Import Database - Admin';
+include '../includes/header.php';
+?>
 <body class="bg-gray-50 flex h-screen overflow-hidden">
     <!-- Sidebar -->
-    <aside class="w-64 bg-gray-900 text-white flex flex-col hidden md:flex">
-        <div class="p-6 border-b border-gray-800 mt-2">
-            <h1 class="text-2xl font-black">Admin Panel</h1>
-            <p class="text-sm text-gray-400">Clinic System</p>
-        </div>
-        <nav class="flex-1 p-4 space-y-2">
-            <a href="dashboard.php" class="block p-3 hover:bg-gray-800 rounded transition font-semibold">Dashboard</a>
-            <a href="patients.php" class="block p-3 hover:bg-gray-800 rounded transition font-semibold">All Patients</a>
-            <a href="backup.php" class="block p-3 bg-green-600 hover:bg-green-700 rounded transition font-semibold">Backup DB</a>
-            <a href="import.php" class="block p-3 bg-blue-600 hover:bg-blue-700 rounded transition font-semibold">Import DB</a>
-        </nav>
-        <div class="p-4 border-t border-gray-800">
-            <a href="../index.php" class="block p-3 hover:bg-gray-800 rounded transition text-center text-sm">Main Menu</a>
-            <a href="logout.php" class="block p-3 mt-2 bg-red-600 hover:bg-red-700 rounded text-center transition font-bold">Logout</a>
-        </div>
-    </aside>
+    <?php include '../includes/sidebar_admin.php'; ?>
 
     <div class="flex-1 overflow-y-auto">
         <!-- Mobile Nav Header -->
