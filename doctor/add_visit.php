@@ -411,21 +411,21 @@ include '../includes/header.php';
             // Append formatting block
             let rxString = "\n\n--- PRESCRIPTION ---\n";
             billDrugs.forEach((d, index) => {
-                let nameLine = `${index + 1}. ${d.name.toUpperCase()}`;
-                if (d.dose) nameLine += ` (${d.dose})`;
-                rxString += `${nameLine}\n`;
+                let line = `${index + 1}. ${d.name.toUpperCase()}`;
+                if (d.dose) line += ` (${d.dose})`;
                 
-                if (d.frequency || d.duration) {
-                    let sig = "   Sig: ";
-                    if (d.frequency) sig += d.frequency;
-                    if (d.duration) {
-                        const durStr = d.duration.toString().toLowerCase();
-                        const durText = durStr.includes('day') || durStr.includes('week') || durStr.includes('month') ? d.duration : d.duration + ' days';
-                        sig += (d.frequency ? " for " : "") + durText;
-                    }
-                    rxString += `${sig}\n`;
+                let instructions = [];
+                if (d.frequency) instructions.push(`Sig: ${d.frequency}`);
+                if (d.duration) {
+                    const durStr = d.duration.toString().toLowerCase();
+                    const durText = durStr.includes('day') || durStr.includes('week') || durStr.includes('month') ? d.duration : d.duration + ' days';
+                    instructions.push(`for ${durText}`);
                 }
-                rxString += `   Dispense: ${d.qty}\n`;
+                
+                if (instructions.length > 0) line += ` - ${instructions.join(' ')}`;
+                line += ` [Dispense: ${d.qty}]\n`;
+                
+                rxString += line;
             });
             
             const tat = document.getElementById('treatment');

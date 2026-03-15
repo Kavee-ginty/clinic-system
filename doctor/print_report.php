@@ -114,32 +114,7 @@ while ($row = $settingsStmt->fetch()) {
             <?php endif; ?>
         </div>
 
-        <!-- Prescription Items Table -->
-        <div class="mt-4 border-t-2 border-gray-800 pt-3">
-            <h3 class="font-black text-base mb-1 uppercase tracking-wide">Prescription</h4>
-            <table class="w-full text-left text-sm mb-2">
-                <tr class="border-b-2 border-gray-800 bg-gray-50">
-                    <th class="p-1 font-bold">Drug Name & Instructions</th>
-                    <th class="p-1 font-bold text-center w-24">Dispense</th>
-                </tr>
-                <?php foreach($drugs as $d): ?>
-                    <tr class="border-b border-gray-100">
-                        <td class="p-1">
-                            <span class="font-bold text-base"><?= htmlspecialchars($d['DrugName']) ?></span>
-                            <?php 
-                                $instructions = array_filter([$d['Dose'], $d['Frequency'], $d['Duration']]);
-                                if(!empty($instructions)): 
-                            ?>
-                                <span class="block text-xs text-gray-700 mt-0.5 font-bold leading-tight mb-0.5">
-                                    Sig: <?= htmlspecialchars(implode(' • ', $instructions)) ?>
-                                </span>
-                            <?php endif; ?>
-                        </td>
-                        <td class="p-1 text-center align-middle font-black text-lg text-gray-800 bg-gray-50"><?= $d['Quantity'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </table>
-        </div>
+
 
         <div class="mt-8 pt-4 border-t border-gray-400 flex justify-between">
             <p class="text-sm text-gray-500">Printed on: <?= date('Y-m-d H:i') ?></p>
