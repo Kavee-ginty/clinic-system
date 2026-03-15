@@ -37,10 +37,10 @@ while ($row = $settingsStmt->fetch()) {
     <style>
         @page {
             size: A5 portrait;
-            margin: 10mm;
+            margin: 5mm;
         }
         body {
-            font-size: 13px;
+            font-size: 12px;
         }
         @media print {
             .no-print { display: none !important; }
@@ -51,11 +51,11 @@ while ($row = $settingsStmt->fetch()) {
 </head>
 <body class="bg-gray-100 p-4">
 
-    <div class="max-w-2xl mx-auto bg-white p-6 shadow-lg print-border text-sm">
+    <div class="max-w-2xl mx-auto bg-white p-4 shadow-lg print-border text-sm">
         
-        <div class="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-4">
+        <div class="flex justify-between items-start border-b-2 border-gray-800 pb-2 mb-2">
             <div>
-                <h1 class="text-2xl font-black text-gray-800"><?= htmlspecialchars($settings['clinic_name']) ?></h1>
+                <h1 class="text-xl font-black text-gray-800"><?= htmlspecialchars($settings['clinic_name']) ?></h1>
                 <p class="text-gray-600 font-bold mt-1 text-sm"><?= htmlspecialchars($settings['doctor_name']) ?></p>
                 <p class="text-xs text-gray-500 max-w-xs leading-tight"><?= htmlspecialchars($settings['clinic_address']) ?></p>
                 <p class="text-xs text-gray-500 font-bold"><?= htmlspecialchars($settings['clinic_phone']) ?></p>
@@ -67,8 +67,8 @@ while ($row = $settingsStmt->fetch()) {
             </div>
         </div>
 
-        <div class="border-b border-gray-300 pb-3 mb-4">
-            <h2 class="text-sm font-bold border-b inline-block mb-1">Patient Details</h2>
+        <div class="border-b border-gray-300 pb-2 mb-3">
+            <h2 class="text-xs font-bold inline-block mb-1 text-gray-500 uppercase">Patient Information</h2>
             <div class="grid grid-cols-2 gap-2 mt-1 text-xs">
                 <p><span class="font-bold">Name:</span> <?= htmlspecialchars($visit['FirstName'] . ' ' . $visit['LastName']) ?></p>
                 <p><span class="font-bold">Age/DOB:</span> <?= htmlspecialchars($visit['Age']) ?> yrs (<?= htmlspecialchars($visit['DOB']) ?>)</p>
@@ -77,7 +77,7 @@ while ($row = $settingsStmt->fetch()) {
             </div>
         </div>
 
-        <div class="space-y-4">
+        <div class="space-y-3">
             <?php if (!empty($visit['Complaint'])): ?>
             <div>
                 <h3 class="font-bold text-gray-800 text-sm border-l-4 border-gray-800 pl-2 mb-1">Presenting Complaint</h3>
@@ -115,33 +115,33 @@ while ($row = $settingsStmt->fetch()) {
         </div>
 
         <!-- Prescription Items Table -->
-        <div class="mt-8 border-t-2 border-gray-800 pt-6">
-            <h3 class="font-black text-lg mb-2 uppercase tracking-wide">Prescription</h3>
-            <table class="w-full text-left text-sm mb-4">
-                <tr class="border-b border-gray-300 bg-gray-50">
-                    <th class="p-2 font-bold">Drug Name & Instructions</th>
-                    <th class="p-2 font-bold text-center">Qty to Dispense</th>
+        <div class="mt-4 border-t-2 border-gray-800 pt-3">
+            <h3 class="font-black text-base mb-1 uppercase tracking-wide">Prescription</h4>
+            <table class="w-full text-left text-sm mb-2">
+                <tr class="border-b-2 border-gray-800 bg-gray-50">
+                    <th class="p-1 font-bold">Drug Name & Instructions</th>
+                    <th class="p-1 font-bold text-center w-24">Dispense</th>
                 </tr>
                 <?php foreach($drugs as $d): ?>
                     <tr class="border-b border-gray-100">
-                        <td class="p-2">
-                            <span class="font-bold text-lg"><?= htmlspecialchars($d['DrugName']) ?></span>
+                        <td class="p-1">
+                            <span class="font-bold text-base"><?= htmlspecialchars($d['DrugName']) ?></span>
                             <?php 
                                 $instructions = array_filter([$d['Dose'], $d['Frequency'], $d['Duration']]);
                                 if(!empty($instructions)): 
                             ?>
-                                <span class="block text-sm text-gray-700 mt-1 font-bold leading-relaxed mb-1">
+                                <span class="block text-xs text-gray-700 mt-0.5 font-bold leading-tight mb-0.5">
                                     Sig: <?= htmlspecialchars(implode(' • ', $instructions)) ?>
                                 </span>
                             <?php endif; ?>
                         </td>
-                        <td class="p-2 text-center align-middle font-bold text-lg"><?= $d['Quantity'] ?></td>
+                        <td class="p-1 text-center align-middle font-black text-lg text-gray-800 bg-gray-50"><?= $d['Quantity'] ?></td>
                     </tr>
                 <?php endforeach; ?>
             </table>
         </div>
 
-        <div class="mt-20 pt-10 border-t border-gray-400 flex justify-between">
+        <div class="mt-8 pt-4 border-t border-gray-400 flex justify-between">
             <p class="text-sm text-gray-500">Printed on: <?= date('Y-m-d H:i') ?></p>
             <div class="text-center">
                 <p class="border-b border-black w-48 mb-1"></p>

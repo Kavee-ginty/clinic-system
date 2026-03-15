@@ -425,7 +425,7 @@ include '../includes/header.php';
                     }
                     rxString += `${sig}\n`;
                 }
-                rxString += `   Dispense: ${d.qty}\n\n`;
+                rxString += `   Dispense: ${d.qty}\n`;
             });
             
             const tat = document.getElementById('treatment');
