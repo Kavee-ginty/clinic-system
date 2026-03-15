@@ -13,6 +13,7 @@ $patients = $stmt->fetchAll();
 $pageTitle = 'All Patients - Admin';
 include '../includes/header.php';
 ?>
+<body class="bg-gray-50 flex h-screen overflow-hidden dark:bg-gray-900 transition-colors">
     <!-- Sidebar -->
     <?php include '../includes/sidebar_admin.php'; ?>
 
@@ -24,12 +25,12 @@ include '../includes/header.php';
             </div>
         </nav>
 
-        <main class="flex-1 overflow-y-auto p-4 md:p-8">
-        <div class="bg-white p-6 rounded-xl shadow border-t-4 border-gray-800">
-            <h2 class="text-xl font-bold mb-4">Master Patient List</h2>
+        <main class="flex-1 overflow-y-auto p-4 md:p-8 w-full">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow border-t-4 border-gray-800 dark:border-gray-600">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">Master Patient List</h2>
             <div class="overflow-x-auto max-h-[700px]">
                 <table class="w-full text-left border-collapse">
-                    <thead class="sticky top-0 bg-gray-100 border-b shadow-sm">
+                    <thead class="sticky top-0 bg-gray-100 dark:bg-gray-900 border-b dark:border-gray-700 shadow-sm text-gray-700 dark:text-gray-300">
                         <tr>
                             <th class="p-3">ID</th>
                             <th class="p-3">First Name</th>
@@ -41,10 +42,10 @@ include '../includes/header.php';
                             <th class="p-3 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-gray-700 dark:text-gray-300">
                         <?php foreach($patients as $p): ?>
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="p-3 text-gray-500 font-bold"><?= $p['PatientID'] ?></td>
+                        <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="p-3 text-gray-500 dark:text-gray-400 font-bold"><?= $p['PatientID'] ?></td>
                             <td class="p-3"><?= htmlspecialchars($p['FirstName']) ?></td>
                             <td class="p-3"><?= htmlspecialchars($p['LastName']) ?></td>
                             <td class="p-3"><?= htmlspecialchars($p['Phone']) ?></td>
