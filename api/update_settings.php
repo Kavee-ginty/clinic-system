@@ -7,11 +7,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     try {
         $pdo->beginTransaction();
-        $stmt = $pdo->prepare("UPDATE Settings SET SettingValue = ? WHERE SettingKey = ?");
+        $stmtUpdate = $pdo->prepare("UPDATE Settings SET SettingValue = ? WHERE SettingKey = ?");
+        $stmtInsert = $pdo->prepare("INSERT INTO Settings (SettingKey, SettingValue) VALUES (?, ?)");
         
-        foreach(['clinic_name', 'doctor_name', 'clinic_address', 'clinic_phone', 'print_page_size', 'print_text_size'] as $key) {
+        foreach(['clinic_name', 'doctor_name', 'doctor_qualifications', 'doctor_slmc', 'clinic_address', 'clinic_phone', 'clinic_email', 'print_page_size', 'print_text_size', 'logo_width'] as $key) {
             if(isset($data[$key])) {
-                $stmt->execute([$data[$key], $key]);
+                $stmtUpdate->execute([$data[$key], $key]);
+                if ($stmtUpdate->rowCount() === 0) {
+                    $check = $pdo->prepare("SELECT 1 FROM Settings WHERE SettingKey = ?");
+                    $check->execute([$key]);
+                    if (!$check->fetch()) {
+                        $stmtInsert->execute([$key, $data[$key]]);
+                    }
+                }
             }
         }
         $pdo->commit();

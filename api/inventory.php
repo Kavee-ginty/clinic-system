@@ -25,6 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("UPDATE Drugs SET UnitPrice = ? WHERE DrugID = ?");
             $stmt->execute([$data['price'], $data['drug_id']]);
             echo json_encode(['success' => true]);
+        } elseif ($action === 'edit_details') {
+            $stmt = $pdo->prepare("UPDATE Drugs SET DrugName = ?, Dose = ?, BatchNumber = ? WHERE DrugID = ?");
+            $stmt->execute([$data['drug_name'], $data['dose'] ?? '', $data['batch'], $data['drug_id']]);
+            echo json_encode(['success' => true]);
         } elseif ($action === 'delete') {
             $stmt = $pdo->prepare("DELETE FROM Drugs WHERE DrugID = ?");
             $stmt->execute([$data['drug_id']]);

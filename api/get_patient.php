@@ -12,7 +12,16 @@ if (!$patientId) {
 try {
     $stmt = $pdo->prepare("SELECT * FROM Patients WHERE PatientID = ?");
     $stmt->execute([$patientId]);
-    $patient = $stmt->fetch();
+    $patient = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($patient && !empty($patient['DOB'])) {
+        try {
+            $dobDate = new DateTime($patient['DOB']);
+            $today = new DateTime('today');
+            $patient['Age'] = $dobDate->diff($today)->y;
+        } catch(Exception $e){}
+    }
+    
     echo json_encode($patient);
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);

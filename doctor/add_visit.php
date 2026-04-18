@@ -15,15 +15,17 @@ if (!$patientId || !$queueId) {
 $pageTitle = 'Visit Record Form';
 include '../includes/header.php';
 ?>
+
 <body class="bg-gray-50 min-h-screen dark:bg-gray-900 transition-colors">
     <nav class="bg-teal-600 text-white p-4 shadow-md flex justify-between items-center">
         <h1 class="text-2xl font-bold">Add Visit Record</h1> <br>
-        <a href="dashboard.php" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 rounded font-semibold">Back to Dashboard</a>
+        <a href="dashboard.php" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 rounded font-semibold">Back to
+            Dashboard</a>
     </nav>
 
     <div class="container mx-auto p-4 max-w-4xl mt-6">
         <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-500">
-            
+
             <div id="patientInfo" class="mb-6 p-4 bg-gray-100 rounded-lg flex justify-between items-center">
                 <!-- Loaded via JS -->
             </div>
@@ -32,12 +34,16 @@ include '../includes/header.php';
                 <!-- Group 1 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block font-bold text-gray-700 mb-2">Presenting Complaint <span class="text-red-500">*</span></label>
-                        <textarea id="complaint" rows="3" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" required></textarea>
+                        <label class="block font-bold text-gray-700 mb-2">Presenting Complaint <span
+                                class="text-red-500">*</span></label>
+                        <textarea id="complaint" rows="3"
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            required></textarea>
                     </div>
                     <div>
                         <label class="block font-bold text-gray-700 mb-2">Examination Findings</label>
-                        <textarea id="examination" rows="3" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                        <textarea id="examination" rows="3"
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
                     </div>
                 </div>
 
@@ -45,42 +51,54 @@ include '../includes/header.php';
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block font-bold text-gray-700 mb-2">Investigations</label>
-                        <textarea id="investigation" rows="2" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                        <textarea id="investigation" rows="2"
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
                     </div>
                     <div>
-                        <label class="block font-bold text-gray-700 mb-2">Diagnosis <span class="text-red-500">*</span></label>
-                        <textarea id="diagnosis" rows="2" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" required></textarea>
+                        <label class="block font-bold text-gray-700 mb-2">Diagnosis <span
+                                class="text-red-500">*</span></label>
+                        <textarea id="diagnosis" rows="2"
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            required></textarea>
                     </div>
                 </div>
 
                 <!-- Group 3 -->
                 <div>
                     <div class="flex justify-between items-center mb-2">
-                        <label class="block font-bold text-gray-700">Treatment / Prescription <span class="text-red-500">*</span></label>
-                        <button type="button" onclick="openPrescriptionModal()" class="px-4 py-1.5 bg-teal-100 text-teal-800 hover:bg-teal-200 border border-teal-300 rounded font-bold text-sm flex items-center gap-2 shadow-sm transition">
+                        <label class="block font-bold text-gray-700">Treatment / Prescription <span
+                                class="text-red-500">*</span></label>
+                        <button type="button" onclick="openPrescriptionModal()"
+                            class="px-4 py-1.5 bg-teal-100 text-teal-800 hover:bg-teal-200 border border-teal-300 rounded font-bold text-sm flex items-center gap-2 shadow-sm transition">
                             <span class="text-lg leading-none">+</span> Open Prescription Table
                         </button>
                     </div>
-                    <textarea id="treatment" rows="4" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" required></textarea>
+                    <textarea id="treatment" rows="4"
+                        class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        required></textarea>
                 </div>
 
                 <!-- Group 4 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block font-bold text-gray-700 mb-2">Referrals</label>
-                        <textarea id="referals" rows="2" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                        <textarea id="referals" rows="2"
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
                     </div>
                     <div>
                         <label class="block font-bold text-gray-700 mb-2">Doctor's Notes</label>
-                        <textarea id="notes" rows="2" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                        <textarea id="notes" rows="2"
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
                     </div>
                 </div>
 
                 <div class="flex justify-between items-center pt-4 border-t">
                     <div class="text-sm font-bold text-gray-500">
-                        Total Table Drugs: <span id="lblDrugCount" class="text-teal-600 outline outline-1 outline-teal-300 px-2 py-0.5 rounded">0</span>
+                        Total Table Drugs: <span id="lblDrugCount"
+                            class="text-teal-600 outline outline-1 outline-teal-300 px-2 py-0.5 rounded">0</span>
                     </div>
-                    <button type="submit" class="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-md transition text-lg">
+                    <button type="submit"
+                        class="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-md transition text-lg">
                         Complete Visit & Record
                     </button>
                 </div>
@@ -89,12 +107,14 @@ include '../includes/header.php';
     </div>
 
     <!-- PRESCRIPTION MODAL OVERLAY -->
-    <div id="rxModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm transition-opacity">
+    <div id="rxModal"
+        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
-            
+
             <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h2 class="text-2xl font-black text-gray-800">Add Drugs to Prescription</h2>
-                <button onclick="closePrescriptionModal()" class="text-gray-400 hover:text-red-500 font-bold p-2 text-2xl leading-none">&times;</button>
+                <button onclick="closePrescriptionModal()"
+                    class="text-gray-400 hover:text-red-500 font-bold p-2 text-2xl leading-none">&times;</button>
             </div>
 
             <div class="p-6 overflow-y-auto flex-1 bg-white">
@@ -104,11 +124,11 @@ include '../includes/header.php';
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-gray-100">
                             <tr>
-                                <th class="p-3 font-bold text-gray-700 w-1/4">Drug Name (Auto-suggest)</th>
+                                <th class="p-3 font-bold text-gray-700 w-1/4">Drug Name</th>
                                 <th class="p-3 font-bold text-gray-700 w-1/6">Dose</th>
-                                <th class="p-3 font-bold text-gray-700">Frequency (e.g. 2 0 2)</th>
-                                <th class="p-3 font-bold text-gray-700 w-24">Days</th>
-                                <th class="p-3 font-bold text-gray-700 w-24 text-center">Total Pill<br>Count</th>
+                                <th class="p-3 font-bold text-gray-700">Dosage Grid (M-A-E-N)</th>
+                                <th class="p-3 font-bold text-gray-700 w-24">Duration</th>
+                                <th class="p-3 font-bold text-gray-700 w-24 text-center">Total Qty</th>
                                 <th class="p-3 font-bold text-gray-700 w-20 text-center">Action</th>
                             </tr>
                         </thead>
@@ -116,14 +136,28 @@ include '../includes/header.php';
                             <!-- Input Row -->
                             <tr class="bg-blue-50/50 border-b-2 border-blue-100">
                                 <td class="p-2 relative">
-                                    <input type="text" id="tDrugName" class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm" placeholder="Type drug name..." autocomplete="off">
-                                    <div id="drugDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
+                                    <input type="text" id="tDrugName"
+                                        class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
+                                        placeholder="Type drug name..." autocomplete="off">
+                                    <div id="drugDropdown"
+                                        class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100">
+                                    </div>
                                 </td>
-                                <td class="p-2"><input type="text" id="tDose" class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm" placeholder="Optional"></td>
-                                <td class="p-2"><input type="text" id="tFreq" class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm" placeholder="e.g. 2 2 2" oninput="calcPillCount()"></td>
-                                <td class="p-2"><input type="number" id="tDays" class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm" placeholder="Days" min="1" oninput="calcPillCount()"></td>
-                                <td class="p-2"><input type="number" id="tTotalQty" class="w-full border-2 border-teal-500 bg-teal-50 p-2 rounded font-black focus:outline-none text-sm text-center" placeholder="Qty"></td>
-                                <td class="p-2 text-center"><button type="button" onclick="addTableDrug()" class="bg-teal-600 hover:bg-teal-700 text-white font-bold p-2 text-sm rounded shadow-md w-full">+</button></td>
+                                <td class="p-2"><input type="text" id="tDose"
+                                        class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
+                                        placeholder="Optional"></td>
+                                <td class="p-2"><input type="text" id="tFreq"
+                                        class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
+                                        placeholder="e.g. 1-0-1-0" oninput="calcPillCount()"></td>
+                                <td class="p-2"><input type="number" id="tDays"
+                                        class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
+                                        placeholder="Days" min="1" oninput="calcPillCount()"></td>
+                                <td class="p-2"><input type="number" id="tTotalQty"
+                                        class="w-full border-2 border-teal-500 bg-teal-50 p-2 rounded font-black focus:outline-none text-sm text-center"
+                                        placeholder="Qty"></td>
+                                <td class="p-2 text-center"><button type="button" onclick="addTableDrug()"
+                                        class="bg-teal-600 hover:bg-teal-700 text-white font-bold p-2 text-sm rounded shadow-md w-full">+</button>
+                                </td>
                             </tr>
                             <!-- Added Drugs go here -->
                         </tbody>
@@ -136,11 +170,12 @@ include '../includes/header.php';
                 <div class="text-sm font-bold text-gray-500">
                     Est. Drug Cost: <span class="text-teal-700 text-lg">Rs. <span id="billWithoutFee">0.00</span></span>
                 </div>
-                <button type="button" onclick="confirmPrescriptionModal()" class="px-8 py-3 bg-gray-900 hover:bg-black text-white font-black rounded-lg shadow-lg transition text-lg">
+                <button type="button" onclick="confirmPrescriptionModal()"
+                    class="px-8 py-3 bg-gray-900 hover:bg-black text-white font-black rounded-lg shadow-lg transition text-lg">
                     Confirm & Append to Notes
                 </button>
             </div>
-            
+
         </div>
     </div>
 
@@ -187,13 +222,13 @@ include '../includes/header.php';
             const res = await fetch('../api/add_visit.php', {
                 method: 'POST',
                 body: JSON.stringify(data),
-                headers: {'Content-Type': 'application/json'}
+                headers: { 'Content-Type': 'application/json' }
             });
             const result = await res.json();
-            
-            if(result.success) {
-                // Instantly navigate to print preview
-                window.location.href = `print_report.php?visit_id=${result.visit_id}`;
+
+            if (result.success) {
+                // Instantly navigate to print preview in a new tab
+                window.open(`print_report.php?visit_id=${result.visit_id}`, '_blank');
             } else {
                 showToast("Error saving record: " + result.error, "error");
             }
@@ -221,10 +256,10 @@ include '../includes/header.php';
         dInput.addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase();
             dDrop.innerHTML = '';
-            
+
             // If empty, show full inventory, otherwise filter
             const matches = val ? inventory.filter(d => (d.DrugName || '').toLowerCase().includes(val)) : inventory;
-            
+
             if (matches.length > 0) {
                 dDrop.innerHTML = matches.map(d => `
                     <div class="p-3 cursor-pointer hover:bg-teal-50 transition flex justify-between items-center group" 
@@ -238,8 +273,8 @@ include '../includes/header.php';
                 }
                 dDrop.classList.remove('hidden');
             } else {
-                 dDrop.innerHTML = `<div class="p-3 cursor-pointer bg-gray-50 hover:bg-gray-100 text-xs font-bold text-gray-500 text-center" onclick="dDrop.classList.add('hidden')">No matches. Use "${e.target.value}" as Custom Drug</div>`;
-                 dDrop.classList.remove('hidden');
+                dDrop.innerHTML = `<div class="p-3 cursor-pointer bg-gray-50 hover:bg-gray-100 text-xs font-bold text-gray-500 text-center" onclick="dDrop.classList.add('hidden')">No matches. Use "${e.target.value}" as Custom Drug</div>`;
+                dDrop.classList.remove('hidden');
             }
         });
 
@@ -249,7 +284,7 @@ include '../includes/header.php';
             }
         });
 
-        window.selectDrug = function(name, dose) {
+        window.selectDrug = function (name, dose) {
             dInput.value = name;
             document.getElementById('tDose').value = dose;
             dDrop.classList.add('hidden');
@@ -260,16 +295,16 @@ include '../includes/header.php';
             const freq = document.getElementById('tFreq').value.trim();
             const days = parseInt(document.getElementById('tDays').value) || 0;
             const qtyBox = document.getElementById('tTotalQty');
-            
-            if(!freq && !days) return; 
-            
+
+            if (!freq && !days) return;
+
             let dailyPills = 0;
-            if(freq) {
+            if (freq) {
                 const parts = freq.split(/[\s,+-]+/);
-                parts.forEach(p => { const num = parseInt(p); if(!isNaN(num)) dailyPills += num; });
+                parts.forEach(p => { const num = parseInt(p); if (!isNaN(num)) dailyPills += num; });
             }
 
-            if(dailyPills > 0 && days > 0) qtyBox.value = dailyPills * days;
+            if (dailyPills > 0 && days > 0) qtyBox.value = dailyPills * days;
             else if (dailyPills > 0 && days === 0) qtyBox.value = dailyPills;
         }
 
@@ -283,7 +318,7 @@ include '../includes/header.php';
             err.classList.add('hidden');
 
             const name = nameInput.value.trim();
-            if(!name) return;
+            if (!name) return;
 
             const dose = doseInput.value.trim();
             const freq = freqInput.value.trim();
@@ -292,9 +327,9 @@ include '../includes/header.php';
 
             const invMatch = inventory.find(d => d.DrugName.toLowerCase() === name.toLowerCase());
             const price = invMatch ? parseFloat(invMatch.UnitPrice) : 0;
-            const drugId = invMatch ? invMatch.DrugID : null; 
-            const stock = invMatch ? parseInt(invMatch.Quantity) : 999999; 
-            
+            const drugId = invMatch ? invMatch.DrugID : null;
+            const stock = invMatch ? parseInt(invMatch.Quantity) : 999999;
+
             if (drugId && qty > stock) {
                 err.innerText = `${name} only has ${stock} units in stock!`;
                 err.classList.remove('hidden'); return;
@@ -325,7 +360,7 @@ include '../includes/header.php';
             }
 
             nameInput.value = ''; doseInput.value = ''; freqInput.value = ''; daysInput.value = ''; qtyInput.value = '';
-            document.getElementById('tDrugName').focus(); 
+            document.getElementById('tDrugName').focus();
             renderBill();
         }
 
@@ -335,16 +370,16 @@ include '../includes/header.php';
         }
 
         // Exposing globally for inline edits
-        window.updateField = function(idx, field, val) {
+        window.updateField = function (idx, field, val) {
             billDrugs[idx][field] = val;
-            if(field === 'qty') billDrugs[idx].cost = parseInt(val) * billDrugs[idx].unit_price;
+            if (field === 'qty') billDrugs[idx].cost = parseInt(val) * billDrugs[idx].unit_price;
             renderBill(); // Note: rapid firing this on text inputs drops focus, so we let the user edit and blur
         }
 
         function updateInlineValue(idx, el, field) {
             const val = el.value;
             billDrugs[idx][field] = val;
-            
+
             if (field === 'qty') {
                 billDrugs[idx].qty = parseInt(val) || 0;
                 billDrugs[idx].cost = billDrugs[idx].qty * billDrugs[idx].unit_price;
@@ -356,9 +391,9 @@ include '../includes/header.php';
                 if (durMatch) days = parseInt(durMatch[0]);
 
                 let dailyPills = 0;
-                if(freq) {
+                if (freq) {
                     const parts = freq.split(/[\s,+-]+/);
-                    parts.forEach(p => { const num = parseInt(p); if(!isNaN(num)) dailyPills += num; });
+                    parts.forEach(p => { const num = parseInt(p); if (!isNaN(num)) dailyPills += num; });
                 }
 
                 if (dailyPills > 0) {
@@ -374,7 +409,7 @@ include '../includes/header.php';
             rows.forEach(r => r.remove());
 
             const tbody = document.getElementById('billTableBody');
-            
+
             billDrugs.forEach((d, i) => {
                 const tr = document.createElement('tr');
                 tr.className = 'border-b border-gray-100 hover:bg-gray-50 bg-white dynamic-row pt-2';
@@ -389,14 +424,14 @@ include '../includes/header.php';
                 `;
                 tbody.appendChild(tr);
             });
-            
+
             const drugTotal = billDrugs.reduce((sum, d) => sum + d.cost, 0);
             document.getElementById('billWithoutFee').innerText = drugTotal.toFixed(2);
             document.getElementById('lblDrugCount').innerText = billDrugs.length;
         }
 
         function openPrescriptionModal() {
-            if(inventory.length === 0) loadInventory();
+            if (inventory.length === 0) loadInventory();
             document.getElementById('rxModal').classList.remove('hidden');
             setTimeout(() => document.getElementById('tDrugName').focus(), 100);
         }
@@ -406,14 +441,14 @@ include '../includes/header.php';
         }
 
         function confirmPrescriptionModal() {
-            if(billDrugs.length === 0) return closePrescriptionModal();
+            if (billDrugs.length === 0) return closePrescriptionModal();
 
             // Append formatting block
             let rxString = "\n\n--- PRESCRIPTION ---\n";
             billDrugs.forEach((d, index) => {
                 let line = `${index + 1}. ${d.name.toUpperCase()}`;
                 if (d.dose) line += ` (${d.dose})`;
-                
+
                 let instructions = [];
                 if (d.frequency) instructions.push(`Sig: ${d.frequency}`);
                 if (d.duration) {
@@ -421,15 +456,15 @@ include '../includes/header.php';
                     const durText = durStr.includes('day') || durStr.includes('week') || durStr.includes('month') ? d.duration : d.duration + ' days';
                     instructions.push(`for ${durText}`);
                 }
-                
+
                 if (instructions.length > 0) line += ` - ${instructions.join(' ')}`;
                 line += ` [Dispense: ${d.qty}]\n`;
-                
+
                 rxString += line;
             });
-            
+
             const tat = document.getElementById('treatment');
-            if(tat.value && !tat.value.endsWith('\n')) tat.value += "\n";
+            if (tat.value && !tat.value.endsWith('\n')) tat.value += "\n";
             tat.value += rxString.trim();
             closePrescriptionModal();
             showToast("Prescription injected into notes!");
@@ -438,4 +473,5 @@ include '../includes/header.php';
     </script>
     <script src="../assets/js/toast.js"></script>
 </body>
+
 </html>

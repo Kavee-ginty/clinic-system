@@ -5,7 +5,9 @@ require_once '../config/db.php';
 $query = trim($_GET['q'] ?? '');
 
 if (empty($query)) {
-    echo json_encode([]);
+    $stmt = $pdo->prepare("SELECT p.*, (SELECT COUNT(*) FROM Visits v WHERE v.PatientID = p.PatientID) as PreviousVisits FROM Patients p ORDER BY p.PatientID DESC LIMIT 100");
+    $stmt->execute();
+    echo json_encode($stmt->fetchAll());
     exit;
 }
 

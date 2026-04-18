@@ -6,7 +6,8 @@ try {
     $stmt = $pdo->query("
         SELECT q.QueueID, q.QueueNumber, q.Status, q.PatientID, 
                p.FirstName, p.LastName, p.Gender, p.DOB,
-               (SELECT COUNT(*) FROM Visits v WHERE v.PatientID = q.PatientID AND DATE(v.VisitDateTime) < CURRENT_DATE) as PreviousVisits
+               (SELECT COUNT(*) FROM Visits v WHERE v.PatientID = q.PatientID AND DATE(v.VisitDateTime) < CURRENT_DATE) as PreviousVisits,
+               (SELECT VisitID FROM Visits v2 WHERE v2.QueueID = q.QueueID LIMIT 1) as VisitID
         FROM Queue q
         JOIN Patients p ON q.PatientID = p.PatientID
         WHERE q.QueueDate = CURRENT_DATE

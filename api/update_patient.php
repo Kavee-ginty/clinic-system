@@ -25,8 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $pdo->prepare("UPDATE Patients SET FirstName=?, LastName=?, DOB=?, Gender=?, Phone=?, Address=? WHERE PatientID=?");
-        $stmt->execute([$firstName, $lastName, $dob, $gender, $phone, $address, $patient_id]);
+        $age = 0;
+        if (!empty($dob)) {
+            $dobDate = new DateTime($dob);
+            $today = new DateTime('today');
+            $age = $dobDate->diff($today)->y;
+        }
+
+        $stmt = $pdo->prepare("UPDATE Patients SET FirstName=?, LastName=?, DOB=?, Gender=?, Phone=?, Address=?, Age=? WHERE PatientID=?");
+        $stmt->execute([$firstName, $lastName, $dob, $gender, $phone, $address, $age, $patient_id]);
         
         echo json_encode(['success' => true]);
     } catch (Exception $e) {

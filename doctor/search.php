@@ -35,13 +35,17 @@ include '../includes/header.php';
     </main>
 
     <script>
-        document.getElementById('searchInput').addEventListener('input', debounce(async (e) => {
-            const query = e.target.value;
+        async function performSearch(query) {
             const resBox = document.getElementById('searchResults');
-            if(query.length < 2) { resBox.innerHTML = ''; return; }
+            if(query.length > 0 && query.length < 2) { return; }
             
             const res = await fetch(`../api/search_patient.php?q=${encodeURIComponent(query)}`);
             const patients = await res.json();
+            
+            if(patients.length === 0) {
+                resBox.innerHTML = '<div class="p-6 text-center text-gray-400 font-bold">No patients found.</div>';
+                return;
+            }
             
             resBox.innerHTML = patients.map(p => `
                 <div class="p-4 border rounded-lg hover:shadow-md hover:border-teal-300 bg-gray-50 flex justify-between items-center transition">
@@ -69,7 +73,14 @@ include '../includes/header.php';
                     <a href="history.php?patient_id=${p.PatientID}" target="_blank" class="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-lg font-black shadow-md border-b-4 border-teal-700 active:border-b-0 active:mt-1 transition">Review History</a>
                 </div>
             `).join('');
+        }
+
+        document.getElementById('searchInput').addEventListener('input', debounce((e) => {
+            performSearch(e.target.value.trim());
         }, 300));
+        
+        // Initial load of all patients
+        performSearch('');
     </script>
 </body>
 </html>

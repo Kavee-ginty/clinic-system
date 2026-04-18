@@ -33,32 +33,50 @@ include '../includes/header.php';
         <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-500">
             <h2 class="text-xl font-bold mb-6 text-gray-800">Edit Clinic Data (Shows on printed reports)</h2>
             <form id="settingsForm" class="space-y-4">
-                <div>
-                    <label class="block font-bold text-gray-700 mb-1">Clinic Name</label>
-                    <input type="text" id="clinic_name" value="<?= htmlspecialchars($settings['clinic_name'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500" required>
-                </div>
-                <div>
-                    <label class="block font-bold text-gray-700 mb-1">Doctor's Name / Credentials</label>
-                    <input type="text" id="doctor_name" value="<?= htmlspecialchars($settings['doctor_name'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500" required>
-                </div>
-                <div>
-                    <label class="block font-bold text-gray-700 mb-1">Address</label>
-                    <input type="text" id="clinic_address" value="<?= htmlspecialchars($settings['clinic_address'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500" required>
-                </div>
-                <div>
-                    <label class="block font-bold text-gray-700 mb-1">Phone Number</label>
-                    <input type="text" id="clinic_phone" value="<?= htmlspecialchars($settings['clinic_phone'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500" required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Clinic Name</label>
+                        <input type="text" id="clinic_name" value="<?= htmlspecialchars($settings['clinic_name'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500" required>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Clinic Email</label>
+                        <input type="text" id="clinic_email" value="<?= htmlspecialchars($settings['clinic_email'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Clinic Address</label>
+                        <input type="text" id="clinic_address" value="<?= htmlspecialchars($settings['clinic_address'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500" required>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Phone Number(s)</label>
+                        <input type="text" id="clinic_phone" value="<?= htmlspecialchars($settings['clinic_phone'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500" required>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Doctor's Name</label>
+                        <input type="text" id="doctor_name" value="<?= htmlspecialchars($settings['doctor_name'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500" required>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Doctor Qualifications</label>
+                        <input type="text" id="doctor_qualifications" value="<?= htmlspecialchars($settings['doctor_qualifications'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Doctor SLMC Reg No</label>
+                        <input type="text" id="doctor_slmc" value="<?= htmlspecialchars($settings['doctor_slmc'] ?? '') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Logo Width (Print, e.g. w-24 or 100px)</label>
+                        <input type="text" id="logo_width" value="<?= htmlspecialchars($settings['logo_width'] ?? 'w-[28%]') ?>" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500">
+                    </div>
                 </div>
 
                 <div class="pt-4 border-t mt-4">
                     <h3 class="text-lg font-bold text-gray-800 mb-2">Print Properties</h3>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block font-bold text-gray-700 mb-1">Page Size</label>
+                            <label class="block font-bold text-gray-700 mb-1">Page Size & Orientation</label>
                             <select id="print_page_size" class="w-full border rounded p-3 focus:ring-2 focus:ring-teal-500">
-                                <option value="A4" <?= ($settings['print_page_size'] ?? 'A4') == 'A4' ? 'selected' : '' ?>>A4 (Standard)</option>
-                                <option value="A5" <?= ($settings['print_page_size'] ?? 'A4') == 'A5' ? 'selected' : '' ?>>A5 (Half Size)</option>
-                                <option value="Letter" <?= ($settings['print_page_size'] ?? 'A4') == 'Letter' ? 'selected' : '' ?>>Letter</option>
+                                <option value="A5" <?= ($settings['print_page_size'] ?? 'A5') == 'A5' ? 'selected' : '' ?>>A5 Portrait (Strict Layout)</option>
+                                <option value="A4" <?= ($settings['print_page_size'] ?? 'A5') == 'A4' ? 'selected' : '' ?>>A4 Portrait</option>
+                                <option value="Letter" <?= ($settings['print_page_size'] ?? 'A5') == 'Letter' ? 'selected' : '' ?>>Letter Portrait</option>
                             </select>
                         </div>
                         <div>
@@ -87,11 +105,15 @@ include '../includes/header.php';
             e.preventDefault();
             const payload = {
                 clinic_name: document.getElementById('clinic_name').value,
+                clinic_email: document.getElementById('clinic_email').value,
                 doctor_name: document.getElementById('doctor_name').value,
+                doctor_qualifications: document.getElementById('doctor_qualifications').value,
+                doctor_slmc: document.getElementById('doctor_slmc').value,
                 clinic_address: document.getElementById('clinic_address').value,
                 clinic_phone: document.getElementById('clinic_phone').value,
                 print_page_size: document.getElementById('print_page_size').value,
-                print_text_size: document.getElementById('print_text_size').value
+                print_text_size: document.getElementById('print_text_size').value,
+                logo_width: document.getElementById('logo_width').value
             };
             
             const res = await fetch('../api/update_settings.php', {

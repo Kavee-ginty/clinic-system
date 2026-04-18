@@ -127,7 +127,7 @@ include '../includes/header.php';
                     else if(q.Status === 'completed') {
                         statusBadge = '<span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-bold uppercase tracking-wide border border-green-200">Discharged</span>';
                         actionButtons = `
-                            <a href="history.php?patient_id=${q.PatientID}" target="_blank" class="px-5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-500 rounded-lg font-bold transition text-sm">View Record</a>
+                            <a href="print_report.php?visit_id=${q.VisitID}" target="_blank" class="px-5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-500 rounded-lg font-bold transition text-sm">View Record</a>
                         `;
                     }
 

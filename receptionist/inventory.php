@@ -77,6 +77,7 @@ include '../includes/header.php';
                     <td class="p-3 text-right space-x-2">
                         <button onclick="updateStock(${d.DrugID})" class="px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 text-xs font-bold rounded">Add Stock</button>
                         <button onclick="updatePrice(${d.DrugID})" class="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-bold rounded">Edit Price</button>
+                        <button onclick="editDrugDetails(${d.DrugID}, '${(d.DrugName||'').replace(/'/g,`\\'`).replace(/\"/g,`&quot;`)}', '${(d.Dose||'').replace(/'/g,`\\'`).replace(/\"/g,`&quot;`)}', '${(d.BatchNumber||'').replace(/'/g,`\\'`).replace(/\"/g,`&quot;`)}')" class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs hover:bg-yellow-200 font-bold rounded">Edit Details</button>
                         <button onclick="deleteDrug(${d.DrugID})" class="px-3 py-1 bg-red-100 text-red-600 text-xs hover:bg-red-200 font-bold rounded">Delete</button>
                     </td>
                 </tr>
@@ -123,6 +124,19 @@ include '../includes/header.php';
             } else {
                 showToast(data.error || "Cannot delete. May be tied to existing patient records.", "error");
             }
+        }
+
+        async function editDrugDetails(id, name, dose, batch) {
+            const newName = prompt("Edit Drug Name:", name);
+            if(newName === null) return;
+            const newDose = prompt("Edit Dose:", dose);
+            if(newDose === null) return;
+            const newBatch = prompt("Edit Batch:", batch);
+            if(newBatch === null) return;
+
+            const payload = { action: 'edit_details', drug_id: id, drug_name: newName, dose: newDose, batch: newBatch };
+            await fetch('../api/inventory.php', { method: 'POST', body: JSON.stringify(payload) });
+            loadInventory();
         }
 
         loadInventory();
