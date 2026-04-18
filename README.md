@@ -1,6 +1,6 @@
-# Clinic System Installation Guide
+# Clinic System Installation & Operations Guide
 
-This system is designed for high-performance use on a local WiFi network (LAN) using a lightweight XAMPP server stack.
+This system is designed for high-performance use on a local WiFi network (LAN) using a lightweight XAMPP server stack. It acts as an integrated system for receptionist patient onboarding and medical practitioner live queue diagnosis and inventory tracking.
 
 ## Installation Steps (Doctor's PC / Server)
 
@@ -43,18 +43,28 @@ This system is designed for high-performance use on a local WiFi network (LAN) u
 1. On the Doctor's PC (Server), go to `http://localhost/clinic-system`
 2. Click the **"Link a Receptionist PC"** button on the home screen.
 3. The system will automatically generate a Permanent Computer Name Link (e.g., `http://DOCTORS-PC/clinic-system`).
-4. On the Receptionist's PC, type this exact link into the browser and bookmark it. This link permanently handles router reboots.
+4. On the Receptionist's PC, type this exact link into the browser and bookmark it. This link permanently handles router reboots safely for persistent internal LAN deployment.
 
-## Architecture Highlights
-- **Performance:** 1-Second AJAX Polling on `<100ms` LAN connection enables real-time queue synchronization.
-- **Security:** PDO Prepared Statements used on all APIs preventing SQL Injections.
-- **Frontend Stack:** TailwindCSS on HTML Structure with highly optimized Vanilla JavaScript APIs endpoints.
+## Core Features & Sub-systems
+
+### 1. Unified Drug Inventory System
+- Both the Receptionist and Doctor share an identical real-time drug inventory UI.
+- Capabilities include: adding stock globally, editing dynamic attributes (Drug Name, Dose, Quantities, Prices, Batch Nos), and syncing depletion when doctors finalize a patient diagnosis and dispense.
+
+### 2. Live Queue Synchronization
+- Operates via a real-time polling mechanism between Reception and Diagnostics without requiring full-page reloads.
+- Doctors have automated medical action handlers triggered heavily by the active status: from "Waiting" tracking through to "Discharged". 
+
+### 3. Print Generation Engine
+- Tailor-made for generating Medical and Prescription reports exclusively clamped to **A5 Portrait Mode**.
+- Custom settings injection manages dynamic logos, doctor attributes (such as SLMC credentials & qualifications), and automated age re-calculations.
+- Incorporates direct-to-browser new-tab routing and tab-closing redirects bridging Print layouts and live Medical flows securely.
 
 ## Directory Structure Overview
-- `/api` - Independent PHP endpoints outputting JSON
-- `/admin` - Database overview & historical tools
-- `/doctor` - Consultation, queue management & history
-- `/receptionist` - Patient registration & queue dispatch
-- `/config` - Database connections
+- `/api` - Independent PHP JSON rest-endpoints.
+- `/admin` - Database overview, patient histories & clinic config tools.
+- `/doctor` - Consultation desk, diagnosis forms, medical queue tracking, advanced searching & live preview reporting.
+- `/receptionist` - Patient registration dashboard, live queue dispatcher & remote stock inventory visibility.
+- `/config` - Database connection settings.
 
-*System tailored for local environments.*
+*System securely tailored for rapid, continuous local environment ops.*
