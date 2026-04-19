@@ -15,7 +15,7 @@ $stmt = $pdo->prepare("SELECT * FROM Visits v JOIN Patients p ON v.PatientID = p
 $stmt->execute([$visitId]);
 $visit = $stmt->fetch();
 
-$drugStmt = $pdo->prepare("SELECT d.DrugName, vd.Quantity, vd.TotalCost, vd.Frequency, vd.Dose, vd.Duration FROM VisitDrugs vd JOIN Drugs d ON vd.DrugID = d.DrugID WHERE vd.VisitID = ?");
+$drugStmt = $pdo->prepare("SELECT COALESCE(vd.DrugName, d.DrugName) AS DrugName, vd.Quantity, vd.TotalCost, vd.Frequency, vd.Dose, vd.Duration FROM VisitDrugs vd LEFT JOIN Drugs d ON vd.DrugID = d.DrugID WHERE vd.VisitID = ?");
 $drugStmt->execute([$visitId]);
 $drugs = $drugStmt->fetchAll();
 

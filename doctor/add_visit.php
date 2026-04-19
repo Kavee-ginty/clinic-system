@@ -315,7 +315,7 @@ include '../includes/header.php';
             const daysInput = document.getElementById('tDays');
             const qtyInput = document.getElementById('tTotalQty');
             const err = document.getElementById('drugErr');
-            err.classList.add('hidden');
+            err.className = 'text-xs text-red-500 font-bold hidden mb-4 text-center';
 
             const name = nameInput.value.trim();
             if (!name) return;
@@ -330,16 +330,19 @@ include '../includes/header.php';
             const drugId = invMatch ? invMatch.DrugID : null;
             const stock = invMatch ? parseInt(invMatch.Quantity) : 999999;
 
+            let showedWarning = false;
             if (drugId && qty > stock) {
-                err.innerText = `${name} only has ${stock} units in stock!`;
-                err.classList.remove('hidden'); return;
+                err.innerText = `Warning: ${name} only has ${stock} units in stock! Added anyway.`;
+                err.className = 'text-xs text-orange-500 font-bold mb-4 text-center';
+                showedWarning = true;
             }
 
             const existing = billDrugs.find(d => d.name.toLowerCase() === name.toLowerCase());
-            if (existing && existing.drug_id) {
-                if (existing.qty + qty > stock) {
-                    err.innerText = `Adding this exceeds available stock (${stock}) for ${name}!`;
-                    err.classList.remove('hidden'); return;
+            if (existing && existing.id) {
+                if (qty > stock) {
+                    err.innerText = `Warning: Adding this exceeds available stock (${stock}) for ${name}! Added anyway.`;
+                    err.className = 'text-xs text-orange-500 font-bold mb-4 text-center';
+                    showedWarning = true;
                 }
                 existing.qty = qty; // Override in modal edit scenario
                 existing.cost = existing.qty * price;
