@@ -31,18 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Doctor Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm border-t-4 border-teal-600">
-        <h2 class="text-2xl font-bold mb-6 text-center text-teal-800">Doctor Login</h2>
+<body class="bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-slate-900 via-slate-800 to-zinc-900 flex items-center justify-center min-h-screen text-slate-200 font-sans">
+    <div class="bg-white/5 backdrop-blur-3xl p-8 rounded-[2rem] shadow-2xl border border-white/10 w-full max-w-sm relative">
+        <h2 class="text-2xl font-bold mb-6 text-center text-white drop-shadow-md tracking-tight">Doctor Login</h2>
         <?php if($error): ?>
-            <p class="text-red-500 text-center mb-4 font-bold border border-red-200 bg-red-50 rounded p-2"><?= $error ?></p>
+            <p class="text-rose-300 bg-rose-500/20 border-rose-500/30 shadow-sm backdrop-blur-sm text-center mb-4 font-bold border rounded-xl p-2 drop-shadow-sm"><?= $error ?></p>
         <?php endif; ?>
         <form method="POST" class="space-y-4">
             <div>
-                <input type="password" name="password" placeholder="Enter Doctor Password" class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-teal-600" required>
+                <input type="password" name="password" placeholder="Enter Doctor Password" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 font-medium transition-all outline-none shadow-inner backdrop-blur-sm" required>
             </div>
-            <button type="submit" class="w-full bg-teal-600 text-white p-3 rounded font-bold hover:bg-teal-700 transition">Login</button>
-            <a href="../index.php" class="block text-center text-sm text-gray-500 mt-4 hover:underline">Back to Home</a>
+            <button type="submit" class="w-full bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-200 font-bold p-3.5 rounded-xl transition-all shadow-sm hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] backdrop-blur-md">Login</button>
+            <a href="../index.php" class="block text-center text-sm text-slate-400 mt-4 hover:text-white transition-colors">Back to Home</a>
         </form>
     </div>
 </body>

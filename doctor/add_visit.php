@@ -16,49 +16,46 @@ $pageTitle = 'Visit Record Form';
 include '../includes/header.php';
 ?>
 
-<body class="bg-gray-50 min-h-screen dark:bg-gray-900 transition-colors">
-    <nav class="bg-teal-600 text-white p-4 shadow-md flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Add Visit Record</h1> <br>
-        <a href="dashboard.php" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 rounded font-semibold">Back to
-            Dashboard</a>
+<body class="bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] flex min-h-screen overflow-hidden from-slate-900 via-slate-800 to-zinc-900 text-slate-200 transition-colors font-sans">
+    <nav class="bg-white/5 backdrop-blur-xl border-b border-white/10 text-white p-4 shadow-lg flex justify-between items-center w-full z-10 absolute top-0">
+        <h1 class="text-xl font-bold tracking-tight drop-shadow-md">Add Visit Record</h1>
+        <a href="dashboard.php" class="px-4 py-2 bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 rounded-lg font-medium transition-all shadow-sm">Back to Dashboard</a>
     </nav>
 
-    <div class="container mx-auto p-4 max-w-4xl mt-6">
-        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-500">
+    <div class="container mx-auto p-4 max-w-4xl mt-24 mb-10 overflow-y-auto z-0 relative">
+        <div class="bg-white/5 backdrop-blur-2xl p-8 rounded-[2rem] shadow-2xl border border-white/10 border-t-white/20">
 
-            <div id="patientInfo" class="mb-6 p-4 bg-gray-100 rounded-lg flex justify-between items-center">
+            <div id="patientInfo" class="mb-8 p-5 bg-black/20 border border-white/5 rounded-2xl flex justify-between items-center shadow-inner backdrop-blur-sm">
                 <!-- Loaded via JS -->
             </div>
 
-            <form id="visitForm" class="space-y-6">
+            <form id="visitForm" class="space-y-8">
                 <!-- Group 1 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block font-bold text-gray-700 mb-2">Presenting Complaint <span
-                                class="text-red-500">*</span></label>
+                        <label class="block font-medium text-slate-300 mb-2">Presenting Complaint <span class="text-rose-400">*</span></label>
                         <textarea id="complaint" rows="3"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30 transition-all shadow-inner backdrop-blur-sm"
                             required></textarea>
                     </div>
                     <div>
-                        <label class="block font-bold text-gray-700 mb-2">Examination Findings</label>
+                        <label class="block font-medium text-slate-300 mb-2">Examination Findings</label>
                         <textarea id="examination" rows="3"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                            class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30 transition-all shadow-inner backdrop-blur-sm"></textarea>
                     </div>
                 </div>
 
                 <!-- Group 2 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block font-bold text-gray-700 mb-2">Investigations</label>
+                        <label class="block font-medium text-slate-300 mb-2">Investigations</label>
                         <textarea id="investigation" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                            class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30 transition-all shadow-inner backdrop-blur-sm"></textarea>
                     </div>
                     <div>
-                        <label class="block font-bold text-gray-700 mb-2">Diagnosis <span
-                                class="text-red-500">*</span></label>
+                        <label class="block font-medium text-slate-300 mb-2">Diagnosis <span class="text-rose-400">*</span></label>
                         <textarea id="diagnosis" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30 transition-all shadow-inner backdrop-blur-sm"
                             required></textarea>
                     </div>
                 </div>
@@ -66,39 +63,38 @@ include '../includes/header.php';
                 <!-- Group 3 -->
                 <div>
                     <div class="flex justify-between items-center mb-2">
-                        <label class="block font-bold text-gray-700">Treatment / Prescription <span
-                                class="text-red-500">*</span></label>
+                        <label class="block font-medium text-slate-300">Treatment / Prescription <span class="text-rose-400">*</span></label>
                         <button type="button" onclick="openPrescriptionModal()"
-                            class="px-4 py-1.5 bg-teal-100 text-teal-800 hover:bg-teal-200 border border-teal-300 rounded font-bold text-sm flex items-center gap-2 shadow-sm transition">
+                            class="px-5 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 hover:border-indigo-500/50 backdrop-blur-md rounded-xl font-medium text-sm flex items-center gap-2 shadow-sm transition-all hover:shadow-[0_0_15px_rgba(99,102,241,0.3)]">
                             <span class="text-lg leading-none">+</span> Open Prescription Table
                         </button>
                     </div>
                     <textarea id="treatment" rows="4"
-                        class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30 transition-all shadow-inner backdrop-blur-sm"
                         required></textarea>
                 </div>
 
                 <!-- Group 4 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block font-bold text-gray-700 mb-2">Referrals</label>
+                        <label class="block font-medium text-slate-300 mb-2">Referrals</label>
                         <textarea id="referals" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                            class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30 transition-all shadow-inner backdrop-blur-sm"></textarea>
                     </div>
                     <div>
-                        <label class="block font-bold text-gray-700 mb-2">Doctor's Notes</label>
+                        <label class="block font-medium text-slate-300 mb-2">Doctor's Notes</label>
                         <textarea id="notes" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                            class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30 transition-all shadow-inner backdrop-blur-sm"></textarea>
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center pt-4 border-t">
-                    <div class="text-sm font-bold text-gray-500">
+                <div class="flex justify-between items-center pt-6 border-t border-white/10">
+                    <div class="text-sm font-medium text-slate-400">
                         Total Table Drugs: <span id="lblDrugCount"
-                            class="text-teal-600 outline outline-1 outline-teal-300 px-2 py-0.5 rounded">0</span>
+                            class="text-teal-300 bg-teal-500/10 border border-teal-500/20 px-2.5 py-1 rounded-md font-semibold">0</span>
                     </div>
                     <button type="submit"
-                        class="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-md transition text-lg">
+                        class="px-8 py-3.5 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 border border-indigo-500/30 hover:border-indigo-500/50 font-medium rounded-xl shadow-sm transition-all text-lg backdrop-blur-md hover:shadow-[0_0_20px_rgba(99,102,241,0.4)]">
                         Complete Visit & Record
                     </button>
                 </div>
@@ -107,72 +103,73 @@ include '../includes/header.php';
     </div>
 
     <!-- PRESCRIPTION MODAL OVERLAY -->
-    <div id="rxModal"
-        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm transition-opacity">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
+    <div id="rxModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-md transition-opacity">
+        <div class="bg-slate-900/80 backdrop-blur-2xl rounded-[2rem] shadow-2xl border border-white/10 w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden relative">
+            <div class="absolute inset-0 bg-gradient-to-t from-indigo-900/10 to-transparent pointer-events-none"></div>
 
-            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h2 class="text-2xl font-black text-gray-800">Add Drugs to Prescription</h2>
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5 relative z-10">
+                <h2 class="text-xl font-bold text-white tracking-tight drop-shadow-md">Add Drugs to Prescription</h2>
                 <button onclick="closePrescriptionModal()"
-                    class="text-gray-400 hover:text-red-500 font-bold p-2 text-2xl leading-none">&times;</button>
+                    class="text-slate-400 hover:text-rose-400 font-black px-2 py-1 text-2xl leading-none transition-colors rounded-lg hover:bg-rose-500/10">&times;</button>
             </div>
 
-            <div class="p-6 overflow-y-auto flex-1 bg-white">
+            <div class="p-6 overflow-y-auto flex-1 relative z-10">
 
                 <!-- Table UI -->
-                <div class="w-full mb-4">
+                <div class="w-full mb-4 overflow-hidden rounded-2xl border border-white/10">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-gray-100">
+                        <thead class="bg-white/5 backdrop-blur-md">
                             <tr>
-                                <th class="p-3 font-bold text-gray-700 w-1/4">Drug Name</th>
-                                <th class="p-3 font-bold text-gray-700 w-1/6">Dose</th>
-                                <th class="p-3 font-bold text-gray-700">Dosage Grid (M-A-E-N)</th>
-                                <th class="p-3 font-bold text-gray-700 w-24">Duration</th>
-                                <th class="p-3 font-bold text-gray-700 w-24 text-center">Total Qty</th>
-                                <th class="p-3 font-bold text-gray-700 w-20 text-center">Action</th>
+                                <th class="p-4 font-medium text-slate-400 text-sm uppercase tracking-wider w-1/4 border-b border-white/10">Drug Name</th>
+                                <th class="p-4 font-medium text-slate-400 text-sm uppercase tracking-wider w-1/6 border-b border-white/10">Dose</th>
+                                <th class="p-4 font-medium text-slate-400 text-sm uppercase tracking-wider border-b border-white/10">Dosage Grid (M-A-E-N)</th>
+                                <th class="p-4 font-medium text-slate-400 text-sm uppercase tracking-wider w-24 border-b border-white/10">Duration</th>
+                                <th class="p-4 font-medium text-slate-400 text-sm uppercase tracking-wider w-24 text-center border-b border-white/10">Qty</th>
+                                <th class="p-4 font-medium text-slate-400 text-sm uppercase tracking-wider w-20 text-center border-b border-white/10">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="billTableBody">
+                        <tbody id="billTableBody" class="divide-y divide-white/5">
                             <!-- Input Row -->
-                            <tr class="bg-blue-50/50 border-b-2 border-blue-100">
-                                <td class="p-2 relative">
+                            <tr class="bg-white/5">
+                                <td class="p-3 relative">
                                     <input type="text" id="tDrugName"
-                                        class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
+                                        class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 p-2.5 rounded-lg font-medium focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 text-sm transition-all"
                                         placeholder="Type drug name..." autocomplete="off">
                                     <div id="drugDropdown"
-                                        class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100">
+                                        class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-800/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-white/5">
                                     </div>
                                 </td>
-                                <td class="p-2"><input type="text" id="tDose"
-                                        class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
+                                <td class="p-3"><input type="text" id="tDose"
+                                        class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 p-2.5 rounded-lg font-medium focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 text-sm transition-all"
                                         placeholder="Optional"></td>
-                                <td class="p-2"><input type="text" id="tFreq"
-                                        class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
+                                <td class="p-3"><input type="text" id="tFreq"
+                                        class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 p-2.5 rounded-lg font-medium focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 text-sm transition-all"
                                         placeholder="e.g. 1-0-1-0" oninput="calcPillCount()"></td>
-                                <td class="p-2"><input type="number" id="tDays"
-                                        class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
+                                <td class="p-3"><input type="number" id="tDays"
+                                        class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 p-2.5 rounded-lg font-medium focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 text-sm transition-all"
                                         placeholder="Days" min="1" oninput="calcPillCount()"></td>
-                                <td class="p-2"><input type="number" id="tTotalQty"
-                                        class="w-full border-2 border-teal-500 bg-teal-50 p-2 rounded font-black focus:outline-none text-sm text-center"
+                                <td class="p-3"><input type="number" id="tTotalQty"
+                                        class="w-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 p-2.5 rounded-lg font-bold focus:outline-none text-sm text-center"
                                         placeholder="Qty"></td>
-                                <td class="p-2 text-center"><button type="button" onclick="addTableDrug()"
-                                        class="bg-teal-600 hover:bg-teal-700 text-white font-bold p-2 text-sm rounded shadow-md w-full">+</button>
+                                <td class="p-3 text-center">
+                                    <button type="button" onclick="addTableDrug()"
+                                        class="bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 font-bold p-2.5 text-sm rounded-lg backdrop-blur-md transition-all w-full shadow-sm hover:shadow-[0_0_15px_rgba(99,102,241,0.3)]">+</button>
                                 </td>
                             </tr>
                             <!-- Added Drugs go here -->
                         </tbody>
                     </table>
                 </div>
-                <p class="text-xs text-red-500 font-bold hidden mb-4 text-center" id="drugErr"></p>
+                <p class="text-xs text-rose-400 font-bold hidden mt-2 text-center drop-shadow-md" id="drugErr"></p>
             </div>
 
-            <div class="p-6 border-t border-gray-100 bg-gray-50 flex justify-between items-center">
-                <div class="text-sm font-bold text-gray-500">
-                    Est. Drug Cost: <span class="text-teal-700 text-lg">Rs. <span id="billWithoutFee">0.00</span></span>
+            <div class="p-6 border-t border-white/10 bg-white/5 flex justify-between items-center relative z-10">
+                <div class="text-sm font-medium text-slate-300">
+                    Est. Drug Cost: <span class="text-teal-300 font-bold text-lg ml-2">Rs. <span id="billWithoutFee">0.00</span></span>
                 </div>
                 <button type="button" onclick="confirmPrescriptionModal()"
-                    class="px-8 py-3 bg-gray-900 hover:bg-black text-white font-black rounded-lg shadow-lg transition text-lg">
-                    Confirm & Append to Notes
+                    class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40 font-medium rounded-xl shadow-sm transition-all text-base backdrop-blur-md">
+                    Confirm & Append
                 </button>
             </div>
 
@@ -415,15 +412,15 @@ include '../includes/header.php';
 
             billDrugs.forEach((d, i) => {
                 const tr = document.createElement('tr');
-                tr.className = 'border-b border-gray-100 hover:bg-gray-50 bg-white dynamic-row pt-2';
-                const tagCustom = !d.id ? `<span class="bg-gray-200 text-gray-600 text-[10px] px-1 ml-2 rounded font-black uppercase">Custom</span>` : '';
+                tr.className = 'bg-transparent hover:bg-white/5 dynamic-row transition-all border-b border-white/5';
+                const tagCustom = !d.id ? `<span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] px-1.5 py-0.5 ml-2 rounded-md font-bold uppercase tracking-wider backdrop-blur-sm">Custom</span>` : '';
                 tr.innerHTML = `
-                    <td class="p-2 font-bold text-gray-800">${d.name} ${tagCustom}<br><span class="text-xs text-gray-500 font-normal">Rs. ${d.unit_price} x ${d.qty} = Rs. ${d.cost.toFixed(2)}</span></td>
-                    <td class="p-2"><input type="text" class="w-full border p-1 rounded font-semibold text-sm focus:border-blue-500" value="${d.dose}" onchange="updateInlineValue(${i}, this, 'dose')"></td>
-                    <td class="p-2"><input type="text" class="w-full border p-1 rounded font-mono font-bold text-sm focus:border-blue-500" value="${d.frequency}" onchange="updateInlineValue(${i}, this, 'frequency')"></td>
-                    <td class="p-2"><input type="text" class="w-full border p-1 rounded font-bold text-sm focus:border-blue-500" value="${d.duration}" onchange="updateInlineValue(${i}, this, 'duration')"></td>
-                    <td class="p-2"><input type="number" class="w-full border-2 border-teal-200 p-1 rounded font-black text-center text-teal-600 text-lg focus:border-teal-500" value="${d.qty}" onchange="updateInlineValue(${i}, this, 'qty')"></td>
-                    <td class="p-2 text-center"><button type="button" onclick="removeDrug(${i})" class="text-red-500 hover:bg-red-50 px-3 py-1 rounded font-black transition">&times;</button></td>
+                    <td class="p-3 font-medium text-white drop-shadow-sm">${d.name} ${tagCustom}<br><span class="text-xs text-slate-400 font-normal mt-1 block">Rs. ${d.unit_price} x ${d.qty} = Rs. ${d.cost.toFixed(2)}</span></td>
+                    <td class="p-3"><input type="text" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 p-2 rounded-lg font-medium text-sm focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all" value="${d.dose}" onchange="updateInlineValue(${i}, this, 'dose')"></td>
+                    <td class="p-3"><input type="text" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 p-2 rounded-lg font-mono font-medium text-sm focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all" value="${d.frequency}" onchange="updateInlineValue(${i}, this, 'frequency')"></td>
+                    <td class="p-3"><input type="text" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 p-2 rounded-lg font-medium text-sm focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all" value="${d.duration}" onchange="updateInlineValue(${i}, this, 'duration')"></td>
+                    <td class="p-3"><input type="number" class="w-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 p-2 rounded-lg font-bold text-center text-sm focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all" value="${d.qty}" onchange="updateInlineValue(${i}, this, 'qty')"></td>
+                    <td class="p-3 text-center"><button type="button" onclick="removeDrug(${i})" class="text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 px-3 py-1.5 rounded-lg font-black transition-all text-lg">&times;</button></td>
                 `;
                 tbody.appendChild(tr);
             });

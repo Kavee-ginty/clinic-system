@@ -13,49 +13,49 @@ $patients = $stmt->fetchAll();
 $pageTitle = 'All Patients - Admin';
 include '../includes/header.php';
 ?>
-<body class="bg-gray-50 flex h-screen overflow-hidden dark:bg-gray-900 transition-colors">
+<body class="bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] flex h-screen overflow-hidden from-slate-900 via-slate-800 to-zinc-900 text-slate-200 transition-colors font-sans">
     <!-- Sidebar -->
     <?php include '../includes/sidebar_admin.php'; ?>
 
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        <nav class="bg-gray-900 text-white p-4 md:hidden flex justify-between items-center shadow-md">
-            <h1 class="text-xl font-bold">All Patients Record</h1>
+        <nav class="bg-white/5 backdrop-blur-xl border-b border-white/10 text-white p-4 md:hidden flex justify-between items-center shadow-lg z-10 relative">
+            <h1 class="text-xl font-bold tracking-tight drop-shadow-md">All Patients Record</h1>
             <div>
-                <a href="../index.php" class="px-3 py-1 bg-gray-700 hover:bg-gray-800 rounded font-bold text-sm mr-2 transition">Dashboard</a>
+                <a href="../index.php" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 shadow-sm transition-all text-sm font-bold rounded-lg mr-2">Dashboard</a>
             </div>
         </nav>
 
-        <main class="flex-1 overflow-y-auto p-4 md:p-8 w-full">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow border-t-4 border-gray-800 dark:border-gray-600">
-            <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">Master Patient List</h2>
-            <div class="overflow-x-auto max-h-[700px]">
-                <table class="w-full text-left border-collapse">
-                    <thead class="sticky top-0 bg-gray-100 dark:bg-gray-900 border-b dark:border-gray-700 shadow-sm text-gray-700 dark:text-gray-300">
+        <main class="flex-1 overflow-y-auto p-4 md:p-8 w-full relative z-0">
+        <div class="bg-white/5 backdrop-blur-3xl p-6 md:p-8 rounded-[2rem] shadow-2xl border border-white/10 border-t-white/20 mt-4">
+            <h2 class="text-2xl font-bold mb-6 text-white tracking-tight drop-shadow-md">Master Patient List</h2>
+            <div class="flex-1 overflow-y-auto custom-scrollbar rounded-xl border border-white/10 bg-black/10 backdrop-blur-sm max-h-[700px]">
+                <table class="w-full text-left border-collapse table-fixed">
+                    <thead class="bg-white/5 sticky top-0 backdrop-blur-md z-10 border-b border-white/10 text-slate-300 uppercase text-xs tracking-wider">
                         <tr>
-                            <th class="p-3">ID</th>
-                            <th class="p-3">First Name</th>
-                            <th class="p-3">Last Name</th>
-                            <th class="p-3">Phone</th>
-                            <th class="p-3">Gender</th>
-                            <th class="p-3">DOB</th>
-                            <th class="p-3">Reg. Date</th>
-                            <th class="p-3 text-right">Action</th>
+                            <th class="p-4 font-bold w-16">ID</th>
+                            <th class="p-4 font-bold">First Name</th>
+                            <th class="p-4 font-bold">Last Name</th>
+                            <th class="p-4 font-bold w-32">Phone</th>
+                            <th class="p-4 font-bold w-24">Gender</th>
+                            <th class="p-4 font-bold w-28">DOB</th>
+                            <th class="p-4 font-bold w-32">Reg. Date</th>
+                            <th class="p-4 font-bold text-right w-64">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="text-gray-700 dark:text-gray-300">
+                    <tbody class="divide-y divide-white/5 text-slate-300 font-medium">
                         <?php foreach($patients as $p): ?>
-                        <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="p-3 text-gray-500 dark:text-gray-400 font-bold"><?= $p['PatientID'] ?></td>
-                            <td class="p-3"><?= htmlspecialchars($p['FirstName']) ?></td>
-                            <td class="p-3"><?= htmlspecialchars($p['LastName']) ?></td>
-                            <td class="p-3"><?= htmlspecialchars($p['Phone']) ?></td>
-                            <td class="p-3"><?= htmlspecialchars($p['Gender']) ?></td>
-                            <td class="p-3"><?= htmlspecialchars($p['DOB']) ?></td>
-                            <td class="p-3"><?= htmlspecialchars($p['RegisteredDate']) ?></td>
-                            <td class="p-3 text-right space-x-2">
-                                <a href="edit_patient.php?id=<?= $p['PatientID'] ?>" class="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700 font-bold transition">Edit</a>
-                                <a href="../doctor/history.php?patient_id=<?= $p['PatientID'] ?>" target="_blank" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 font-bold transition">History</a>
-                                <button onclick="deletePatient(<?= $p['PatientID'] ?>)" class="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 font-bold transition">Delete</button>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                            <td class="p-4 text-indigo-400 font-bold drop-shadow-sm truncate max-w-0"><?= $p['PatientID'] ?></td>
+                            <td class="p-4 text-white drop-shadow-sm truncate max-w-0"><?= htmlspecialchars($p['FirstName']) ?></td>
+                            <td class="p-4 text-white drop-shadow-sm truncate max-w-0"><?= htmlspecialchars($p['LastName']) ?></td>
+                            <td class="p-4 truncate max-w-0"><?= htmlspecialchars($p['Phone']) ?></td>
+                            <td class="p-4 truncate max-w-0"><?= htmlspecialchars($p['Gender']) ?></td>
+                            <td class="p-4 truncate max-w-0"><?= htmlspecialchars($p['DOB']) ?></td>
+                            <td class="p-4 truncate max-w-0 text-sm"><?= htmlspecialchars(date('M d', strtotime($p['RegisteredDate']))) ?></td>
+                            <td class="p-4 text-right space-x-1 outline-none">
+                                <a href="edit_patient.php?id=<?= $p['PatientID'] ?>" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 transition-all shadow-sm rounded-lg text-xs font-bold backdrop-blur-sm">Edit</a>
+                                <a href="../doctor/history.php?patient_id=<?= $p['PatientID'] ?>" target="_blank" class="px-3 py-1.5 bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-300 transition-all shadow-sm rounded-lg text-xs font-bold backdrop-blur-sm">History</a>
+                                <button onclick="deletePatient(<?= $p['PatientID'] ?>)" class="px-3 py-1.5 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 text-rose-300 transition-all shadow-sm rounded-lg text-xs font-bold backdrop-blur-sm">Delete</button>
                             </td>
                         </tr>
                         <?php endforeach; ?>

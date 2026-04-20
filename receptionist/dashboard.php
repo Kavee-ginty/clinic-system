@@ -2,42 +2,42 @@
 $pageTitle = 'Receptionist Desk';
 include '../includes/header.php';
 ?>
-<body class="bg-gray-50 flex h-screen overflow-hidden dark:bg-gray-900 transition-colors">
+<body class="bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] flex h-screen overflow-hidden from-slate-900 via-slate-800 to-zinc-900 text-slate-200 transition-colors font-sans">
     <!-- Sidebar -->
     <?php include '../includes/sidebar_receptionist.php'; ?>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        <nav class="bg-blue-900 text-white p-4 md:hidden flex justify-between items-center shadow-md">
-            <h1 class="text-xl font-bold">Front Desk</h1>
-            <div>
-                <a href="../index.php" class="px-3 py-1 bg-blue-600 hover:bg-blue-800 rounded font-bold text-sm mr-2 transition">Dashboard</a>
-                <a href="../index.php" class="px-3 py-1 bg-blue-700 hover:bg-blue-800 rounded font-bold text-sm transition">Exit</a>
+        <nav class="bg-white/5 backdrop-blur-xl border-b border-white/10 text-white p-4 shadow-lg flex justify-between items-center z-10 relative md:hidden">
+            <h1 class="text-xl font-bold tracking-tight drop-shadow-md">Front Desk</h1>
+            <div class="flex gap-2">
+                <a href="../index.php" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-slate-200 rounded-lg font-medium text-sm transition-all border border-white/10 shadow-sm">Main Menu</a>
+                <a href="../index.php" class="px-3 py-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 rounded-lg font-medium text-sm transition-all border border-rose-500/30 shadow-sm">Exit</a>
             </div>
         </nav>
 
-        <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 relative z-0">
             
-            <div class="flex justify-between items-end mb-6">
+            <div class="flex justify-between items-end mb-8">
                 <div>
-                    <h2 class="text-3xl font-black text-gray-800">Receptionist Desk</h2>
-                    <p class="text-gray-500 font-semibold mt-1">Patient intake & flow management</p>
+                    <h2 class="text-3xl font-bold text-white tracking-tight drop-shadow-md">Receptionist Desk</h2>
+                    <p class="text-slate-400 font-medium mt-1">Patient intake & flow management</p>
                 </div>
             </div>
 
             <!-- Stats Module -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="statsGrid">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div><p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Visits Today</p><p class="text-2xl font-black text-blue-600" id="stat_visits">-</p></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8" id="statsGrid">
+                <div class="bg-white/5 backdrop-blur-3xl p-5 rounded-2xl shadow-xl border border-white/10 border-t-white/20 flex items-center justify-between transition hover:shadow-2xl">
+                    <div><p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Visits Today</p><p class="text-3xl font-bold text-indigo-400 drop-shadow" id="stat_visits">-</p></div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div><p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Waiting Now</p><p class="text-2xl font-black text-yellow-500 animate-pulse" id="stat_waiting">-</p></div>
+                <div class="bg-white/5 backdrop-blur-3xl p-5 rounded-2xl shadow-xl border border-white/10 border-t-white/20 flex items-center justify-between transition hover:shadow-2xl">
+                    <div><p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Waiting Now</p><p class="text-3xl font-bold text-amber-400 animate-pulse drop-shadow" id="stat_waiting">-</p></div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div><p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Registered Today</p><p class="text-2xl font-black text-purple-600" id="stat_registered">-</p></div>
+                <div class="bg-white/5 backdrop-blur-3xl p-5 rounded-2xl shadow-xl border border-white/10 border-t-white/20 flex items-center justify-between transition hover:shadow-2xl">
+                    <div><p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Registered Today</p><p class="text-3xl font-bold text-emerald-400 drop-shadow" id="stat_registered">-</p></div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div><p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Total Patients</p><p class="text-2xl font-black text-gray-700" id="stat_total">-</p></div>
+                <div class="bg-white/5 backdrop-blur-3xl p-5 rounded-2xl shadow-xl border border-white/10 border-t-white/20 flex items-center justify-between transition hover:shadow-2xl">
+                    <div><p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Total Patients</p><p class="text-3xl font-bold text-white drop-shadow" id="stat_total">-</p></div>
                 </div>
             </div>
 
@@ -48,41 +48,47 @@ include '../includes/header.php';
                 <div class="col-span-1 space-y-6">
                     
                     <!-- Search Patient -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-t-4 border-blue-500">
-                        <h2 class="text-lg font-black mb-4 text-gray-800">1. Select Patient</h2>
-                        <input type="text" id="searchInput" class="w-full border-2 border-gray-200 rounded-xl p-3 mb-2 focus:outline-none focus:border-blue-500 focus:ring-0 font-bold" placeholder="Search Name, Phone...">
-                        <div id="searchResults" class="rounded-xl w-full max-h-48 overflow-y-auto space-y-1 mt-2 pr-1"></div>
+                    <div class="bg-white/5 backdrop-blur-3xl p-8 rounded-3xl shadow-2xl border border-white/10 border-t-white/20">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 font-bold shadow-inner">1</div>
+                            <h2 class="text-lg font-bold text-white tracking-tight drop-shadow-sm">Select Patient</h2>
+                        </div>
+                        <input type="text" id="searchInput" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 mb-3 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 font-medium transition-all shadow-inner outline-none backdrop-blur-sm" placeholder="Search Name, Phone...">
+                        <div id="searchResults" class="w-full max-h-[300px] overflow-y-auto space-y-2 mt-2 pr-1 custom-scrollbar"></div>
                     </div>
 
                     <!-- Register New -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-t-4 border-green-500">
-                        <h2 class="text-lg font-black mb-4 text-gray-800">2. Pre-Register New</h2>
-                        <form id="addPatientForm" class="space-y-3">
-                            <div class="grid grid-cols-2 gap-3">
-                                <div><input type="text" id="firstName" placeholder="First Name *" required class="border-2 border-gray-100 rounded-lg p-2 w-full focus:border-green-500 text-sm font-semibold"></div>
-                                <div><input type="text" id="lastName" placeholder="Last Name *" required class="border-2 border-gray-100 rounded-lg p-2 w-full focus:border-green-500 text-sm font-semibold"></div>
+                    <div class="bg-white/5 backdrop-blur-3xl p-8 rounded-3xl shadow-2xl border border-white/10 border-t-white/20">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-300 font-bold shadow-inner">2</div>
+                            <h2 class="text-lg font-bold text-white tracking-tight drop-shadow-sm">Pre-Register New</h2>
+                        </div>
+                        <form id="addPatientForm" class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><input type="text" id="firstName" placeholder="First Name *" required class="bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 w-full focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 text-sm font-medium transition-all shadow-inner outline-none backdrop-blur-sm"></div>
+                                <div><input type="text" id="lastName" placeholder="Last Name *" required class="bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 w-full focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 text-sm font-medium transition-all shadow-inner outline-none backdrop-blur-sm"></div>
                             </div>
-                            <div class="grid grid-cols-2 gap-3">
+                            <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label class="text-xs font-bold text-gray-400 uppercase">DOB *</label>
-                                    <input type="date" id="dob" required class="border-2 border-gray-100 rounded-lg p-2 w-full text-sm font-semibold text-gray-600 focus:border-green-500">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Date of Birth *</label>
+                                    <input type="date" id="dob" required class="bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 w-full text-sm font-medium focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 transition-all shadow-inner outline-none backdrop-blur-sm [color-scheme:dark]">
                                 </div>
                                 <div>
-                                    <label class="text-xs font-bold text-gray-400 uppercase">Gender *</label>
-                                    <select id="gender" class="border-2 border-gray-100 rounded-lg p-2 w-full text-sm font-semibold text-gray-600 focus:border-green-500">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Gender *</label>
+                                    <select id="gender" class="bg-black/20 border border-white/10 text-white rounded-xl p-3 w-full text-sm font-medium focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 transition-all shadow-inner outline-none backdrop-blur-sm [&>option]:bg-slate-800">
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                         <option value="Other">Other</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-3 mb-3">
-                                <input type="text" id="phone" placeholder="Phone Number *" required class="border-2 border-gray-100 rounded-lg p-2 w-full text-sm font-semibold focus:border-green-500">
-                                <input type="text" id="nic" placeholder="NIC / ID" class="border-2 border-gray-100 rounded-lg p-2 w-full text-sm font-semibold focus:border-green-500">
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <input type="text" id="phone" placeholder="Phone Number *" required class="bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 w-full text-sm font-medium focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 transition-all shadow-inner outline-none backdrop-blur-sm">
+                                <input type="text" id="nic" placeholder="NIC / ID" class="bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 w-full text-sm font-medium focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 transition-all shadow-inner outline-none backdrop-blur-sm">
                             </div>
-                            <textarea id="address" placeholder="Residential Address" class="border-2 border-gray-100 rounded-lg p-2 w-full text-sm font-semibold focus:border-green-500" rows="2"></textarea>
-                            <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 font-bold transition shadow-md shadow-green-500/20">Register & Send to Queue</button>
-                            <div id="regMsg" class="text-sm font-bold text-center hidden mt-2"></div>
+                            <textarea id="address" placeholder="Residential Address" class="bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 w-full text-sm font-medium focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 transition-all shadow-inner outline-none backdrop-blur-sm" rows="2"></textarea>
+                            <button type="submit" class="w-full bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 hover:border-emerald-500/50 text-emerald-200 p-3.5 rounded-xl font-bold transition-all shadow-sm hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] mt-3 backdrop-blur-md">Register & Send to Queue</button>
+                            <div id="regMsg" class="text-sm font-bold text-center hidden mt-2 drop-shadow-sm"></div>
                         </form>
                     </div>
 
@@ -90,29 +96,29 @@ include '../includes/header.php';
 
                 <!-- Right Column Queue -->
                 <div class="col-span-1 lg:col-span-2 flex flex-col">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-t-4 border-purple-500 flex-1 flex flex-col min-h-[500px]">
+                    <div class="bg-white/5 backdrop-blur-3xl p-8 rounded-3xl shadow-2xl border border-white/10 border-t-white/20 flex-1 flex flex-col min-h-[500px]">
                         
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-xl font-black text-gray-800">Today's Dispatch Line</h2>
-                            <div class="flex items-center gap-2 bg-purple-50 px-3 py-1 rounded-full">
+                        <div class="flex justify-between items-center mb-8">
+                            <h2 class="text-xl font-bold text-white tracking-tight drop-shadow-sm">Today's Dispatch Line</h2>
+                            <div class="flex items-center gap-2 bg-indigo-500/20 px-3 py-1.5 rounded-lg border border-indigo-500/30 backdrop-blur-md">
                                 <span class="relative flex h-2 w-2">
-                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
                                 </span>
-                                <span class="text-xs font-bold text-purple-700 uppercase tracking-widest">Live Syncing</span>
+                                <span class="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Live Syncing</span>
                             </div>
                         </div>
 
-                        <div class="overflow-x-auto flex-1">
+                        <div class="overflow-x-auto flex-1 rounded-xl border border-white/10 bg-black/10 backdrop-blur-sm">
                             <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="text-gray-400 text-xs uppercase tracking-widest border-b-2 border-gray-100">
-                                        <th class="p-3 font-black">Token</th>
-                                        <th class="p-3 font-black">Patient Data</th>
-                                        <th class="p-3 font-black text-right">Doctor Stage</th>
+                                <thead class="bg-white/5">
+                                    <tr class="text-slate-300 text-xs uppercase tracking-wider border-b border-white/10">
+                                        <th class="p-4 font-bold">Token</th>
+                                        <th class="p-4 font-bold">Patient Data</th>
+                                        <th class="p-4 font-bold text-right">Doctor Stage</th>
                                     </tr>
                                 </thead>
-                                <tbody id="queueTableBody">
+                                <tbody id="queueTableBody" class="divide-y divide-white/5">
                                     <!-- Populated by JS -->
                                 </tbody>
                             </table>
@@ -147,13 +153,13 @@ include '../includes/header.php';
             if (result.success) {
                 // Auto add to queue
                 await addToQueue(result.patient_id, false);
-                msg.className = 'text-green-600 text-sm font-bold mt-2';
+                msg.className = 'text-emerald-400 text-sm font-bold mt-2 drop-shadow';
                 msg.innerText = 'Registed & Queued!';
                 
                 document.getElementById('addPatientForm').reset();
                 setTimeout(()=>msg.classList.add('hidden'), 3000);
             } else {
-                msg.className = 'text-red-600 text-sm font-bold mt-2';
+                msg.className = 'text-rose-400 text-sm font-bold mt-2 drop-shadow';
                 msg.innerText = result.error;
             }
         });
@@ -168,17 +174,17 @@ include '../includes/header.php';
             const patients = await res.json();
             
             if(patients.length === 0){
-                resBox.innerHTML = '<div class="p-3 text-red-400 font-bold text-sm text-center">No matching patients.</div>';
+                resBox.innerHTML = '<div class="p-4 text-slate-400 font-bold text-sm text-center border border-white/5 rounded-xl bg-white/5 backdrop-blur-sm shadow-inner drop-shadow-sm">No matching patients.</div>';
                 return;
             }
 
             resBox.innerHTML = patients.map(p => `
-                <div class="p-3 border border-gray-100 rounded-xl hover:bg-blue-50 cursor-pointer flex justify-between items-center transition group mb-2 bg-white shadow-sm">
+                <div class="p-4 border border-white/10 rounded-2xl hover:border-indigo-500/30 hover:bg-white/5 hover:shadow-lg cursor-pointer flex justify-between items-center transition-all group bg-white/5 backdrop-blur-md">
                     <div>
-                        <div class="font-black text-gray-800 text-sm">${p.FirstName} ${p.LastName}</div>
-                        <div class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">${p.Phone} &bull; ${p.DOB}</div>
+                        <div class="font-bold text-white drop-shadow-sm">${p.FirstName} ${p.LastName}</div>
+                        <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mt-1">${p.Phone} &bull; ${p.DOB}</div>
                     </div>
-                    <button onclick="addToQueue(${p.PatientID}, true)" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition transform active:scale-95">Send Queue</button>
+                    <button onclick="addToQueue(${p.PatientID}, true)" class="bg-indigo-500/20 hover:bg-indigo-500/40 text-indigo-200 font-bold px-4 py-2 rounded-xl transition-all border border-indigo-500/30 hover:border-indigo-500/50 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] shadow-sm backdrop-blur-sm">Queue</button>
                 </div>
             `).join('');
         }, 300));
@@ -188,14 +194,14 @@ include '../includes/header.php';
             // Optimistic UI Ghost Row
             const tbody = document.getElementById('queueTableBody');
             const ghostRow = `
-                <tr class="bg-purple-50 transition border-b border-purple-100 animate-pulse">
-                    <td class="p-3 font-black text-2xl text-purple-300 w-16">--</td>
-                    <td class="p-3">
-                        <div class="font-bold text-gray-400">Syncing to Dispatch Line...</div>
-                        <div class="text-[10px] text-gray-300 font-bold uppercase tracking-wider mt-1">Sending to Doctor</div>
+                <tr class="bg-indigo-500/10 transition border-b border-white/5 animate-pulse">
+                    <td class="p-4 font-bold text-2xl text-indigo-400 w-16 drop-shadow">--</td>
+                    <td class="p-4">
+                        <div class="font-bold text-slate-400">Syncing to Dispatch Line...</div>
+                        <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Sending to Doctor</div>
                     </td>
-                    <td class="p-3 text-right">
-                        <span class="px-3 py-1 bg-purple-100 text-purple-500 rounded-full text-[10px] font-bold uppercase tracking-widest border border-purple-200">Dispatching</span>
+                    <td class="p-4 text-right">
+                        <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-md text-[10px] font-bold uppercase tracking-wider border border-indigo-500/30 shadow-sm backdrop-blur-sm">Dispatching</span>
                     </td>
                 </tr>
             `;
@@ -241,7 +247,7 @@ include '../includes/header.php';
                 const tbody = document.getElementById('queueTableBody');
 
                 if(queue.length === 0) {
-                     const emptyHTML = '<tr><td colspan="3" class="p-10 text-center font-black text-gray-300 text-xl">Waiting line is empty.</td></tr>';
+                     const emptyHTML = '<tr><td colspan="3" class="p-10 text-center font-bold text-slate-400/50 text-lg drop-shadow-sm">Waiting line is empty.</td></tr>';
                      if (lastQueueHTML !== emptyHTML) {
                          tbody.innerHTML = emptyHTML;
                          lastQueueHTML = emptyHTML;
@@ -251,23 +257,23 @@ include '../includes/header.php';
 
                 const newHTML = queue.map(q => {
                     let statusBadge = '';
-                    if(q.Status === 'waiting') statusBadge = '<span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-[10px] font-bold uppercase tracking-widest border border-yellow-200">Wait Area</span>';
-                    else if(q.Status === 'with_doctor') statusBadge = '<span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-[10px] font-bold uppercase tracking-widest border border-blue-200 animate-pulse">In Room</span>';
-                    else if(q.Status === 'completed') statusBadge = '<span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-widest border border-green-200">Left Clinic</span>';
+                    if(q.Status === 'waiting') statusBadge = '<span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-md text-[10px] font-bold uppercase tracking-wider border border-amber-500/30 shadow-sm backdrop-blur-sm">Wait Area</span>';
+                    else if(q.Status === 'with_doctor') statusBadge = '<span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-md text-[10px] font-bold uppercase tracking-wider border border-indigo-500/30 animate-pulse shadow-sm backdrop-blur-sm">In Room</span>';
+                    else if(q.Status === 'completed') statusBadge = '<span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-md text-[10px] font-bold uppercase tracking-wider border border-emerald-500/30 shadow-sm backdrop-blur-sm">Left Clinic</span>';
 
-                    const rowClass = q.Status === 'completed' ? 'opacity-40' : 'bg-white';
+                    const rowClass = q.Status === 'completed' ? 'opacity-50 grayscale' : 'hover:bg-white/5';
 
                     return `
-                    <tr class="hover:bg-gray-50 transition border-b border-gray-100 ${rowClass}">
-                        <td class="p-3 font-black text-2xl text-purple-600 w-16">${q.QueueNumber}</td>
-                        <td class="p-3">
-                            <div class="font-bold text-gray-800">${q.FirstName} ${q.LastName}</div>
-                            <div class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mt-1">
+                    <tr class="transition-colors border-b border-white/5 ${rowClass}">
+                        <td class="p-4 font-bold text-2xl text-indigo-400 w-16 drop-shadow">${q.QueueNumber}</td>
+                        <td class="p-4">
+                            <div class="font-bold text-white drop-shadow-sm">${q.FirstName} ${q.LastName}</div>
+                            <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mt-1">
                                 ${q.Gender} &bull; ${q.DOB} &bull; 
-                                <span class="text-blue-600 font-black ml-1 bg-blue-50 px-1 py-0.5 rounded border border-blue-100">Visits: ${q.PreviousVisits || 0}</span>
+                                <span class="text-indigo-300 font-bold ml-1 bg-indigo-500/20 px-1.5 py-0.5 rounded border border-indigo-500/30">Visits: ${q.PreviousVisits || 0}</span>
                             </div>
                         </td>
-                        <td class="p-3 text-right">${statusBadge}</td>
+                        <td class="p-4 text-right">${statusBadge}</td>
                     </tr>
                     `;
                 }).join('');

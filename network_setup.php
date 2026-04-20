@@ -46,63 +46,63 @@ $lan_url_host = "http://" . $hostname . $folder_name;
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+<body class="bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] flex min-h-screen from-slate-900 via-slate-800 to-zinc-900 text-slate-200 font-sans items-center justify-center p-4">
     
-    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-3xl w-full border-t-8 border-teal-600">
+    <div class="bg-white/5 backdrop-blur-3xl p-8 rounded-[2rem] shadow-2xl border border-white/10 border-t-indigo-500/50 max-w-3xl w-full">
         
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-black text-gray-800 mb-2">Connect Receptionist PC</h1>
-            <p class="text-gray-600 text-lg">Your router restarts daily, so please use the <strong>Permanent Link</strong> below.</p>
+            <h1 class="text-4xl font-black text-white mb-2 drop-shadow-md">Connect Receptionist PC</h1>
+            <p class="text-slate-400 text-lg">Your router restarts daily, so please use the <strong>Permanent Link</strong> below.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <!-- OPTION 1: HOSTNAME (Permanent) -->
-            <div class="bg-green-50 border-2 border-green-500 p-6 rounded-xl relative shadow-sm">
-                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow">
+            <div class="bg-emerald-500/10 border-2 border-emerald-500/30 p-6 rounded-2xl relative shadow-sm backdrop-blur-sm">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-emerald-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg shadow-emerald-500/20">
                     ⭐ RECOMMENDED & PERMANENT
                 </div>
-                <h2 class="text-lg font-bold text-green-800 mb-2 mt-2 text-center">Use Computer Name</h2>
-                <p class="text-green-900 text-sm mb-4 text-center">This link will <strong>never change</strong> even when the router reboots.</p>
+                <h2 class="text-lg font-bold text-emerald-400 mb-2 mt-2 text-center drop-shadow-sm">Use Computer Name</h2>
+                <p class="text-emerald-200/70 text-sm mb-4 text-center">This link will <strong>never change</strong> even when the router reboots.</p>
                 
-                <div class="bg-white border-2 border-green-300 rounded-lg p-3 text-center cursor-pointer hover:bg-green-100 transition" onclick="copyToClipboard('hostUrl', 'hostCopyMsg')">
-                    <div class="text-xl font-black text-green-700 font-mono break-all" id="hostUrl"><?= $lan_url_host ?></div>
+                <div class="bg-emerald-500/20 border-2 border-emerald-500/30 rounded-xl p-3 text-center cursor-pointer hover:bg-emerald-500/30 transition-all shadow-inner" onclick="copyToClipboard('hostUrl', 'hostCopyMsg')">
+                    <div class="text-xl font-black text-emerald-300 font-mono break-all" id="hostUrl"><?= $lan_url_host ?></div>
                 </div>
-                <p id="hostCopyMsg" class="text-center text-green-600 font-bold mt-2 text-sm hidden">Copied!</p>
+                <p id="hostCopyMsg" class="text-center text-emerald-400 font-bold mt-2 text-sm hidden">Copied!</p>
             </div>
 
             <!-- OPTION 2: IP ADDRESS (Fallback) -->
-            <div class="bg-blue-50 border-2 border-blue-300 p-6 rounded-xl relative opacity-90">
-                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-400 text-white px-4 py-1 rounded-full text-xs font-bold shadow">
+            <div class="bg-indigo-500/10 border-2 border-indigo-500/30 p-6 rounded-2xl relative opacity-90 backdrop-blur-sm">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-indigo-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg shadow-indigo-500/20">
                     FALLBACK ONLY
                 </div>
-                <h2 class="text-lg font-bold text-blue-800 mb-2 mt-2 text-center">Use IP Address</h2>
-                <p class="text-blue-900 text-sm mb-4 text-center">This number changes daily. Only use this if the Permanent link fails.</p>
+                <h2 class="text-lg font-bold text-indigo-400 mb-2 mt-2 text-center drop-shadow-sm">Use IP Address</h2>
+                <p class="text-indigo-200/70 text-sm mb-4 text-center">This number changes daily. Only use this if the Permanent link fails.</p>
                 
-                <div class="bg-white border-2 border-blue-200 rounded-lg p-3 text-center cursor-pointer hover:bg-blue-100 transition" onclick="copyToClipboard('ipUrl', 'ipCopyMsg')">
-                    <div class="text-xl font-black text-blue-700 font-mono break-all" id="ipUrl"><?= $lan_url_ip ?></div>
+                <div class="bg-indigo-500/20 border-2 border-indigo-500/30 rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-500/30 transition-all shadow-inner" onclick="copyToClipboard('ipUrl', 'ipCopyMsg')">
+                    <div class="text-xl font-black text-indigo-300 font-mono break-all" id="ipUrl"><?= $lan_url_ip ?></div>
                 </div>
-                <p id="ipCopyMsg" class="text-center text-blue-600 font-bold mt-2 text-sm hidden">Copied!</p>
+                <p id="ipCopyMsg" class="text-center text-indigo-400 font-bold mt-2 text-sm hidden">Copied!</p>
             </div>
         </div>
 
-        <div class="bg-gray-100 p-6 rounded-lg text-center mb-6">
-            <h3 class="font-bold text-gray-700 mb-2">How to connect the Receptionist:</h3>
-            <p class="text-gray-600">On the Receptionist's computer, open Google Chrome and type the <strong>Permanent Link</strong> into the very top bar. Once it loads, <strong>Bookmark it</strong> (press Ctrl+D).</p>
+        <div class="bg-black/20 p-6 rounded-2xl text-center mb-6 border border-white/10 shadow-inner backdrop-blur-sm">
+            <h3 class="font-bold text-slate-300 mb-2">How to connect the Receptionist:</h3>
+            <p class="text-slate-400 font-medium">On the Receptionist's computer, open Google Chrome and type the <strong>Permanent Link</strong> into the very top bar. Once it loads, <strong>Bookmark it</strong> (press Ctrl+D).</p>
         </div>
 
         <!-- QR Code -->
-        <div class="flex flex-col md:flex-row items-center justify-center gap-6 bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-6 bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur-md">
             <div class="text-center md:text-left">
-                <h3 class="text-lg font-bold text-gray-800 mb-1">Mobile / Tablet Setup</h3>
-                <p class="text-gray-600 text-sm">Scan this QR to connect instantly via IP.</p>
+                <h3 class="text-lg font-bold text-white mb-1 drop-shadow-md">Mobile / Tablet Setup</h3>
+                <p class="text-slate-400 text-sm">Scan this QR to connect instantly via IP.</p>
             </div>
-            <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-300">
+            <div class="bg-white p-2 rounded-xl shadow-lg border border-white/20">
                 <div id="qrcode"></div>
             </div>
         </div>
 
-        <div class="mt-8 text-center pt-6 border-t border-gray-200">
-            <a href="index.php" class="inline-block px-10 py-4 bg-gray-800 hover:bg-black text-white font-black text-xl rounded-xl shadow-lg transition">
+        <div class="mt-8 text-center pt-6 border-t border-white/10">
+            <a href="index.php" class="inline-block px-10 py-4 bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-200 font-black text-xl rounded-2xl shadow-sm hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all backdrop-blur-md">
                 Return to Clinic System
             </a>
         </div>

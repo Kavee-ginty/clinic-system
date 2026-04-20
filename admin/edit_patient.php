@@ -23,38 +23,38 @@ if(!$patient) die("Patient not found");
     <title>Edit Patient - Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <nav class="bg-gray-800 text-white p-4 shadow-md flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Edit Patient Details</h1>
-        <a href="dashboard.php" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded font-semibold">Back</a>
+<body class="bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] min-h-screen from-slate-900 via-slate-800 to-zinc-900 text-slate-200 font-sans">
+    <nav class="bg-white/5 backdrop-blur-xl border-b border-white/10 text-white p-4 shadow-lg flex justify-between items-center z-10 relative">
+        <h1 class="text-2xl font-bold tracking-tight drop-shadow-md">Edit Patient Details</h1>
+        <a href="dashboard.php" class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-200 rounded-lg font-bold transition-all shadow-sm">Back</a>
     </nav>
 
-    <div class="container mx-auto p-4 max-w-2xl mt-6">
-        <div class="bg-white p-8 rounded-xl shadow border-t-4 border-gray-800">
-            <h2 class="text-xl font-bold mb-6">Patient ID: #<?= $patient['PatientID'] ?></h2>
+    <div class="container mx-auto p-4 max-w-3xl mt-8">
+        <div class="bg-white/5 backdrop-blur-3xl p-8 md:p-10 rounded-[2rem] shadow-2xl border border-white/10 border-t-white/20">
+            <h2 class="text-2xl font-bold mb-8 text-white tracking-tight drop-shadow-md">Patient ID: <span class="text-indigo-400 drop-shadow">#<?= $patient['PatientID'] ?></span></h2>
             
-            <form id="editForm" class="space-y-4">
+            <form id="editForm" class="space-y-6">
                 <input type="hidden" id="patient_id" value="<?= $patient['PatientID'] ?>">
                 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block font-bold text-gray-700 mb-1">First Name <span class="text-red-500">*</span></label>
-                        <input type="text" id="firstName" value="<?= htmlspecialchars($patient['FirstName']) ?>" class="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400" required>
+                        <label class="block font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">First Name <span class="text-rose-400">*</span></label>
+                        <input type="text" id="firstName" value="<?= htmlspecialchars($patient['FirstName']) ?>" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 font-medium transition-all outline-none shadow-inner backdrop-blur-sm" required>
                     </div>
                     <div>
-                        <label class="block font-bold text-gray-700 mb-1">Last Name <span class="text-red-500">*</span></label>
-                        <input type="text" id="lastName" value="<?= htmlspecialchars($patient['LastName']) ?>" class="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400" required>
+                        <label class="block font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Last Name <span class="text-rose-400">*</span></label>
+                        <input type="text" id="lastName" value="<?= htmlspecialchars($patient['LastName']) ?>" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 font-medium transition-all outline-none shadow-inner backdrop-blur-sm" required>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block font-bold text-gray-700 mb-1">DOB <span class="text-red-500">*</span></label>
-                        <input type="date" id="dob" value="<?= htmlspecialchars($patient['DOB']) ?>" class="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400" required>
+                        <label class="block font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">DOB <span class="text-rose-400">*</span></label>
+                        <input type="date" id="dob" value="<?= htmlspecialchars($patient['DOB']) ?>" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 font-medium transition-all outline-none shadow-inner backdrop-blur-sm [color-scheme:dark]" required>
                     </div>
                     <div>
-                        <label class="block font-bold text-gray-700 mb-1">Gender <span class="text-red-500">*</span></label>
-                        <select id="gender" class="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400">
+                        <label class="block font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Gender <span class="text-rose-400">*</span></label>
+                        <select id="gender" class="w-full bg-black/20 border border-white/10 text-white rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 font-medium transition-all outline-none shadow-inner backdrop-blur-sm [&>option]:bg-slate-800">
                             <option value="Male" <?= $patient['Gender']=='Male' ? 'selected':'' ?>>Male</option>
                             <option value="Female" <?= $patient['Gender']=='Female' ? 'selected':'' ?>>Female</option>
                             <option value="Other" <?= $patient['Gender']=='Other' ? 'selected':'' ?>>Other</option>
@@ -63,20 +63,20 @@ if(!$patient) die("Patient not found");
                 </div>
 
                 <div>
-                    <label class="block font-bold text-gray-700 mb-1">Phone Number <span class="text-red-500">*</span></label>
-                    <input type="text" id="phone" value="<?= htmlspecialchars($patient['Phone']) ?>" class="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400" required>
+                    <label class="block font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Phone Number <span class="text-rose-400">*</span></label>
+                    <input type="text" id="phone" value="<?= htmlspecialchars($patient['Phone']) ?>" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 font-medium transition-all outline-none shadow-inner backdrop-blur-sm" required>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-gray-700 mb-1">Address</label>
-                    <textarea id="address" class="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400" rows="3"><?= htmlspecialchars($patient['Address']) ?></textarea>
+                    <label class="block font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Address</label>
+                    <textarea id="address" class="w-full bg-black/20 border border-white/10 text-white placeholder-slate-500 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 font-medium transition-all outline-none shadow-inner backdrop-blur-sm" rows="3"><?= htmlspecialchars($patient['Address']) ?></textarea>
                 </div>
 
-                <div class="pt-4 flex gap-4">
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded shadow transition">Save Changes</button>
-                    <a href="dashboard.php" class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded text-center transition">Cancel</a>
+                <div class="pt-6 flex flex-col md:flex-row gap-4 border-t border-white/10">
+                    <button type="submit" class="w-full md:w-2/3 bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-200 font-bold py-3.5 rounded-xl shadow-sm hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all backdrop-blur-md">Save Changes</button>
+                    <a href="dashboard.php" class="w-full md:w-1/3 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-200 font-bold py-3.5 rounded-xl text-center shadow-sm hover:shadow-lg transition-all backdrop-blur-md">Cancel</a>
                 </div>
-                <div id="saveMsg" class="font-bold text-center mt-2 hidden"></div>
+                <div id="saveMsg" class="font-bold text-center mt-4 hidden drop-shadow-sm"></div>
             </form>
         </div>
     </div>
@@ -102,11 +102,11 @@ if(!$patient) die("Patient not found");
             const msg = document.getElementById('saveMsg');
             msg.classList.remove('hidden');
             if (result.success) {
-                msg.className = 'text-green-600 font-bold text-center mt-2';
+                msg.className = 'text-emerald-400 font-bold text-center mt-3 drop-shadow-sm';
                 msg.innerText = 'Patient updated successfully!';
                 setTimeout(()=> window.location.href='dashboard.php', 1000);
             } else {
-                msg.className = 'text-red-600 font-bold text-center mt-2';
+                msg.className = 'text-rose-400 font-bold text-center mt-3 drop-shadow-sm';
                 msg.innerText = 'Error: ' + result.error;
             }
         });
