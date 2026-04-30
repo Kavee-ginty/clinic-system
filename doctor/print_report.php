@@ -140,7 +140,7 @@ while ($row = $settingsStmt->fetch()) {
         <div class="space-y-3 mb-5">
             <?php if (!empty($visit['Complaint'])): ?>
                 <div>
-                    <h3 class="font-bold text-gray-700 text-[13px]">Chief Complaints:</h3>
+                    <h3 class="font-bold text-gray-700 text-[13px]">Complaints:</h3>
                     <?php foreach (explode("\n", trim($visit['Complaint'])) as $line): ?>
                         <?php if (trim($line)): ?>
                             <p class="font-medium text-gray-700 text-[12px] ml-3 uppercase">* <?= htmlspecialchars(trim($line)) ?>
