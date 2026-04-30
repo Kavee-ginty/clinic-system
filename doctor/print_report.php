@@ -98,34 +98,27 @@ while ($row = $settingsStmt->fetch()) {
 
         <!-- Header -->
         <div class="flex justify-between items-start border-b-[2px] border-gray-500 pb-3 mb-4">
-            <div style="max-width: 50%; width: <?= htmlspecialchars(str_replace(['w-', '[', ']'], '', $settings['logo_width'] ?? '28%')) ?>;"
-                class="pr-2">
+            <div style="max-width: 50%; width: <?= htmlspecialchars(str_replace(['w-', '[', ']'], '', $settings['logo_width'] ?? '28%')) ?>;" class="pr-2">
                 <img src="../logo.jpeg" alt="Logo" class="w-full object-contain mix-blend-multiply max-w-20">
             </div>
             <div class="w-[55%] text-center px-1">
                 <h1 class="header-text-large leading-tight font-sans">
-                    <?= htmlspecialchars($settings['clinic_name'] ?? 'Royal Channel Center') ?>
-                </h1>
+                    <?= htmlspecialchars($settings['clinic_name'] ?? 'Royal Channel Center') ?></h1>
                 <p class="text-gray-700 text-[10px] mt-1">
-                    <?= htmlspecialchars($settings['clinic_address'] ?? 'No48/1, Muruthalawa, Kandy') ?>
-                </p>
+                    <?= htmlspecialchars($settings['clinic_address'] ?? 'No48/1, Muruthalawa, Kandy') ?></p>
                 <p class="text-gray-700 text-[10px]">
-                    <?= htmlspecialchars($settings['clinic_phone'] ?? '0812 412 400 , 0776 020 964') ?>
-                </p>
+                    <?= htmlspecialchars($settings['clinic_phone'] ?? '0812 412 400 , 0776 020 964') ?></p>
                 <p class="text-gray-700 text-[10px] font-medium break-all">
-                    <?= htmlspecialchars($settings['clinic_email'] ?? 'royalchannelcenter@gmail.com') ?>
-                </p>
+                    <?= htmlspecialchars($settings['clinic_email'] ?? 'royalchannelcenter@gmail.com') ?></p>
             </div>
             <div class="w-[28%] text-right pl-2">
                 <br>
                 <p class="text-[12px] font-bold text-gray-700">
-                    <?= htmlspecialchars($settings['doctor_name'] ?? 'Dr. Mangala Kumara') ?>
-                </p>
-                <p class="text-[11px] text-gray-700">
-                    <?= htmlspecialchars($settings['doctor_qualifications'] ?? 'MBBS Peradeniya') ?>
-                </p>
-                <p class="text-[11px] text-gray-700">SLMC - <?= htmlspecialchars($settings['doctor_slmc'] ?? '21307') ?>
-                </p>
+                    <?= htmlspecialchars($settings['doctor_name'] ?? 'Dr. Mangala Kumara') ?></p>
+                    <p class="text-[11px] text-gray-700">
+                        <?= htmlspecialchars($settings['doctor_qualifications'] ?? 'MBBS Peradeniya') ?></p>
+                    <p class="text-[11px] text-gray-700">SLMC - <?= htmlspecialchars($settings['doctor_slmc'] ?? '21307') ?>
+                    </p>
             </div>
         </div>
 
@@ -135,13 +128,11 @@ while ($row = $settingsStmt->fetch()) {
                 <p class="text-[12px] font-bold text-gray-700 leading-tight">ID:
                     <?= htmlspecialchars($visit['VisitID']) ?> -
                     <?= htmlspecialchars(strtoupper($visit['FirstName'] . ' ' . $visit['LastName'])) ?>
-                    (<?= substr($visit['Gender'], 0, 1) ?>) / <?= htmlspecialchars($visit['Age']) ?> Y
-                </p>
+                    (<?= substr($visit['Gender'], 0, 1) ?>) / <?= htmlspecialchars($visit['Age']) ?> Y</p>
             </div>
             <div class="w-[40%] text-right">
                 <p class="text-[12px] font-bold text-gray-700 leading-tight">Date of Visit:
-                    <br><?= date('d-M-Y, h:i A', strtotime($visit['VisitDateTime'])) ?>
-                </p>
+                    <br><?= date('d-M-Y, h:i A', strtotime($visit['VisitDateTime'])) ?></p>
             </div>
         </div>
 
@@ -249,15 +240,21 @@ while ($row = $settingsStmt->fetch()) {
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-                    <?php else: ?>
-                        <?php if (!empty($visit['Treatment'])): ?>
-                            <tr>
-                                <td colspan="7" class="py-3 whitespace-pre-line text-[12px] pl-1 font-mono">
-                                    <span class="font-bold text-gray-700 block mb-1">Treatment / Prescription:</span>
-                                    <?= htmlspecialchars($visit['Treatment']) ?>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
+                    <?php endif; ?>
+                    
+                    <?php 
+                    $cleanTreatment = '';
+                    if (!empty($visit['Treatment'])) {
+                        $cleanTreatment = trim(preg_replace('/--- PRESCRIPTION ---.*/s', '', $visit['Treatment']));
+                    }
+                    ?>
+                    <?php if (!empty($cleanTreatment)): ?>
+                        <tr>
+                            <td colspan="7" class="py-3 whitespace-pre-line text-[12px] pl-1 font-mono">
+                                <span class="font-bold text-gray-700 block mb-1">Treatment / Prescription:</span>
+                                <?= htmlspecialchars($cleanTreatment) ?>
+                            </td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -288,15 +285,9 @@ while ($row = $settingsStmt->fetch()) {
 
     <!-- Actions (Hidden during print) -->
     <div class="w-full md:w-auto flex flex-col gap-3 no-print sticky top-4 shrink-0">
-        <button onclick="window.print()"
-            class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded shadow-md font-bold text-sm transition">Preview
-            Print</button>
-        <button onclick="directPrint()"
-            class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded shadow-md font-bold text-sm transition">Direct
-            Print</button>
-        <button onclick="if(window.opener) window.opener.location.href='dashboard.php'; window.close();"
-            class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded shadow-md font-bold text-sm transition mt-4">Close
-            Tab</button>
+        <button onclick="window.print()" class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded shadow-md font-bold text-sm transition">Preview Print</button>
+        <button onclick="directPrint()" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded shadow-md font-bold text-sm transition">Direct Print</button>
+        <button onclick="if(window.opener) window.opener.location.href='dashboard.php'; window.close();" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded shadow-md font-bold text-sm transition mt-4">Close Tab</button>
     </div>
 
     <script>
