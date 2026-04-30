@@ -136,12 +136,36 @@ while ($row = $settingsStmt->fetch()) {
             </div>
         </div>
 
-        <!-- Complaints & Diagnosis -->
+        <!-- Complaints, Examination, Investigation, Diagnosis, Treatment -->
         <div class="space-y-3 mb-5">
             <?php if (!empty($visit['Complaint'])): ?>
                 <div>
                     <h3 class="font-bold text-gray-700 text-[13px]">Chief Complaints:</h3>
                     <?php foreach (explode("\n", trim($visit['Complaint'])) as $line): ?>
+                        <?php if (trim($line)): ?>
+                            <p class="font-medium text-gray-700 text-[12px] ml-3 uppercase">* <?= htmlspecialchars(trim($line)) ?>
+                            </p>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (!empty($visit['Examination'])): ?>
+                <div>
+                    <h3 class="font-bold text-gray-700 text-[13px]">Examination Findings:</h3>
+                    <?php foreach (explode("\n", trim($visit['Examination'])) as $line): ?>
+                        <?php if (trim($line)): ?>
+                            <p class="font-medium text-gray-700 text-[12px] ml-3 uppercase">* <?= htmlspecialchars(trim($line)) ?>
+                            </p>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (!empty($visit['Investigation'])): ?>
+                <div>
+                    <h3 class="font-bold text-gray-700 text-[13px]">Investigations:</h3>
+                    <?php foreach (explode("\n", trim($visit['Investigation'])) as $line): ?>
                         <?php if (trim($line)): ?>
                             <p class="font-medium text-gray-700 text-[12px] ml-3 uppercase">* <?= htmlspecialchars(trim($line)) ?>
                             </p>
@@ -161,6 +185,14 @@ while ($row = $settingsStmt->fetch()) {
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
+
+            <?php if (!empty($visit['Treatment'])): ?>
+                <div>
+                    <h3 class="font-bold text-gray-700 text-[13px]">Treatment:</h3>
+                    <p class="font-medium text-gray-700 text-[12px] ml-3 whitespace-pre-line">
+                        <?= htmlspecialchars($visit['Treatment']) ?></p>
+                </div>
+            <?php endif; ?>
         </div>
 
         <!-- Rx Table -->
@@ -169,9 +201,13 @@ while ($row = $settingsStmt->fetch()) {
                 <thead>
                     <tr class="border-b-[1.5px] border-t-[1.5px] border-gray-600 text-gray-800 bg-gray-50/50">
                         <th class="py-1 text-[12px] font-bold pl-1">Drug Name</th>
-                        <th class="py-1 text-[12px] font-bold border-l border-gray-300 pl-1">Dosage Grid (M-A-E-N)</th>
+                        <th class="py-1 text-[12px] font-bold border-l border-gray-300 pl-1">M</th>
+                        <th class="py-1 text-[12px] font-bold border-l border-gray-300 pl-1">A</th>
+                        <th class="py-1 text-[12px] font-bold border-l border-gray-300 pl-1">E</th>
+                        <th class="py-1 text-[12px] font-bold border-l border-gray-300 pl-1">N</th>
                         <th class="py-1 text-[12px] font-bold border-l border-gray-300 pl-1">Duration</th>
-                        <th class="py-1 text-[12px] font-bold text-center border-l border-gray-300">Total Qty</th>
+                        <th class="py-1 text-[12px] font-bold border-l border-gray-300 pl-1">Total</th>
+                        <th class="py-1 text-[12px] font-bold text-center border-l border-gray-300">Qty</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -182,35 +218,41 @@ while ($row = $settingsStmt->fetch()) {
                                     <?= htmlspecialchars(ucfirst(strtolower($drug['DrugName']))) ?>
                                     <?= htmlspecialchars(strtolower($drug['Dose'])) ?>
                                 </td>
-                                <td
-                                    class="py-2 pl-1 pr-1 text-gray-700 text-[12px] font-medium tracking-wider border-l border-gray-200">
-                                    <?php
-                                    $freq = trim($drug['Frequency']);
-                                    // Make format like "1 - 1 - 1 - 0" if it isn't
-                                    $freq = str_replace([' ', ','], ' ', preg_replace('/[^0-9\s]/', ' ', $freq));
-                                    $freq = implode(' - ', array_filter(explode(' ', $freq), 'strlen'));
-                                    echo htmlspecialchars($freq ?: trim($drug['Frequency']));
-                                    ?>
-                                </td>
+                                <?php
+                                $freq = trim($drug['Frequency']);
+                                $parts = [];
+                                if ($freq !== '') {
+                                    $parts = array_values(array_filter(preg_split('/\D+/', $freq), 'strlen'));
+                                }
+                                $doseValues = [];
+                                for ($i = 0; $i < 4; $i++) {
+                                    $doseValues[$i] = $parts[$i] ?? '';
+                                }
+                                $totalDose = array_sum(array_map('intval', $doseValues));
+                                ?>
+                                <td class="py-2 pl-1 pr-1 text-center text-gray-700 text-[12px] font-medium border-l border-gray-200"><?= htmlspecialchars($doseValues[0]) ?></td>
+                                <td class="py-2 pl-1 pr-1 text-center text-gray-700 text-[12px] font-medium border-l border-gray-200"><?= htmlspecialchars($doseValues[1]) ?></td>
+                                <td class="py-2 pl-1 pr-1 text-center text-gray-700 text-[12px] font-medium border-l border-gray-200"><?= htmlspecialchars($doseValues[2]) ?></td>
+                                <td class="py-2 pl-1 pr-1 text-center text-gray-700 text-[12px] font-medium border-l border-gray-200"><?= htmlspecialchars($doseValues[3]) ?></td>
                                 <td class="py-2 pl-1 pr-1 text-gray-700 text-[12px] font-medium border-l border-gray-200">
                                     <?php
                                     $dur = trim($drug['Duration']);
-                                    // if it's purely a number, append ' Days'
-                                    if (is_numeric($dur))
+                                    if (is_numeric($dur)) {
                                         $dur .= ' Days';
+                                    }
                                     echo htmlspecialchars(ucwords(strtolower($dur)));
                                     ?>
                                 </td>
+                                <td class="py-2 pl-1 pr-1 text-center text-gray-700 text-[12px] font-medium border-l border-gray-200"><?= $totalDose ? htmlspecialchars($totalDose) : '' ?></td>
                                 <td class="py-2 pr-1 text-right text-gray-700 text-[12px] font-bold border-l border-gray-200">
                                     <?= htmlspecialchars($drug['Quantity']) ?>
-                                    <?php if ($drug['Quantity'] == 0): ?> - <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <?php if (!empty($visit['Treatment'])): ?>
                             <tr>
-                                <td colspan="4" class="py-3 whitespace-pre-line text-[12px] pl-1 font-mono">
+                                <td colspan="8" class="py-3 whitespace-pre-line text-[12px] pl-1 font-mono">
                                     <?= htmlspecialchars($visit['Treatment']) ?>
                                 </td>
                             </tr>
