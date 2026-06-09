@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['doctor_logged_in'])) {
+if (!isset($_SESSION['doctor_logged_in']) && !isset($_SESSION['admin_logged_in']) && !isset($_SESSION['receptionist_view'])) {
     header('Location: ../index.php');
     exit;
 }

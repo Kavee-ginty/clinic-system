@@ -33,45 +33,60 @@ include '../includes/header.php';
             <form id="visitForm" class="space-y-6">
                 <!-- Group 1 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
+                    <div class="relative">
                         <label class="block font-bold text-gray-700 mb-2">Presenting Complaint <span
                                 class="text-red-500">*</span></label>
                         <textarea id="complaint" rows="3"
                             class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                            required></textarea>
+                            required autocomplete="off"></textarea>
+                        <div id="complaintDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
                     </div>
-                    <div>
+                    <div class="relative">
                         <label class="block font-bold text-gray-700 mb-2">Examination Findings</label>
                         <textarea id="examination" rows="3"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" autocomplete="off"></textarea>
+                        <div id="examinationDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
                     </div>
                 </div>
 
                 <!-- Group 2 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
+                    <div class="relative">
                         <label class="block font-bold text-gray-700 mb-2">Investigations</label>
                         <textarea id="investigation" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" autocomplete="off"></textarea>
+                        <div id="investigationDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
                     </div>
-                    <div>
+                    <div class="relative">
                         <label class="block font-bold text-gray-700 mb-2">Diagnosis <span
                                 class="text-red-500">*</span></label>
                         <textarea id="diagnosis" rows="2"
                             class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                            required></textarea>
+                            required autocomplete="off"></textarea>
+                        <div id="diagnosisDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100">
+                        </div>
                     </div>
                 </div>
 
                 <!-- Group 3 -->
                 <div>
-                    <div class="flex justify-between items-center mb-2">
+                    <div class="flex justify-between items-center mb-2 flex-wrap gap-2">
                         <label class="block font-bold text-gray-700">Treatment / Prescription <span
                                 class="text-red-500">*</span></label>
-                        <button type="button" onclick="openPrescriptionModal()"
-                            class="px-4 py-1.5 bg-teal-100 text-teal-800 hover:bg-teal-200 border border-teal-300 rounded font-bold text-sm flex items-center gap-2 shadow-sm transition">
-                            <span class="text-lg leading-none">+</span> Open Prescription Table
-                        </button>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="saveCurrentAsTemplate()"
+                                class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded font-bold text-xs flex items-center gap-1 shadow-sm transition">
+                                <span>💾</span> Save Template
+                            </button>
+                            <button type="button" onclick="openTemplatesModal()"
+                                class="px-3 py-1.5 bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 rounded font-bold text-xs flex items-center gap-1 shadow-sm transition">
+                                <span>⚙️</span> Templates
+                            </button>
+                            <button type="button" onclick="openPrescriptionModal()"
+                                class="px-4 py-1.5 bg-teal-100 text-teal-800 hover:bg-teal-200 border border-teal-300 rounded font-bold text-sm flex items-center gap-2 shadow-sm transition">
+                                <span class="text-lg leading-none">+</span> Open Prescription Table
+                            </button>
+                        </div>
                     </div>
                     <textarea id="treatment" rows="4"
                         class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -80,15 +95,17 @@ include '../includes/header.php';
 
                 <!-- Group 4 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
+                    <div class="relative">
                         <label class="block font-bold text-gray-700 mb-2">Referrals</label>
                         <textarea id="referals" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" autocomplete="off"></textarea>
+                        <div id="referalsDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
                     </div>
-                    <div>
+                    <div class="relative">
                         <label class="block font-bold text-gray-700 mb-2">Doctor's Notes</label>
                         <textarea id="notes" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" autocomplete="off"></textarea>
+                        <div id="notesDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
                     </div>
                 </div>
 
@@ -97,10 +114,16 @@ include '../includes/header.php';
                         Total Table Drugs: <span id="lblDrugCount"
                             class="text-teal-600 outline outline-1 outline-teal-300 px-2 py-0.5 rounded">0</span>
                     </div>
-                    <button type="submit"
-                        class="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-md transition text-lg">
-                        Complete Visit & Record
-                    </button>
+                    <div class="flex gap-4">
+                        <button type="submit" id="btnCompletePreview"
+                            class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded-lg shadow-md transition text-lg">
+                            Complete & Preview
+                        </button>
+                        <button type="submit" id="btnCompletePrint"
+                            class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-md transition text-lg flex items-center gap-2">
+                            <span>🖨️</span> Save & Direct Print
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -138,7 +161,7 @@ include '../includes/header.php';
                                 <td class="p-2 relative">
                                     <input type="text" id="tDrugName"
                                         class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
-                                        placeholder="Type drug name..." autocomplete="off">
+                                        placeholder="Type drug name...">
                                     <div id="drugDropdown"
                                         class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100">
                                     </div>
@@ -179,9 +202,155 @@ include '../includes/header.php';
         </div>
     </div>
 
+    <!-- Templates Modal -->
+    <div id="templatesModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-gray-800 dark:text-white rounded-2xl shadow-xl w-full max-w-lg p-6 m-4 relative border border-gray-100 dark:border-gray-700">
+            <button onclick="closeTemplatesModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-650 text-2xl font-bold">&times;</button>
+            <h3 class="text-xl font-black text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+                <span>📋</span> Treatment Templates
+            </h3>
+            <div id="templatesList" class="space-y-3 max-h-80 overflow-y-auto pr-1">
+                <!-- Populated via JS -->
+            </div>
+            <div class="pt-4 border-t dark:border-gray-700 mt-4 flex justify-end">
+                <button onclick="closeTemplatesModal()" class="bg-gray-600 hover:bg-gray-700 text-white font-bold px-4 py-2 rounded-lg transition text-sm">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Confirm Modal -->
+    <div id="templateConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-gray-850 dark:text-white rounded-2xl shadow-xl w-full max-w-md p-6 m-4 relative border border-gray-100 dark:border-gray-750">
+            <h3 class="text-lg font-black text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-2">
+                <span>💡</span> Pre-saved Treatment Found
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
+                Pre saved Treatment for <strong id="templateMatchName" class="text-teal-700 dark:text-teal-400"></strong> saved, do u want to apply?
+            </p>
+            <div class="flex justify-end gap-3">
+                <button id="btnCancelTemplate" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold rounded-lg transition text-sm">No</button>
+                <button id="btnApplyTemplate" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg transition text-sm">Yes, Apply</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const patientId = <?= json_encode($patientId) ?>;
         const queueId = <?= json_encode($queueId) ?>;
+
+        // ----------------------------------------------------
+        // Generic Field Autocomplete
+        // ----------------------------------------------------
+        function setupAutocomplete(inputId, dropdownId, dbField) {
+            const input = document.getElementById(inputId);
+            const drop = document.getElementById(dropdownId);
+            if (!input || !drop) return;
+
+            let historyData = [];
+            let selectedIndex = -1;
+            let loaded = false;
+
+            async function loadHistory() {
+                if (loaded) return;
+                try {
+                    const res = await fetch(`../api/get_field_history.php?field=${dbField}`);
+                    const data = await res.json();
+                    if (data.success) {
+                        historyData = data.items;
+                        loaded = true;
+                    }
+                } catch (e) {
+                    console.error(`Failed to load history for ${dbField}`, e);
+                }
+            }
+
+            input.addEventListener('focus', async () => {
+                await loadHistory();
+                input.dispatchEvent(new Event('input'));
+            });
+
+            input.addEventListener('input', (e) => {
+                const val = e.target.value.toLowerCase();
+                drop.innerHTML = '';
+                selectedIndex = -1;
+
+                if (!val) {
+                    drop.classList.add('hidden');
+                    return;
+                }
+
+                const matches = historyData.filter(d => d.toLowerCase().includes(val));
+
+                if (matches.length > 0) {
+                    let dropdownHTML = `<div class="p-2 bg-teal-100 text-teal-800 font-black text-xs uppercase tracking-wider sticky top-0">📋 Suggestions</div>`;
+                    dropdownHTML += matches.map((d, idx) => `
+                        <div class="p-3 cursor-pointer hover:bg-teal-50 transition flex justify-between items-center group autocomplete-item" data-val="${d.replace(/"/g, '&quot;')}">
+                            <div class="font-bold text-gray-700 group-hover:text-teal-700 text-sm">${d}</div>
+                        </div>
+                    `).join('');
+                    drop.innerHTML = dropdownHTML;
+                    drop.classList.remove('hidden');
+
+                    drop.querySelectorAll('.autocomplete-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            input.value = item.getAttribute('data-val');
+                            drop.classList.add('hidden');
+                            input.dispatchEvent(new Event('blur')); // Trigger blur (useful for template auto-check on diagnosis)
+                        });
+                    });
+                } else {
+                    drop.classList.add('hidden');
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!input.contains(e.target) && !drop.contains(e.target)) {
+                    drop.classList.add('hidden');
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                const items = drop.querySelectorAll('.autocomplete-item');
+                if (items.length === 0 || drop.classList.contains('hidden')) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = (selectedIndex + 1) % items.length;
+                    highlightItem(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+                    highlightItem(items);
+                } else if (e.key === 'Enter') {
+                    if (selectedIndex >= 0 && selectedIndex < items.length) {
+                        e.preventDefault();
+                        items[selectedIndex].click();
+                        selectedIndex = -1;
+                    }
+                } else if (e.key === 'Escape') {
+                    drop.classList.add('hidden');
+                    selectedIndex = -1;
+                }
+            });
+
+            function highlightItem(items) {
+                items.forEach((item, idx) => {
+                    if (idx === selectedIndex) {
+                        item.classList.add('bg-teal-150', 'text-teal-900', 'font-black');
+                        item.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        item.classList.remove('bg-teal-150', 'text-teal-900', 'font-black');
+                    }
+                });
+            }
+        }
+
+        setupAutocomplete('complaint', 'complaintDropdown', 'Complaint');
+        setupAutocomplete('examination', 'examinationDropdown', 'Examination');
+        setupAutocomplete('investigation', 'investigationDropdown', 'Investigation');
+        setupAutocomplete('diagnosis', 'diagnosisDropdown', 'Diagnosis');
+        setupAutocomplete('referals', 'referalsDropdown', 'Referals');
+        setupAutocomplete('notes', 'notesDropdown', 'Notes');
 
         // Load Patient Info
         async function loadPatient() {
@@ -202,10 +371,18 @@ include '../includes/header.php';
             `;
         }
         loadPatient();
+        document.getElementById('complaint').focus();
+
+        // Track action button clicked
+        let submitAction = 'preview';
+        document.getElementById('btnCompletePreview')?.addEventListener('click', () => { submitAction = 'preview'; });
+        document.getElementById('btnCompletePrint')?.addEventListener('click', () => { submitAction = 'print'; });
 
         // Submit Form
         document.getElementById('visitForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const action = submitAction;
+            
             const data = {
                 patient_id: patientId,
                 queue_id: queueId,
@@ -227,8 +404,35 @@ include '../includes/header.php';
             const result = await res.json();
 
             if (result.success) {
-                // Instantly navigate to print preview in a new tab
-                window.open(`print_report.php?visit_id=${result.visit_id}`, '_blank');
+                if (action === 'print') {
+                    // Direct print via iframe
+                    let iframe = document.getElementById('printIframe');
+                    if (!iframe) {
+                        iframe = document.createElement('iframe');
+                        iframe.id = 'printIframe';
+                        iframe.style.display = 'none';
+                        document.body.appendChild(iframe);
+                    }
+                    iframe.src = `print_report.php?visit_id=${result.visit_id}`;
+                    iframe.onload = function() {
+                        setTimeout(() => {
+                            try {
+                                iframe.contentWindow.focus();
+                                iframe.contentWindow.print();
+                            } catch(err) {
+                                console.error('Failed to trigger print: ', err);
+                            }
+                            // Redirect back to dashboard after a delay
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.php';
+                            }, 1000);
+                        }, 500);
+                    };
+                } else {
+                    // Instantly navigate to print preview in a new tab
+                    window.open(`print_report.php?visit_id=${result.visit_id}`, '_blank');
+                    window.location.href = 'dashboard.php';
+                }
             } else {
                 showToast("Error saving record: " + result.error, "error");
             }
@@ -239,35 +443,75 @@ include '../includes/header.php';
         // ----------------------------------------------------
         let inventory = [];
         let billDrugs = [];
+        let patientHistoryDrugs = [];
 
         async function loadInventory() {
             const res = await fetch('../api/inventory.php');
             inventory = await res.json();
         }
 
+        async function loadPatientHistoryDrugs() {
+            const res = await fetch(`../api/get_visit_drugs.php?patient_id=${patientId}`);
+            const data = await res.json();
+            if (data.success) {
+                patientHistoryDrugs = data.drugs;
+            }
+        }
+
         const dInput = document.getElementById('tDrugName');
         const dDrop = document.getElementById('drugDropdown');
 
-        dInput.addEventListener('focus', () => {
+        dInput.addEventListener('focus', async () => {
             if (inventory.length === 0) loadInventory();
+            if (patientHistoryDrugs.length === 0) await loadPatientHistoryDrugs();
             dInput.dispatchEvent(new Event('input')); // trigger dropdown
         });
 
         dInput.addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase();
             dDrop.innerHTML = '';
+            dropdownSelectedIndex = -1;
 
-            // If empty, show full inventory, otherwise filter
-            const matches = val ? inventory.filter(d => (d.DrugName || '').toLowerCase().includes(val)) : inventory;
+            // Filter history matching term
+            const historyMatches = val 
+                ? patientHistoryDrugs.filter(d => (d.DrugName || '').toLowerCase().includes(val))
+                : patientHistoryDrugs;
 
-            if (matches.length > 0) {
-                dDrop.innerHTML = matches.map(d => `
+            // Filter inventory matching term
+            const inventoryMatches = val 
+                ? inventory.filter(d => (d.DrugName || '').toLowerCase().includes(val))
+                : inventory;
+
+            let dropdownHTML = '';
+
+            if (historyMatches.length > 0) {
+                dropdownHTML += `<div class="p-2 bg-teal-100 text-teal-800 font-black text-xs uppercase tracking-wider sticky top-0">📋 From Patient History</div>`;
+                dropdownHTML += historyMatches.map(d => `
+                    <div class="p-3 cursor-pointer hover:bg-teal-50 transition flex justify-between items-center group" 
+                         onclick="selectDrugFromHistory('${(d.DrugName || '').replace(/'/g, "\\'")}', '${d.Dose || ''}', '${d.Frequency || ''}', '${d.Duration || ''}', '${d.Quantity || ''}')">
+                        <div class="font-bold text-gray-700 group-hover:text-teal-700 text-sm">
+                            ${d.DrugName} <span class="text-xs text-teal-650 font-normal ml-1">${d.Dose ? `[${d.Dose}]` : ''} (${d.Frequency} &bull; ${d.Duration})</span>
+                        </div>
+                        <div class="text-[10px] font-bold text-teal-500">History</div>
+                    </div>
+                `).join('');
+            }
+
+            if (inventoryMatches.length > 0) {
+                dropdownHTML += `<div class="p-2 bg-gray-100 text-gray-700 font-black text-xs uppercase tracking-wider sticky top-0">📦 Clinic Inventory</div>`;
+                dropdownHTML += inventoryMatches.map(d => `
                     <div class="p-3 cursor-pointer hover:bg-teal-50 transition flex justify-between items-center group" 
                          onclick="selectDrug('${(d.DrugName || '').replace(/'/g, "\\'")}', '${d.Dose || ''}')">
-                        <div class="font-bold text-gray-700 group-hover:text-teal-700 text-sm">${d.DrugName} <span class="text-xs text-gray-400 font-normal ml-1">${d.Dose ? `[${d.Dose}]` : ''}</span></div>
+                        <div class="font-bold text-gray-700 group-hover:text-teal-700 text-sm">
+                            ${d.DrugName} <span class="text-xs text-gray-400 font-normal ml-1">${d.Dose ? `[${d.Dose}]` : ''}</span>
+                        </div>
                         <div class="text-[10px] font-bold ${d.Quantity < 10 ? 'text-red-500' : 'text-gray-400'}">Stock: ${d.Quantity}</div>
                     </div>
                 `).join('');
+            }
+
+            if (dropdownHTML) {
+                dDrop.innerHTML = dropdownHTML;
                 if (val) {
                     dDrop.innerHTML += `<div class="p-2 cursor-pointer bg-gray-50 hover:bg-gray-100 text-xs font-bold text-gray-500 text-center border-t border-gray-100" onclick="dDrop.classList.add('hidden')">Use "${e.target.value}" as Custom Drug</div>`;
                 }
@@ -290,6 +534,95 @@ include '../includes/header.php';
             dDrop.classList.add('hidden');
             document.getElementById('tFreq').focus();
         };
+
+        window.selectDrugFromHistory = function (name, dose, frequency, duration, qty) {
+            dInput.value = name;
+            document.getElementById('tDose').value = dose;
+            document.getElementById('tFreq').value = frequency;
+            document.getElementById('tDays').value = duration.replace(/\s*days?/i, '').trim();
+            document.getElementById('tTotalQty').value = qty;
+            dDrop.classList.add('hidden');
+            document.getElementById('tTotalQty').focus();
+        };
+
+        // Keydown handling for dropdown selection
+        let dropdownSelectedIndex = -1;
+        dInput.addEventListener('keydown', (e) => {
+            const items = dDrop.querySelectorAll('div[onclick]');
+            if (items.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                dDrop.classList.remove('hidden');
+                dropdownSelectedIndex = (dropdownSelectedIndex + 1) % items.length;
+                highlightDropdownItem(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                dropdownSelectedIndex = (dropdownSelectedIndex - 1 + items.length) % items.length;
+                highlightDropdownItem(items);
+            } else if (e.key === 'Enter') {
+                if (dropdownSelectedIndex >= 0 && dropdownSelectedIndex < items.length) {
+                    e.preventDefault();
+                    items[dropdownSelectedIndex].click();
+                    dropdownSelectedIndex = -1;
+                }
+            } else if (e.key === 'Escape') {
+                dDrop.classList.add('hidden');
+                dropdownSelectedIndex = -1;
+            }
+        });
+
+        function highlightDropdownItem(items) {
+            items.forEach((item, idx) => {
+                if (idx === dropdownSelectedIndex) {
+                    item.classList.add('bg-teal-150', 'text-teal-900', 'font-black');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('bg-teal-150', 'text-teal-900', 'font-black');
+                }
+            });
+        }
+
+        // Enter submits in drug row
+        ['tDrugName', 'tDose', 'tFreq', 'tDays', 'tTotalQty'].forEach(id => {
+            document.getElementById(id).addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    if (id === 'tDrugName' && !dDrop.classList.contains('hidden') && dropdownSelectedIndex >= 0) {
+                        return; // Let dropdown keydown handle it
+                    }
+                    e.preventDefault();
+                    addTableDrug();
+                }
+            });
+        });
+
+        // Frequency format helper (e.g. 4 -> 0-0-0-4)
+        function formatFrequency(val) {
+            let cleanVal = val.trim();
+            if (!cleanVal) return '';
+            const parts = cleanVal.split(/[\s,+-]+/);
+            if (parts.length === 0 || (parts.length === 1 && parts[0] === '')) return '';
+            
+            const maxParts = 4;
+            const padded = Array(maxParts).fill('0');
+            
+            let fillIdx = maxParts - 1;
+            for (let i = parts.length - 1; i >= 0; i--) {
+                if (fillIdx >= 0) {
+                    padded[fillIdx] = parts[i] || '0';
+                    fillIdx--;
+                }
+            }
+            return padded.join('-');
+        }
+
+        document.getElementById('tFreq')?.addEventListener('blur', (e) => {
+            const formatted = formatFrequency(e.target.value);
+            if (formatted) {
+                e.target.value = formatted;
+                calcPillCount();
+            }
+        });
 
         function calcPillCount() {
             const freq = document.getElementById('tFreq').value.trim();
@@ -435,6 +768,7 @@ include '../includes/header.php';
 
         function openPrescriptionModal() {
             if (inventory.length === 0) loadInventory();
+            if (patientHistoryDrugs.length === 0) loadPatientHistoryDrugs();
             document.getElementById('rxModal').classList.remove('hidden');
             setTimeout(() => document.getElementById('tDrugName').focus(), 100);
         }
@@ -473,8 +807,130 @@ include '../includes/header.php';
             showToast("Prescription injected into notes!");
         }
 
+        // ----------------------------------------------------
+        // Diagnosis Treatment Template System
+        // ----------------------------------------------------
+        let pendingTemplate = null;
+
+        document.getElementById('diagnosis').addEventListener('blur', (e) => {
+            const diagVal = e.target.value.trim().toLowerCase();
+            if (!diagVal) return;
+            
+            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
+            const match = templates.find(t => t.name.toLowerCase() === diagVal || t.diagnosis.toLowerCase() === diagVal);
+            
+            if (match) {
+                pendingTemplate = match;
+                document.getElementById('templateMatchName').innerText = match.name;
+                document.getElementById('templateConfirmModal').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('btnApplyTemplate')?.addEventListener('click', () => {
+            if (pendingTemplate) {
+                applyTemplate(pendingTemplate);
+            }
+            document.getElementById('templateConfirmModal').classList.add('hidden');
+            pendingTemplate = null;
+        });
+
+        document.getElementById('btnCancelTemplate')?.addEventListener('click', () => {
+            document.getElementById('templateConfirmModal').classList.add('hidden');
+            pendingTemplate = null;
+        });
+
+        window.saveCurrentAsTemplate = function() {
+            const diag = document.getElementById('diagnosis').value.trim();
+            const name = prompt("Enter a name/diagnosis for this template:", diag || "Dengue");
+            if (!name) return;
+            
+            const treatment = document.getElementById('treatment').value;
+            const notes = document.getElementById('notes').value;
+            
+            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
+            const existingIdx = templates.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
+            
+            const newTemplate = {
+                name: name,
+                diagnosis: name,
+                treatment: treatment,
+                drugs: billDrugs,
+                notes: notes
+            };
+            
+            if (existingIdx >= 0) {
+                if (confirm(`Template for "${name}" already exists. Overwrite?`)) {
+                    templates[existingIdx] = newTemplate;
+                } else {
+                    return;
+                }
+            } else {
+                templates.push(newTemplate);
+            }
+            
+            localStorage.setItem('clinic_treatment_templates', JSON.stringify(templates));
+            showToast(`Template "${name}" saved successfully!`);
+        };
+
+        window.openTemplatesModal = function() {
+            const modal = document.getElementById('templatesModal');
+            const list = document.getElementById('templatesList');
+            modal.classList.remove('hidden');
+            
+            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
+            if (templates.length === 0) {
+                list.innerHTML = `<p class="text-gray-500 italic text-center py-6">No saved templates yet. Fill a prescription and click "Save Template" to create one.</p>`;
+                return;
+            }
+            
+            list.innerHTML = templates.map((t, idx) => `
+                <div class="p-3 border border-gray-150 rounded-xl flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition mb-2 text-sm text-gray-800 dark:text-gray-200">
+                    <div>
+                        <div class="font-bold">${t.name}</div>
+                        <div class="text-[10px] text-gray-500 font-semibold mt-1">
+                            Drugs: ${t.drugs && t.drugs.length > 0 ? t.drugs.map(d => d.name).join(', ') : 'None'}
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="applyTemplateByIndex(${idx})" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-2.5 py-1.5 rounded transition">Apply</button>
+                        <button onclick="deleteTemplateByIndex(${idx})" class="bg-red-500 hover:bg-red-650 text-white text-xs font-bold px-2.5 py-1.5 rounded transition">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        window.closeTemplatesModal = function() {
+            document.getElementById('templatesModal').classList.add('hidden');
+        };
+
+        window.applyTemplateByIndex = function(idx) {
+            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
+            if (templates[idx]) {
+                applyTemplate(templates[idx]);
+                closeTemplatesModal();
+            }
+        };
+
+        window.deleteTemplateByIndex = function(idx) {
+            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
+            if (confirm(`Are you sure you want to delete template "${templates[idx].name}"?`)) {
+                templates.splice(idx, 1);
+                localStorage.setItem('clinic_treatment_templates', JSON.stringify(templates));
+                openTemplatesModal();
+            }
+        };
+
+        function applyTemplate(t) {
+            document.getElementById('treatment').value = t.treatment || '';
+            document.getElementById('notes').value = t.notes || '';
+            if (t.drugs && t.drugs.length > 0) {
+                billDrugs = [...t.drugs];
+                renderBill();
+            }
+            showToast(`Template "${t.name}" applied!`);
+        }
+
     </script>
     <script src="../assets/js/toast.js"></script>
 </body>
-
 </html>

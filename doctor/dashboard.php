@@ -22,10 +22,15 @@ include '../includes/header.php';
 
         <main class="flex-1 overflow-y-auto p-4 md:p-8">
             
-            <div class="flex justify-between items-end mb-6">
+            <div class="flex justify-between items-center mb-6">
                 <div>
-                    <h2 class="text-3xl font-black text-gray-800">My Dashboard</h2>
+                    <h2 class="text-3xl font-black text-gray-800 dark:text-white">My Dashboard</h2>
                     <p class="text-gray-500 font-semibold mt-1">Real-time daily operations</p>
+                </div>
+                <div>
+                    <button id="btnDashboardUploadDrive" class="bg-purple-650 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-2 text-sm focus:outline-none">
+                        <span>☁️</span> Backup to Drive
+                    </button>
                 </div>
             </div>
 
@@ -155,6 +160,7 @@ include '../includes/header.php';
                 if (lastQueueHTML !== newHTML) {
                     tbody.innerHTML = newHTML;
                     lastQueueHTML = newHTML;
+                    activeRowIndex = -1;
                 }
             } catch(e) {}
         }
@@ -182,6 +188,71 @@ include '../includes/header.php';
                 document.getElementById('passwordModule').classList.add('hidden');
             }
         }
+
+        // Keyboard navigation on doctor dashboard queue rows
+        let activeRowIndex = -1;
+        window.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+                return;
+            }
+
+            const rows = document.querySelectorAll('#queueTableBody > tr');
+            if (rows.length === 0 || rows[0].innerText.includes('Polling local server') || rows[0].innerText.includes('empty')) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeRowIndex = (activeRowIndex + 1) % rows.length;
+                highlightRow(rows);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeRowIndex = (activeRowIndex - 1 + rows.length) % rows.length;
+                highlightRow(rows);
+            } else if (e.key === 'Enter') {
+                if (activeRowIndex >= 0 && activeRowIndex < rows.length) {
+                    e.preventDefault();
+                    const primaryBtn = rows[activeRowIndex].querySelector('button, a');
+                    if (primaryBtn) {
+                        primaryBtn.click();
+                        if (primaryBtn.tagName === 'A' && primaryBtn.href && primaryBtn.target !== '_blank') {
+                            window.location.href = primaryBtn.href;
+                        }
+                    }
+                }
+            }
+        });
+
+        function highlightRow(rows) {
+            rows.forEach((row, idx) => {
+                if (idx === activeRowIndex) {
+                    row.classList.add('bg-teal-50', 'dark:bg-teal-900/30', 'border-teal-300', 'ring-2', 'ring-teal-500');
+                    row.scrollIntoView({ block: 'nearest' });
+                } else {
+                    row.classList.remove('bg-teal-50', 'dark:bg-teal-900/30', 'border-teal-300', 'ring-2', 'ring-teal-500');
+                }
+            });
+        }
+
+        // Dashboard Google Drive Backup Button
+        document.getElementById('btnDashboardUploadDrive')?.addEventListener('click', async () => {
+            const btn = document.getElementById('btnDashboardUploadDrive');
+            const origText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span>☁️</span> Uploading...';
+            try {
+                const res = await fetch('../api/upload_backup.php');
+                const result = await res.json();
+                if (result.success) {
+                    showToast('Successfully backed up and uploaded to Google Drive!', 'success');
+                } else {
+                    showToast('Failed to upload backup: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (e) {
+                showToast('Error: ' + e.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = origText;
+            }
+        });
 
         // Poll every 1 second (updates both Queue AND Stats dynamically)
         setInterval(fetchQueueAndStats, 1000);

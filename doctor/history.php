@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['doctor_logged_in']) && !isset($_SESSION['admin_logged_in'])) {
+if (!isset($_SESSION['doctor_logged_in']) && !isset($_SESSION['admin_logged_in']) && !isset($_SESSION['receptionist_view'])) {
     header('Location: ../index.php');
     exit;
 }
@@ -10,18 +10,24 @@ if (!$patientId) die("Patient ID required.");
 <?php
 $pageTitle = 'Patient History';
 include '../includes/header.php';
+$isEmbedded = isset($_GET['embed']) && $_GET['embed'] === 'true';
 ?>
-<body class="bg-gray-50 flex h-screen overflow-hidden dark:bg-gray-900 transition-colors">
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors <?= $isEmbedded ? 'p-2 overflow-y-auto' : 'flex h-screen overflow-hidden' ?>">
     <!-- Sidebar -->
     <?php 
-    if (isset($_SESSION['admin_logged_in'])) {
-        include '../includes/sidebar_admin.php'; 
-    } else {
-        include '../includes/sidebar_doctor.php';
+    if (!$isEmbedded) {
+        if (isset($_SESSION['admin_logged_in'])) {
+            include '../includes/sidebar_admin.php'; 
+        } elseif (isset($_SESSION['doctor_logged_in'])) {
+            include '../includes/sidebar_doctor.php';
+        } else {
+            include '../includes/sidebar_receptionist.php';
+        }
     }
     ?>
 
-    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <div class="<?= $isEmbedded ? 'w-full' : 'flex-1 flex flex-col h-screen overflow-hidden relative' ?>">
+    <?php if (!$isEmbedded): ?>
     <nav class="bg-teal-600 text-white p-4 shadow-md flex justify-between items-center">
         <h1 class="text-2xl font-bold">Patient History</h1>
         <div>
@@ -29,6 +35,7 @@ include '../includes/header.php';
             <a href="javascript:void(0)" onclick="if(window.history.length > 1) { window.history.back(); } else { window.close(); }" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 rounded font-semibold transition">Back / Close</a>
         </div>
     </nav>
+    <?php endif; ?>
 
         <main class="flex-1 overflow-y-auto p-4 md:p-8">
             <h2 class="text-3xl font-black text-gray-800 dark:text-white mb-6">Patient History</h2>
@@ -73,9 +80,12 @@ include '../includes/header.php';
 
             container.innerHTML = history.map(v => `
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow border border-gray-100 dark:border-gray-700">
-                    <div class="flex justify-between items-start border-b dark:border-gray-700 pb-3 mb-3">
+                    <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-3 flex-wrap gap-2">
                         <div class="text-lg font-bold text-teal-700 dark:text-teal-400">Visit Date: ${new Date(v.VisitDateTime).toLocaleString()}</div>
-                        <a href="print_report.php?visit_id=${v.VisitID}" target="_blank" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded text-sm font-semibold">Print</a>
+                        <div class="flex gap-2">
+                            <a href="print_report.php?visit_id=${v.VisitID}" target="_blank" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded text-sm font-semibold">Preview</a>
+                            <button onclick="directPrint(${v.VisitID})" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded text-sm font-semibold transition flex items-center gap-1">🖨️ Print</button>
+                        </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -96,6 +106,28 @@ include '../includes/header.php';
                 </div>
             `).join('');
         }
+        
+        function directPrint(visitId) {
+            let iframe = document.getElementById('printIframe');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'printIframe';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+            }
+            iframe.src = `print_report.php?visit_id=${visitId}`;
+            iframe.onload = function() {
+                setTimeout(() => {
+                    try {
+                        iframe.contentWindow.focus();
+                        iframe.contentWindow.print();
+                    } catch(e) {
+                        console.error('Failed to trigger print: ', e);
+                    }
+                }, 500);
+            };
+        }
+
         loadData();
     </script>
 </body>

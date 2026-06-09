@@ -12,6 +12,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <a href="search.php" class="flex items-center gap-3 p-3 <?= $currentPage === 'search.php' ? 'bg-teal-800 dark:bg-gray-800 text-white' : 'text-teal-200 hover:text-white hover:bg-teal-800 dark:hover:bg-gray-800' ?> rounded-lg font-bold transition">Search Patient</a>
         <a href="inventory.php" class="flex items-center gap-3 p-3 <?= $currentPage === 'inventory.php' ? 'bg-teal-800 dark:bg-gray-800 text-white' : 'text-teal-200 hover:text-white hover:bg-teal-800 dark:hover:bg-gray-800' ?> rounded-lg font-bold transition">Manage Inventory</a>
         <a href="settings.php" class="flex items-center gap-3 p-3 <?= $currentPage === 'settings.php' ? 'bg-teal-800 dark:bg-gray-800 text-white' : 'text-teal-200 hover:text-white hover:bg-teal-800 dark:hover:bg-gray-800' ?> rounded-lg font-bold transition">Print Settings</a>
+        <a href="backup_settings.php" class="flex items-center gap-3 p-3 <?= $currentPage === 'backup_settings.php' ? 'bg-teal-800 dark:bg-gray-800 text-white' : 'text-teal-200 hover:text-white hover:bg-teal-800 dark:hover:bg-gray-800' ?> rounded-lg font-bold transition">Backup Settings</a>
     </nav>
     
     <div class="p-4 border-t border-teal-800 dark:border-gray-900 space-y-2">

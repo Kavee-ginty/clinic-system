@@ -129,6 +129,34 @@ $defaultVisitFee = $stmt->fetchColumn() ?: 500;
             }
         });
 
+        // Frequency helper to auto-pad input (e.g. 4 -> 0-0-0-4)
+        function formatFrequency(val) {
+            let cleanVal = val.trim();
+            if (!cleanVal) return '';
+            const parts = cleanVal.split(/[\s,+-]+/);
+            if (parts.length === 0 || (parts.length === 1 && parts[0] === '')) return '';
+            
+            const maxParts = 4;
+            const padded = Array(maxParts).fill('0');
+            
+            let fillIdx = maxParts - 1;
+            for (let i = parts.length - 1; i >= 0; i--) {
+                if (fillIdx >= 0) {
+                    padded[fillIdx] = parts[i] || '0';
+                    fillIdx--;
+                }
+            }
+            return padded.join('-');
+        }
+
+        document.getElementById('tFreq')?.addEventListener('blur', (e) => {
+            const formatted = formatFrequency(e.target.value);
+            if (formatted) {
+                e.target.value = formatted;
+                calcPillCount();
+            }
+        });
+
         // Pill Calculator
         function calcPillCount() {
             const freq = document.getElementById('tFreq').value.trim();
