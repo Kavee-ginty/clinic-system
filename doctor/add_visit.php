@@ -33,37 +33,38 @@ include '../includes/header.php';
             <form id="visitForm" class="space-y-6">
                 <!-- Group 1 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="relative">
+                    <div>
                         <label class="block font-bold text-gray-700 mb-2">Presenting Complaint <span
                                 class="text-red-500">*</span></label>
-                        <textarea id="complaint" rows="3"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                            required autocomplete="off"></textarea>
-                        <div id="complaintDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
+                        <div class="relative w-full">
+                            <textarea id="ghost_complaint" rows="3" class="absolute inset-0 w-full border border-transparent rounded-lg p-3 text-gray-400 bg-white pointer-events-none resize-none overflow-hidden" tabindex="-1" readonly></textarea>
+                            <textarea id="complaint" rows="3" class="relative w-full border border-gray-200 rounded-lg p-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 z-10" required autocomplete="off"></textarea>
+                        </div>
                     </div>
-                    <div class="relative">
+                    <div>
                         <label class="block font-bold text-gray-700 mb-2">Examination Findings</label>
-                        <textarea id="examination" rows="3"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" autocomplete="off"></textarea>
-                        <div id="examinationDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
+                        <div class="relative w-full">
+                            <textarea id="ghost_examination" rows="3" class="absolute inset-0 w-full border border-transparent rounded-lg p-3 text-gray-400 bg-white pointer-events-none resize-none overflow-hidden" tabindex="-1" readonly></textarea>
+                            <textarea id="examination" rows="3" class="relative w-full border border-gray-200 rounded-lg p-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 z-10" autocomplete="off"></textarea>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Group 2 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="relative">
+                    <div>
                         <label class="block font-bold text-gray-700 mb-2">Investigations</label>
-                        <textarea id="investigation" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" autocomplete="off"></textarea>
-                        <div id="investigationDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
+                        <div class="relative w-full">
+                            <textarea id="ghost_investigation" rows="2" class="absolute inset-0 w-full border border-transparent rounded-lg p-3 text-gray-400 bg-white pointer-events-none resize-none overflow-hidden" tabindex="-1" readonly></textarea>
+                            <textarea id="investigation" rows="2" class="relative w-full border border-gray-200 rounded-lg p-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 z-10" autocomplete="off"></textarea>
+                        </div>
                     </div>
-                    <div class="relative">
+                    <div>
                         <label class="block font-bold text-gray-700 mb-2">Diagnosis <span
                                 class="text-red-500">*</span></label>
-                        <textarea id="diagnosis" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                            required autocomplete="off"></textarea>
-                        <div id="diagnosisDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100">
+                        <div class="relative w-full">
+                            <textarea id="ghost_diagnosis" rows="2" class="absolute inset-0 w-full border border-transparent rounded-lg p-3 text-gray-400 bg-white pointer-events-none resize-none overflow-hidden" tabindex="-1" readonly></textarea>
+                            <textarea id="diagnosis" rows="2" class="relative w-full border border-gray-200 rounded-lg p-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 z-10" required autocomplete="off"></textarea>
                         </div>
                     </div>
                 </div>
@@ -95,17 +96,19 @@ include '../includes/header.php';
 
                 <!-- Group 4 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="relative">
+                    <div>
                         <label class="block font-bold text-gray-700 mb-2">Referrals</label>
-                        <textarea id="referals" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" autocomplete="off"></textarea>
-                        <div id="referalsDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
+                        <div class="relative w-full">
+                            <textarea id="ghost_referals" rows="2" class="absolute inset-0 w-full border border-transparent rounded-lg p-3 text-gray-400 bg-white pointer-events-none resize-none overflow-hidden" tabindex="-1" readonly></textarea>
+                            <textarea id="referals" rows="2" class="relative w-full border border-gray-200 rounded-lg p-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 z-10" autocomplete="off"></textarea>
+                        </div>
                     </div>
-                    <div class="relative">
+                    <div>
                         <label class="block font-bold text-gray-700 mb-2">Doctor's Notes</label>
-                        <textarea id="notes" rows="2"
-                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" autocomplete="off"></textarea>
-                        <div id="notesDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-[60] divide-y divide-gray-100"></div>
+                        <div class="relative w-full">
+                            <textarea id="ghost_notes" rows="2" class="absolute inset-0 w-full border border-transparent rounded-lg p-3 text-gray-400 bg-white pointer-events-none resize-none overflow-hidden" tabindex="-1" readonly></textarea>
+                            <textarea id="notes" rows="2" class="relative w-full border border-gray-200 rounded-lg p-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 z-10" autocomplete="off"></textarea>
+                        </div>
                     </div>
                 </div>
 
@@ -241,13 +244,12 @@ include '../includes/header.php';
         // ----------------------------------------------------
         // Generic Field Autocomplete
         // ----------------------------------------------------
-        function setupAutocomplete(inputId, dropdownId, dbField) {
+        function setupAutocomplete(inputId, ghostId, dbField) {
             const input = document.getElementById(inputId);
-            const drop = document.getElementById(dropdownId);
-            if (!input || !drop) return;
+            const ghost = document.getElementById(ghostId);
+            if (!input || !ghost) return;
 
             let historyData = [];
-            let selectedIndex = -1;
             let loaded = false;
 
             async function loadHistory() {
@@ -269,88 +271,43 @@ include '../includes/header.php';
                 input.dispatchEvent(new Event('input'));
             });
 
-            input.addEventListener('input', (e) => {
-                const val = e.target.value.toLowerCase();
-                drop.innerHTML = '';
-                selectedIndex = -1;
-
-                if (!val) {
-                    drop.classList.add('hidden');
+            input.addEventListener('input', () => {
+                const val = input.value;
+                if (!val || input.selectionStart !== val.length) {
+                    ghost.value = '';
                     return;
                 }
 
-                const matches = historyData.filter(d => d.toLowerCase().includes(val));
-
-                if (matches.length > 0) {
-                    let dropdownHTML = `<div class="p-2 bg-teal-100 text-teal-800 font-black text-xs uppercase tracking-wider sticky top-0">📋 Suggestions</div>`;
-                    dropdownHTML += matches.map((d, idx) => `
-                        <div class="p-3 cursor-pointer hover:bg-teal-50 transition flex justify-between items-center group autocomplete-item" data-val="${d.replace(/"/g, '&quot;')}">
-                            <div class="font-bold text-gray-700 group-hover:text-teal-700 text-sm">${d}</div>
-                        </div>
-                    `).join('');
-                    drop.innerHTML = dropdownHTML;
-                    drop.classList.remove('hidden');
-
-                    drop.querySelectorAll('.autocomplete-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            input.value = item.getAttribute('data-val');
-                            drop.classList.add('hidden');
-                            input.dispatchEvent(new Event('blur')); // Trigger blur (useful for template auto-check on diagnosis)
-                        });
-                    });
+                const match = historyData.find(d => d.toLowerCase().startsWith(val.toLowerCase()));
+                if (match) {
+                    ghost.value = val + match.substring(val.length);
                 } else {
-                    drop.classList.add('hidden');
+                    ghost.value = '';
                 }
             });
 
-            document.addEventListener('click', (e) => {
-                if (!input.contains(e.target) && !drop.contains(e.target)) {
-                    drop.classList.add('hidden');
-                }
+            input.addEventListener('scroll', () => {
+                ghost.scrollTop = input.scrollTop;
+                ghost.scrollLeft = input.scrollLeft;
             });
 
             input.addEventListener('keydown', (e) => {
-                const items = drop.querySelectorAll('.autocomplete-item');
-                if (items.length === 0 || drop.classList.contains('hidden')) return;
-
-                if (e.key === 'ArrowDown') {
+                if (e.key === 'Tab' && ghost.value && ghost.value.toLowerCase().startsWith(input.value.toLowerCase()) && ghost.value.length > input.value.length) {
                     e.preventDefault();
-                    selectedIndex = (selectedIndex + 1) % items.length;
-                    highlightItem(items);
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
-                    highlightItem(items);
-                } else if (e.key === 'Enter') {
-                    if (selectedIndex >= 0 && selectedIndex < items.length) {
-                        e.preventDefault();
-                        items[selectedIndex].click();
-                        selectedIndex = -1;
-                    }
-                } else if (e.key === 'Escape') {
-                    drop.classList.add('hidden');
-                    selectedIndex = -1;
+                    input.value = ghost.value;
+                    ghost.value = '';
+                    input.dispatchEvent(new Event('input'));
+                    input.dispatchEvent(new Event('blur')); // Trigger any blur listeners (e.g., templates)
                 }
             });
-
-            function highlightItem(items) {
-                items.forEach((item, idx) => {
-                    if (idx === selectedIndex) {
-                        item.classList.add('bg-teal-150', 'text-teal-900', 'font-black');
-                        item.scrollIntoView({ block: 'nearest' });
-                    } else {
-                        item.classList.remove('bg-teal-150', 'text-teal-900', 'font-black');
-                    }
-                });
-            }
         }
 
-        setupAutocomplete('complaint', 'complaintDropdown', 'Complaint');
-        setupAutocomplete('examination', 'examinationDropdown', 'Examination');
-        setupAutocomplete('investigation', 'investigationDropdown', 'Investigation');
-        setupAutocomplete('diagnosis', 'diagnosisDropdown', 'Diagnosis');
-        setupAutocomplete('referals', 'referalsDropdown', 'Referals');
-        setupAutocomplete('notes', 'notesDropdown', 'Notes');
+        setupAutocomplete('complaint', 'ghost_complaint', 'Complaint');
+        setupAutocomplete('examination', 'ghost_examination', 'Examination');
+        setupAutocomplete('investigation', 'ghost_investigation', 'Investigation');
+        setupAutocomplete('diagnosis', 'ghost_diagnosis', 'Diagnosis');
+        setupAutocomplete('referals', 'ghost_referals', 'Referals');
+        setupAutocomplete('notes', 'ghost_notes', 'Notes');
 
         // Load Patient Info
         async function loadPatient() {
