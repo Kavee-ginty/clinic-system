@@ -135,7 +135,7 @@ include '../includes/header.php';
     <!-- PRESCRIPTION MODAL OVERLAY -->
     <div id="rxModal"
         class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm transition-opacity">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[85vh] max-h-[90vh] flex flex-col overflow-hidden">
 
             <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h2 class="text-2xl font-black text-gray-800">Add Drugs to Prescription</h2>
