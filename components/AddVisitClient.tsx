@@ -6,19 +6,24 @@ import { money } from "@/lib/format";
 import type { Drug, Patient } from "@/lib/types";
 
 type DrugLine = { id: number | ""; name: string; qty: number; cost: number; frequency: string; dose: string; duration: string };
+type HistoryDrug = { drug_id?: number | null; drug_name?: string; quantity?: number; total_cost?: number; frequency?: string; dose?: string; duration?: string };
 
 export function AddVisitClient({ patientId, queueId }: { patientId: number; queueId: number }) {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [inventory, setInventory] = useState<Drug[]>([]);
+  const [historyDrugs, setHistoryDrugs] = useState<HistoryDrug[]>([]);
   const [lines, setLines] = useState<DrugLine[]>([]);
   const [message, setMessage] = useState("");
   const [visitId, setVisitId] = useState<number | null>(null);
+  const [prescriptionOpen, setPrescriptionOpen] = useState(false);
+  const [treatmentText, setTreatmentText] = useState("");
 
   useEffect(() => {
-    Promise.all([apiGet<Patient>("patient", { id: patientId }), apiGet<Drug[]>("inventory")])
-      .then(([nextPatient, nextInventory]) => {
+    Promise.all([apiGet<Patient>("patient", { id: patientId }), apiGet<Drug[]>("inventory"), apiGet<HistoryDrug[]>("visit-drugs", { patient_id: patientId })])
+      .then(([nextPatient, nextInventory, nextHistoryDrugs]) => {
         setPatient(nextPatient);
         setInventory(nextInventory);
+        setHistoryDrugs(nextHistoryDrugs);
       })
       .catch((error) => setMessage(error.message));
   }, [patientId]);
@@ -29,6 +34,11 @@ export function AddVisitClient({ patientId, queueId }: { patientId: number; queu
     setLines([...lines, { id: "", name: "", qty: 1, cost: 0, frequency: "", dose: "", duration: "" }]);
   }
 
+  function openPrescriptionTable() {
+    if (lines.length === 0) addDrugLine();
+    setPrescriptionOpen(true);
+  }
+
   function setLine(index: number, patch: Partial<DrugLine>) {
     setLines((old) => old.map((line, i) => i === index ? { ...line, ...patch } : line));
   }
@@ -37,6 +47,36 @@ export function AddVisitClient({ patientId, queueId }: { patientId: number; queu
     const drug = inventory.find((item) => item.drug_id === Number(id));
     if (!drug) return;
     setLine(index, { id: drug.drug_id, name: drug.drug_name, dose: drug.dose ?? "", qty: 1, cost: Number(drug.unit_price ?? 0) });
+  }
+
+  function setQty(index: number, qty: number) {
+    const line = lines[index];
+    const drug = inventory.find((item) => item.drug_id === Number(line.id));
+    setLine(index, { qty, cost: drug ? Number(drug.unit_price ?? 0) * qty : line.cost });
+  }
+
+  function addHistoryDrug(drug: HistoryDrug) {
+    setLines([
+      ...lines,
+      {
+        id: drug.drug_id ?? "",
+        name: drug.drug_name ?? "",
+        qty: Number(drug.quantity ?? 1),
+        cost: Number(drug.total_cost ?? 0),
+        frequency: drug.frequency ?? "",
+        dose: drug.dose ?? "",
+        duration: drug.duration ?? ""
+      }
+    ]);
+  }
+
+  function appendPrescriptionToTreatment() {
+    const summary = lines
+      .filter((line) => line.name)
+      .map((line) => `${line.name}${line.dose ? ` ${line.dose}` : ""} - ${line.frequency || "-"} - ${line.duration || "-"} x ${line.qty}`)
+      .join("\n");
+    if (summary) setTreatmentText((old) => [old.trim(), summary].filter(Boolean).join("\n"));
+    setPrescriptionOpen(false);
   }
 
   async function save(event: FormEvent<HTMLFormElement>) {
@@ -94,33 +134,11 @@ export function AddVisitClient({ patientId, queueId }: { patientId: number; queu
             <div className="flex flex-wrap gap-2">
               <button type="button" className="rounded border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-black text-blue-700">Save Template</button>
               <button type="button" className="rounded border border-gray-200 bg-white px-4 py-2 text-sm font-black text-gray-600">Templates</button>
-              <button type="button" onClick={addDrugLine} className="rounded border border-teal-200 bg-teal-50 px-4 py-2 text-sm font-black text-teal-700">+ Open Prescription Table</button>
+              <button type="button" onClick={openPrescriptionTable} className="rounded border border-teal-200 bg-teal-50 px-4 py-2 text-sm font-black text-teal-700">+ Open Prescription Table</button>
             </div>
           </div>
-          <textarea name="treatment" required rows={4} className="w-full rounded-lg border border-gray-200 p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          <textarea name="treatment" required rows={4} value={treatmentText} onChange={(event) => setTreatmentText(event.target.value)} className="w-full rounded-lg border border-gray-200 p-3 focus:outline-none focus:ring-2 focus:ring-teal-500" />
         </section>
-
-        {lines.length > 0 && (
-          <section className="mt-5 rounded-lg border border-gray-100 bg-gray-50 p-4">
-            <div className="space-y-3">
-              {lines.map((line, index) => (
-                <div key={index} className="grid gap-2 rounded-lg border border-gray-100 bg-white p-3 md:grid-cols-[2fr_80px_100px_1fr_1fr_1fr_80px]">
-                  <select value={line.id} onChange={(event) => chooseDrug(index, event.target.value)} className="rounded border p-2 text-sm font-semibold">
-                    <option value="">Select drug</option>
-                    {inventory.map((drug) => <option key={drug.drug_id} value={drug.drug_id}>{drug.drug_name} {drug.dose} ({drug.quantity})</option>)}
-                  </select>
-                  <input value={line.qty} type="number" min="1" onChange={(event) => setLine(index, { qty: Number(event.target.value) })} className="rounded border p-2 text-sm" />
-                  <input value={line.cost} type="number" step="0.01" onChange={(event) => setLine(index, { cost: Number(event.target.value) })} className="rounded border p-2 text-sm" />
-                  <input value={line.frequency} onChange={(event) => setLine(index, { frequency: event.target.value })} placeholder="Frequency" className="rounded border p-2 text-sm" />
-                  <input value={line.dose} onChange={(event) => setLine(index, { dose: event.target.value })} placeholder="Dose" className="rounded border p-2 text-sm" />
-                  <input value={line.duration} onChange={(event) => setLine(index, { duration: event.target.value })} placeholder="Duration" className="rounded border p-2 text-sm" />
-                  <button type="button" onClick={() => setLines(lines.filter((_, i) => i !== index))} className="rounded bg-red-50 px-3 py-2 text-sm font-bold text-red-700">Remove</button>
-                </div>
-              ))}
-            </div>
-            <p className="mt-4 text-right text-lg font-black">Drug subtotal: {money(drugTotal)}</p>
-          </section>
-        )}
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <Field name="referals" label="Referrals" />
@@ -137,6 +155,66 @@ export function AddVisitClient({ patientId, queueId }: { patientId: number; queu
           </div>
         </div>
       </form>
+
+      {prescriptionOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-8 backdrop-blur-sm">
+          <section className="flex max-h-[88vh] w-full max-w-6xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
+            <header className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
+              <h3 className="text-2xl font-black text-gray-900">Add Drugs to Prescription</h3>
+              <button type="button" onClick={() => setPrescriptionOpen(false)} className="text-3xl font-bold text-gray-400 hover:text-gray-700">&times;</button>
+            </header>
+
+            <div className="min-h-[420px] overflow-auto p-6">
+              <div className="grid grid-cols-[minmax(220px,1.6fr)_170px_360px_90px_90px_70px] gap-4 bg-gray-100 px-3 py-3 text-sm font-black text-gray-800">
+                <span>Drug Name</span>
+                <span>Dose</span>
+                <span>Frequency</span>
+                <span>Duration</span>
+                <span>Total Qty</span>
+                <span>Action</span>
+              </div>
+
+              <div className="space-y-2 border-b border-blue-100 pb-4 pt-3">
+                {lines.map((line, index) => (
+                  <div key={index} className="grid grid-cols-[minmax(220px,1.6fr)_170px_360px_90px_90px_70px] gap-4">
+                    <select value={line.id} onChange={(event) => chooseDrug(index, event.target.value)} className="rounded border border-gray-300 p-3 text-sm font-bold">
+                      <option value="">Type drug name...</option>
+                      {inventory.map((drug) => <option key={drug.drug_id} value={drug.drug_id}>{drug.drug_name} {drug.dose} ({drug.quantity})</option>)}
+                    </select>
+                    <input value={line.dose} onChange={(event) => setLine(index, { dose: event.target.value })} placeholder="Optional" className="rounded border border-gray-300 p-3 text-sm font-bold" />
+                    <input value={line.frequency} onChange={(event) => setLine(index, { frequency: event.target.value })} placeholder="bd / tds / mane / nocte / custom" className="rounded border border-gray-300 p-3 text-sm font-bold" />
+                    <input value={line.duration} onChange={(event) => setLine(index, { duration: event.target.value })} placeholder="Days" className="rounded border border-gray-300 p-3 text-sm font-bold" />
+                    <input value={line.qty} type="number" min="1" onChange={(event) => setQty(index, Number(event.target.value))} placeholder="Qty" className="rounded border-2 border-teal-400 p-3 text-sm font-bold" />
+                    <button type="button" onClick={() => setLines(lines.filter((_, i) => i !== index))} className="rounded bg-red-50 px-3 py-2 text-sm font-black text-red-700">Remove</button>
+                  </div>
+                ))}
+                <button type="button" onClick={addDrugLine} className="rounded bg-teal-600 px-6 py-3 font-black text-white hover:bg-teal-700">+</button>
+              </div>
+
+              {historyDrugs.length > 0 && (
+                <div className="mt-1 w-72 rounded-b bg-teal-50 shadow-xl">
+                  <div className="border-b border-teal-100 px-3 py-2 text-xs font-black uppercase tracking-wide text-teal-900">From Patient History</div>
+                  <div className="max-h-56 overflow-y-auto">
+                    {historyDrugs.slice(0, 8).map((drug, index) => (
+                      <button key={index} type="button" onClick={() => addHistoryDrug(drug)} className="block w-full border-b border-teal-100 px-3 py-3 text-left hover:bg-teal-100">
+                        <span className="font-black text-gray-900">{drug.drug_name}</span>
+                        <span className="ml-2 text-xs text-gray-700">[{drug.dose || "Dose"}] ({drug.frequency || "-"} - {drug.duration || "-"})</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <footer className="flex items-center justify-between border-t border-gray-100 bg-gray-50 px-6 py-5">
+              <p className="font-black text-gray-600">Est. Drug Cost: <span className="text-lg text-teal-700">{money(drugTotal)}</span></p>
+              <button type="button" onClick={appendPrescriptionToTreatment} className="rounded-lg bg-gray-900 px-8 py-4 text-lg font-black text-white shadow-lg hover:bg-gray-800">
+                Confirm & Append to Notes
+              </button>
+            </footer>
+          </section>
+        </div>
+      )}
     </div>
   );
 }
