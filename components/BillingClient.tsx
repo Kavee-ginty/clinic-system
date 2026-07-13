@@ -32,10 +32,10 @@ export function BillingClient({ visitId }: { visitId: number }) {
 
   return (
     <form onSubmit={save} className="max-w-3xl">
-      <h2 className="text-3xl font-black text-gray-800">Billing</h2>
+      <h2 className="text-2xl font-black text-gray-800 sm:text-3xl">Billing</h2>
       <p className="mb-6 font-semibold text-gray-500">{details?.visit.patients.first_name} {details?.visit.patients.last_name}</p>
       {message && <div className="mb-4 rounded-lg border border-teal-200 bg-teal-50 p-3 text-sm font-bold text-teal-700">{message}</div>}
-      <section className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+      <section className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
         <label className="block text-sm font-black uppercase text-gray-500">Visit Fee</label>
         <input value={fee} onChange={(event) => setFee(Number(event.target.value))} type="number" step="0.01" className="mt-2 w-full rounded-lg border p-3 font-bold" />
         <div className="mt-6 space-y-2">
@@ -46,8 +46,8 @@ export function BillingClient({ visitId }: { visitId: number }) {
             </div>
           ))}
         </div>
-        <p className="mt-6 text-right text-2xl font-black">Total: {money(fee + drugTotal)}</p>
-        <button className="mt-4 rounded-lg bg-teal-700 px-6 py-3 font-black text-white">Save Billing</button>
+        <p className="mt-6 text-right text-xl font-black sm:text-2xl">Total: {money(fee + drugTotal)}</p>
+        <button className="mt-4 w-full rounded-lg bg-teal-700 px-6 py-3 font-black text-white sm:w-auto">Save Billing</button>
       </section>
     </form>
   );

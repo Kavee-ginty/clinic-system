@@ -13,11 +13,11 @@ export default async function History({ searchParams }: { searchParams: Promise<
 
   return (
     <ClinicShell role={role} email={email}>
-      <h2 className="text-3xl font-black text-gray-800">Patient History</h2>
-      <p className="mb-6 font-semibold text-gray-500">{patient ? `${patient.first_name} ${patient.last_name} • ${patient.patient_number}` : "Patient not found"}</p>
+      <h2 className="text-2xl font-black text-gray-800 sm:text-3xl">Patient History</h2>
+      <p className="mb-6 font-semibold text-gray-500">{patient ? `${patient.first_name} ${patient.last_name} - ${patient.patient_number}` : "Patient not found"}</p>
       <div className="space-y-4">
         {(visits ?? []).map((visit) => (
-          <article key={visit.visit_id} className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+          <article key={visit.visit_id} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
             <div className="mb-3 flex flex-wrap justify-between gap-2">
               <b>{displayDate(String(visit.visit_date_time).slice(0, 10))}</b>
               <span className="text-sm font-bold text-gray-500">{money(visit.total_bill)}</span>

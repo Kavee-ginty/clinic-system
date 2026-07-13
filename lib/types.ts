@@ -14,6 +14,7 @@ export type Patient = {
   nic: string | null;
   age: number | null;
   registered_date: string;
+  visit_count?: number;
 };
 
 export type Drug = {

@@ -92,15 +92,23 @@ export async function GET(request: Request, ctx: Ctx) {
     if (action === "search") {
       if (!allowed(current, ["admin", "doctor", "receptionist"])) return forbid();
       const q = asText(url.searchParams.get("q"));
-      if (!q) return json([]);
-      const { data, error } = await admin
+      let query = admin
         .from("patients")
         .select("*")
-        .or(`first_name.ilike.%${q}%,last_name.ilike.%${q}%,phone.ilike.%${q}%,nic.ilike.%${q}%,patient_number.ilike.%${q}%`)
         .order("patient_id", { ascending: false })
-        .limit(20);
+        .limit(q ? 30 : 50);
+      if (q) query = query.or(`first_name.ilike.%${q}%,last_name.ilike.%${q}%,phone.ilike.%${q}%,nic.ilike.%${q}%,patient_number.ilike.%${q}%`);
+      const { data, error } = await query;
       if (error) throw error;
-      return json(data ?? []);
+      const patients = data ?? [];
+      const patientIds = patients.map((patient) => patient.patient_id);
+      const counts = new Map<number, number>();
+      if (patientIds.length) {
+        const { data: visits, error: visitsError } = await admin.from("visits").select("patient_id").in("patient_id", patientIds);
+        if (visitsError) throw visitsError;
+        for (const visit of visits ?? []) counts.set(visit.patient_id, (counts.get(visit.patient_id) ?? 0) + 1);
+      }
+      return json(patients.map((patient) => ({ ...patient, visit_count: counts.get(patient.patient_id) ?? 0 })));
     }
 
     if (action === "patient") {

@@ -4,5 +4,5 @@ import { requireRole } from "@/lib/auth";
 
 export default async function ReceptionistInventory() {
   const { email } = await requireRole(["receptionist"]);
-  return <ClinicShell role="receptionist" email={email}><InventoryClient /></ClinicShell>;
+  return <ClinicShell role="receptionist" email={email}><InventoryClient role="receptionist" /></ClinicShell>;
 }

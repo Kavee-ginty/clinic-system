@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { apiGet, apiPost } from "@/lib/client-api";
-import { displayDate } from "@/lib/format";
 import type { Patient } from "@/lib/types";
 
 export function AdminPatientsClient() {
@@ -25,25 +24,22 @@ export function AdminPatientsClient() {
   }
 
   return (
-    <div>
-      <h2 className="text-3xl font-black text-gray-800">Patients</h2>
-      <p className="mb-6 font-semibold text-gray-500">Latest 300 patient records</p>
+    <div className="rounded-xl border-t-4 border-slate-900 bg-white p-4 shadow-sm sm:p-6">
+      <h2 className="mb-5 text-xl font-black text-gray-900">Master Patient List</h2>
       {message && <div className="mb-4 rounded-lg border border-teal-200 bg-teal-50 p-3 text-sm font-bold text-teal-700">{message}</div>}
-      <div className="overflow-x-auto rounded-xl border border-gray-100 bg-white shadow-sm">
-        <table className="w-full text-left">
-          <thead className="border-b bg-gray-50 text-xs uppercase text-gray-500">
-            <tr><th className="p-3">Patient</th><th className="p-3">DOB</th><th className="p-3">Phone</th><th className="p-3">NIC</th><th className="p-3"></th></tr>
+      <div className="max-h-[72vh] overflow-auto">
+        <table className="min-w-[980px] w-full text-left">
+          <thead className="sticky top-0 bg-gray-100 text-sm text-gray-700">
+            <tr><th className="p-3">ID</th><th>First Name</th><th>Last Name</th><th>Phone</th><th>Gender</th><th>DOB</th><th>Reg. Date</th><th className="text-right">Action</th></tr>
           </thead>
           <tbody>
             {patients.map((patient) => (
               <tr key={patient.patient_id} className="border-b">
-                <td className="p-3"><b>{patient.first_name} {patient.last_name}</b><p className="text-xs text-gray-500">{patient.patient_number}</p></td>
-                <td className="p-3">{displayDate(patient.dob)}</td>
-                <td className="p-3">{patient.phone}</td>
-                <td className="p-3">{patient.nic}</td>
-                <td className="p-3 text-right">
-                  <a href={`/doctor/history?patient_id=${patient.patient_id}`} className="mr-2 rounded bg-gray-100 px-3 py-1 text-sm font-bold text-gray-700">History</a>
-                  <button onClick={() => remove(patient.patient_id)} className="rounded bg-red-50 px-3 py-1 text-sm font-bold text-red-700">Delete</button>
+                <td className="p-3 font-bold">{patient.patient_id}</td><td>{patient.first_name}</td><td>{patient.last_name}</td><td>{patient.phone}</td><td>{patient.gender}</td><td>{patient.dob}</td><td>{patient.registered_date}</td>
+                <td className="space-x-2 whitespace-nowrap p-3 text-right">
+                  <button className="rounded bg-slate-700 px-3 py-2 text-sm font-black text-white">Edit</button>
+                  <a href={`/doctor/history?patient_id=${patient.patient_id}`} className="rounded bg-blue-500 px-3 py-2 text-sm font-black text-white">History</a>
+                  <button onClick={() => remove(patient.patient_id)} className="rounded bg-red-500 px-3 py-2 text-sm font-black text-white">Delete</button>
                 </td>
               </tr>
             ))}
