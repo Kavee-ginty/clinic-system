@@ -61,6 +61,7 @@ try {
 
     try { $pdo->exec("ALTER TABLE Visits ADD COLUMN VisitFee DECIMAL(10,2) DEFAULT 0.00"); } catch (\Exception $e) {}
     try { $pdo->exec("ALTER TABLE Visits ADD COLUMN TotalBill DECIMAL(10,2) DEFAULT 0.00"); } catch (\Exception $e) {}
+    try { $pdo->exec("ALTER TABLE Visits ADD COLUMN IsPaid TINYINT(1) DEFAULT 0"); } catch (\Exception $e) {}
 
     try { $pdo->exec("ALTER TABLE VisitDrugs ADD COLUMN Frequency VARCHAR(100) DEFAULT ''"); } catch (\Exception $e) {}
     try { $pdo->exec("ALTER TABLE VisitDrugs ADD COLUMN Dose VARCHAR(100) DEFAULT ''"); } catch (\Exception $e) {}

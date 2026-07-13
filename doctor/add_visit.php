@@ -152,7 +152,7 @@ include '../includes/header.php';
                             <tr>
                                 <th class="p-3 font-bold text-gray-700 w-1/4">Drug Name</th>
                                 <th class="p-3 font-bold text-gray-700 w-1/6">Dose</th>
-                                <th class="p-3 font-bold text-gray-700">Dosage Grid (M-A-E-N)</th>
+                                <th class="p-3 font-bold text-gray-700">Frequency</th>
                                 <th class="p-3 font-bold text-gray-700 w-24">Duration</th>
                                 <th class="p-3 font-bold text-gray-700 w-24 text-center">Total Qty</th>
                                 <th class="p-3 font-bold text-gray-700 w-20 text-center">Action</th>
@@ -174,7 +174,7 @@ include '../includes/header.php';
                                         placeholder="Optional"></td>
                                 <td class="p-2"><input type="text" id="tFreq"
                                         class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
-                                        placeholder="e.g. 1-0-1-0" oninput="calcPillCount()"></td>
+                                        placeholder="bd / tds / mane / nocte / custom" oninput="calcPillCount()"></td>
                                 <td class="p-2"><input type="number" id="tDays"
                                         class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm"
                                         placeholder="Days" min="1" oninput="calcPillCount()"></td>
@@ -240,6 +240,7 @@ include '../includes/header.php';
     <script>
         const patientId = <?= json_encode($patientId) ?>;
         const queueId = <?= json_encode($queueId) ?>;
+        const showDob = (value) => (value || '').replace(/-/g, '/');
 
         // ----------------------------------------------------
         // Generic Field Autocomplete
@@ -273,14 +274,22 @@ include '../includes/header.php';
 
             input.addEventListener('input', () => {
                 const val = input.value;
-                if (!val || input.selectionStart !== val.length) {
+                if (input.selectionStart !== input.selectionEnd) {
                     ghost.value = '';
                     return;
                 }
 
-                const match = historyData.find(d => d.toLowerCase().startsWith(val.toLowerCase()));
+                const before = val.slice(0, input.selectionStart);
+                const lineStart = before.lastIndexOf('\n') + 1;
+                const currentLine = before.slice(lineStart);
+                if (!currentLine) {
+                    ghost.value = '';
+                    return;
+                }
+
+                const match = historyData.find(d => d.toLowerCase().startsWith(currentLine.toLowerCase()));
                 if (match) {
-                    ghost.value = val + match.substring(val.length);
+                    ghost.value = before + match.substring(currentLine.length) + val.slice(input.selectionStart);
                 } else {
                     ghost.value = '';
                 }
@@ -295,6 +304,7 @@ include '../includes/header.php';
                 if (e.key === 'Tab' && ghost.value && ghost.value.toLowerCase().startsWith(input.value.toLowerCase()) && ghost.value.length > input.value.length) {
                     e.preventDefault();
                     input.value = ghost.value;
+                    input.selectionStart = input.selectionEnd = input.value.length;
                     ghost.value = '';
                     input.dispatchEvent(new Event('input'));
                     input.dispatchEvent(new Event('blur')); // Trigger any blur listeners (e.g., templates)
@@ -320,7 +330,7 @@ include '../includes/header.php';
                         <span class="font-bold">Age:</span> ${p.Age || 'N/A'} | 
                         <span class="font-bold">NIC:</span> ${p.NIC || 'N/A'} | 
                         <span class="font-bold">Gender:</span> ${p.Gender} | 
-                        <span class="font-bold">DOB:</span> ${p.DOB}
+                        <span class="font-bold">DOB:</span> ${showDob(p.DOB)}
                     </p>
                     <p class="text-gray-500 text-sm"><span class="font-bold">Phone:</span> ${p.Phone}</p>
                 </div>
@@ -338,6 +348,10 @@ include '../includes/header.php';
         // Submit Form
         document.getElementById('visitForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (e.currentTarget.dataset.saving === '1') return;
+            e.currentTarget.dataset.saving = '1';
+            document.getElementById('btnCompletePreview').disabled = true;
+            document.getElementById('btnCompletePrint').disabled = true;
             const action = submitAction;
             
             const data = {
@@ -391,6 +405,9 @@ include '../includes/header.php';
                     window.location.href = 'dashboard.php';
                 }
             } else {
+                e.currentTarget.dataset.saving = '';
+                document.getElementById('btnCompletePreview').disabled = false;
+                document.getElementById('btnCompletePrint').disabled = false;
                 showToast("Error saving record: " + result.error, "error");
             }
         });
@@ -419,7 +436,7 @@ include '../includes/header.php';
         const dDrop = document.getElementById('drugDropdown');
 
         dInput.addEventListener('focus', async () => {
-            if (inventory.length === 0) loadInventory();
+            if (inventory.length === 0) await loadInventory();
             if (patientHistoryDrugs.length === 0) await loadPatientHistoryDrugs();
             dInput.dispatchEvent(new Event('input')); // trigger dropdown
         });
@@ -444,7 +461,7 @@ include '../includes/header.php';
             if (historyMatches.length > 0) {
                 dropdownHTML += `<div class="p-2 bg-teal-100 text-teal-800 font-black text-xs uppercase tracking-wider sticky top-0">📋 From Patient History</div>`;
                 dropdownHTML += historyMatches.map(d => `
-                    <div class="p-3 cursor-pointer hover:bg-teal-50 transition flex justify-between items-center group" 
+                    <div data-dropdown-item class="p-3 cursor-pointer hover:bg-teal-50 transition flex justify-between items-center group" 
                          onclick="selectDrugFromHistory('${(d.DrugName || '').replace(/'/g, "\\'")}', '${d.Dose || ''}', '${d.Frequency || ''}', '${d.Duration || ''}', '${d.Quantity || ''}')">
                         <div class="font-bold text-gray-700 group-hover:text-teal-700 text-sm">
                             ${d.DrugName} <span class="text-xs text-teal-650 font-normal ml-1">${d.Dose ? `[${d.Dose}]` : ''} (${d.Frequency} &bull; ${d.Duration})</span>
@@ -457,7 +474,7 @@ include '../includes/header.php';
             if (inventoryMatches.length > 0) {
                 dropdownHTML += `<div class="p-2 bg-gray-100 text-gray-700 font-black text-xs uppercase tracking-wider sticky top-0">📦 Clinic Inventory</div>`;
                 dropdownHTML += inventoryMatches.map(d => `
-                    <div class="p-3 cursor-pointer hover:bg-teal-50 transition flex justify-between items-center group" 
+                    <div data-dropdown-item class="p-3 cursor-pointer hover:bg-teal-50 transition flex justify-between items-center group" 
                          onclick="selectDrug('${(d.DrugName || '').replace(/'/g, "\\'")}', '${d.Dose || ''}')">
                         <div class="font-bold text-gray-700 group-hover:text-teal-700 text-sm">
                             ${d.DrugName} <span class="text-xs text-gray-400 font-normal ml-1">${d.Dose ? `[${d.Dose}]` : ''}</span>
@@ -473,6 +490,8 @@ include '../includes/header.php';
                     dDrop.innerHTML += `<div class="p-2 cursor-pointer bg-gray-50 hover:bg-gray-100 text-xs font-bold text-gray-500 text-center border-t border-gray-100" onclick="dDrop.classList.add('hidden')">Use "${e.target.value}" as Custom Drug</div>`;
                 }
                 dDrop.classList.remove('hidden');
+                dropdownSelectedIndex = 0;
+                highlightDropdownItem(getDropdownItems());
             } else {
                 dDrop.innerHTML = `<div class="p-3 cursor-pointer bg-gray-50 hover:bg-gray-100 text-xs font-bold text-gray-500 text-center" onclick="dDrop.classList.add('hidden')">No matches. Use "${e.target.value}" as Custom Drug</div>`;
                 dDrop.classList.remove('hidden');
@@ -504,8 +523,12 @@ include '../includes/header.php';
 
         // Keydown handling for dropdown selection
         let dropdownSelectedIndex = -1;
+        function getDropdownItems() {
+            return dDrop.querySelectorAll('[data-dropdown-item]');
+        }
+
         dInput.addEventListener('keydown', (e) => {
-            const items = dDrop.querySelectorAll('div[onclick]');
+            const items = getDropdownItems();
             if (items.length === 0) return;
 
             if (e.key === 'ArrowDown') {
@@ -518,7 +541,7 @@ include '../includes/header.php';
                 dropdownSelectedIndex = (dropdownSelectedIndex - 1 + items.length) % items.length;
                 highlightDropdownItem(items);
             } else if (e.key === 'Enter') {
-                if (dropdownSelectedIndex >= 0 && dropdownSelectedIndex < items.length) {
+                if (!dDrop.classList.contains('hidden') && dropdownSelectedIndex >= 0 && dropdownSelectedIndex < items.length) {
                     e.preventDefault();
                     items[dropdownSelectedIndex].click();
                     dropdownSelectedIndex = -1;
@@ -532,10 +555,10 @@ include '../includes/header.php';
         function highlightDropdownItem(items) {
             items.forEach((item, idx) => {
                 if (idx === dropdownSelectedIndex) {
-                    item.classList.add('bg-teal-150', 'text-teal-900', 'font-black');
+                    item.classList.add('bg-teal-100', 'text-teal-900', 'font-black', 'ring-1', 'ring-teal-400');
                     item.scrollIntoView({ block: 'nearest' });
                 } else {
-                    item.classList.remove('bg-teal-150', 'text-teal-900', 'font-black');
+                    item.classList.remove('bg-teal-100', 'text-teal-900', 'font-black', 'ring-1', 'ring-teal-400');
                 }
             });
         }
@@ -543,6 +566,7 @@ include '../includes/header.php';
         // Enter submits in drug row
         ['tDrugName', 'tDose', 'tFreq', 'tDays', 'tTotalQty'].forEach(id => {
             document.getElementById(id).addEventListener('keydown', (e) => {
+                if (e.defaultPrevented) return;
                 if (e.key === 'Enter') {
                     if (id === 'tDrugName' && !dDrop.classList.contains('hidden') && dropdownSelectedIndex >= 0) {
                         return; // Let dropdown keydown handle it
@@ -553,24 +577,33 @@ include '../includes/header.php';
             });
         });
 
-        // Frequency format helper (e.g. 4 -> 0-0-0-4)
+        function isUnitDrug(name) {
+            return /\b(syrup|drop|drops|eye\s*drops?)\b/i.test(name || '');
+        }
+
+        function dailyDoseCount(freq) {
+            const key = (freq || '').trim().toLowerCase().replace(/\s+/g, '');
+            if (key === 'bd' || key === '1-0-1-0') return 2;
+            if (key === 'tds' || key === '1-1-1-0') return 3;
+            if (key === 'mane' || key === '1-0-0-0') return 1;
+            if (key === 'nocte' || key === '0-0-0-1') return 1;
+
+            let total = 0;
+            (freq || '').split(/[\s,+-]+/).forEach(p => {
+                const num = parseFloat(p);
+                if (!isNaN(num)) total += num;
+            });
+            return total;
+        }
+
+        // Frequency format helper
         function formatFrequency(val) {
             let cleanVal = val.trim();
             if (!cleanVal) return '';
-            const parts = cleanVal.split(/[\s,+-]+/);
-            if (parts.length === 0 || (parts.length === 1 && parts[0] === '')) return '';
-            
-            const maxParts = 4;
-            const padded = Array(maxParts).fill('0');
-            
-            let fillIdx = maxParts - 1;
-            for (let i = parts.length - 1; i >= 0; i--) {
-                if (fillIdx >= 0) {
-                    padded[fillIdx] = parts[i] || '0';
-                    fillIdx--;
-                }
-            }
-            return padded.join('-');
+            const key = cleanVal.toLowerCase().replace(/\s+/g, '');
+            const map = {'1-0-1-0': 'BD', '1-1-1-0': 'TDS', '1-0-0-0': 'MANE', '0-0-0-1': 'NOCTE'};
+            if (['bd', 'tds', 'mane', 'nocte'].includes(key)) return key.toUpperCase();
+            return map[key] || cleanVal;
         }
 
         document.getElementById('tFreq')?.addEventListener('blur', (e) => {
@@ -585,14 +618,15 @@ include '../includes/header.php';
             const freq = document.getElementById('tFreq').value.trim();
             const days = parseInt(document.getElementById('tDays').value) || 0;
             const qtyBox = document.getElementById('tTotalQty');
+            const name = document.getElementById('tDrugName').value.trim();
 
             if (!freq && !days) return;
-
-            let dailyPills = 0;
-            if (freq) {
-                const parts = freq.split(/[\s,+-]+/);
-                parts.forEach(p => { const num = parseInt(p); if (!isNaN(num)) dailyPills += num; });
+            if (isUnitDrug(name)) {
+                if (!qtyBox.value) qtyBox.value = 1;
+                return;
             }
+
+            const dailyPills = dailyDoseCount(freq);
 
             if (dailyPills > 0 && days > 0) qtyBox.value = dailyPills * days;
             else if (dailyPills > 0 && days === 0) qtyBox.value = dailyPills;
@@ -683,11 +717,7 @@ include '../includes/header.php';
                 const durMatch = durStr.match(/\d+/);
                 if (durMatch) days = parseInt(durMatch[0]);
 
-                let dailyPills = 0;
-                if (freq) {
-                    const parts = freq.split(/[\s,+-]+/);
-                    parts.forEach(p => { const num = parseInt(p); if (!isNaN(num)) dailyPills += num; });
-                }
+                const dailyPills = isUnitDrug(billDrugs[idx].name) ? 0 : dailyDoseCount(freq);
 
                 if (dailyPills > 0) {
                     billDrugs[idx].qty = dailyPills * (days > 0 ? days : 1);

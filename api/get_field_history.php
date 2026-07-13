@@ -11,20 +11,28 @@ if (!in_array($field, $allowedFields)) {
 }
 
 try {
-    // Fetch unique values for the requested field, ordered by frequency
+    // Fetch values and split common combined complaints into single suggestions.
     $stmt = $pdo->query("
-        SELECT `$field` as value, COUNT(*) as count 
+        SELECT `$field` as value
         FROM Visits 
         WHERE `$field` IS NOT NULL AND TRIM(`$field`) != '' 
-        GROUP BY `$field` 
-        ORDER BY count DESC 
-        LIMIT 50
+        ORDER BY VisitDateTime DESC 
+        LIMIT 300
     ");
     
-    $items = [];
+    $counts = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $items[] = trim($row['value']);
+        foreach (preg_split('/\R|,|\band\b/i', trim($row['value'])) as $item) {
+            $item = trim($item, " \t\n\r\0\x0B-*");
+            if ($item !== '') {
+                $key = strtolower($item);
+                $counts[$key]['value'] = $item;
+                $counts[$key]['count'] = ($counts[$key]['count'] ?? 0) + 1;
+            }
+        }
     }
+    usort($counts, fn($a, $b) => $b['count'] <=> $a['count']);
+    $items = array_slice(array_column($counts, 'value'), 0, 50);
     
     echo json_encode(['success' => true, 'items' => $items]);
 } catch (Exception $e) {

@@ -14,6 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
+        $dupStmt = $pdo->prepare("SELECT QueueNumber FROM Queue WHERE PatientID = ? AND QueueDate = CURRENT_DATE AND Status IN ('waiting', 'with_doctor') LIMIT 1");
+        $dupStmt->execute([$patientId]);
+        $existing = $dupStmt->fetch();
+        if ($existing) {
+            $pdo->rollBack();
+            echo json_encode(['success' => false, 'error' => 'Patient is already in today\'s active queue as token ' . $existing['QueueNumber']]);
+            exit;
+        }
+
         // Get max queue number for today
         $maxStmt = $pdo->query("SELECT MAX(QueueNumber) as max_num FROM Queue WHERE QueueDate = CURRENT_DATE");
         $maxResult = $maxStmt->fetch();

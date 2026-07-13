@@ -67,7 +67,7 @@ include '../includes/header.php';
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="text-xs font-bold text-gray-400 uppercase">DOB *</label>
-                                    <input type="date" id="dob" autocomplete="bday" required class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg p-2 w-full text-sm font-semibold text-gray-600 dark:text-gray-300 focus:border-green-500">
+                                    <input type="text" id="dob" autocomplete="bday" placeholder="yyyy/mm/dd" pattern="\d{4}/\d{2}/\d{2}" required class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg p-2 w-full text-sm font-semibold text-gray-600 dark:text-gray-300 focus:border-green-500">
                                 </div>
                                 <div>
                                     <label class="text-xs font-bold text-gray-400 uppercase">Gender *</label>
@@ -79,7 +79,7 @@ include '../includes/header.php';
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-3 mb-3">
-                                <input type="text" id="phone" autocomplete="tel" placeholder="Phone Number *" required class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg p-2 w-full text-sm font-semibold focus:border-green-500">
+                                <input type="text" id="phone" autocomplete="tel" placeholder="Phone Number" class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg p-2 w-full text-sm font-semibold focus:border-green-500">
                                 <input type="text" id="nic" autocomplete="off" placeholder="NIC / ID" class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg p-2 w-full text-sm font-semibold focus:border-green-500">
                             </div>
                             <textarea id="address" autocomplete="street-address" placeholder="Residential Address" class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg p-2 w-full text-sm font-semibold focus:border-green-500" rows="2"></textarea>
@@ -155,6 +155,36 @@ include '../includes/header.php';
         </main>
     </div>
 
+    <!-- Edit Patient Modal -->
+    <div id="editPatientModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-gray-800 dark:text-white rounded-2xl shadow-xl w-full max-w-lg p-6 m-4 relative border border-gray-100 dark:border-gray-700">
+            <button onclick="closeEditPatientModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+            <h3 class="text-xl font-black text-gray-800 dark:text-gray-100 mb-4">Edit Patient Details</h3>
+            <form id="editPatientForm" class="space-y-3">
+                <input type="hidden" id="editPatientId">
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" id="editFirstName" placeholder="First Name *" required class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 rounded-lg p-2 w-full text-sm font-semibold">
+                    <input type="text" id="editLastName" placeholder="Last Name *" required class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 rounded-lg p-2 w-full text-sm font-semibold">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" id="editDob" placeholder="yyyy/mm/dd" pattern="\d{4}/\d{2}/\d{2}" required class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 rounded-lg p-2 w-full text-sm font-semibold">
+                    <select id="editGender" class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 rounded-lg p-2 w-full text-sm font-semibold">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" id="editPhone" placeholder="Phone Number" class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 rounded-lg p-2 w-full text-sm font-semibold">
+                    <input type="text" id="editNic" placeholder="NIC / ID" class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 rounded-lg p-2 w-full text-sm font-semibold">
+                </div>
+                <textarea id="editAddress" placeholder="Residential Address" rows="2" class="border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 rounded-lg p-2 w-full text-sm font-semibold"></textarea>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition">Save Patient</button>
+                <div id="editPatientMsg" class="text-sm font-bold text-center hidden"></div>
+            </form>
+        </div>
+    </div>
+
     <!-- Bill Details Modal -->
     <div id="billModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
         <div class="bg-white dark:bg-gray-800 dark:text-white rounded-2xl shadow-xl w-full max-w-md p-6 m-4 relative border border-gray-100 dark:border-gray-700">
@@ -182,6 +212,9 @@ include '../includes/header.php';
     </div>
 
     <script>
+        const showDob = (value) => (value || '').replace(/-/g, '/');
+        const dbDob = (value) => (value || '').replace(/\//g, '-');
+
         // Track submit button clicked
         let submitAction = 'queue';
         document.getElementById('btnRegisterOnly').addEventListener('click', () => { submitAction = 'only'; });
@@ -195,7 +228,7 @@ include '../includes/header.php';
             const data = {
                 first_name: document.getElementById('firstName').value,
                 last_name: document.getElementById('lastName').value,
-                dob: document.getElementById('dob').value,
+                dob: dbDob(document.getElementById('dob').value),
                 gender: document.getElementById('gender').value,
                 phone: document.getElementById('phone').value,
                 nic: document.getElementById('nic').value,
@@ -288,9 +321,12 @@ include '../includes/header.php';
                         <div class="font-black text-gray-800 dark:text-gray-100 text-sm">
                             <a href="#" onclick="openPatientHistoryModal(${p.PatientID}); return false;" class="hover:underline text-blue-600 dark:text-blue-400">${p.FirstName} ${p.LastName}</a>
                         </div>
-                        <div class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">${p.Phone} &bull; ${p.DOB}</div>
+                        <div class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">${p.Phone || 'No phone'} &bull; ${showDob(p.DOB)}</div>
                     </div>
-                    <button onclick="addToQueue(${p.PatientID}, true)" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition transform active:scale-95">Send Queue</button>
+                    <div class="flex gap-1">
+                        <button onclick="openEditPatientModal(${p.PatientID})" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-2 py-2 rounded-lg transition">Edit</button>
+                        <button onclick="addToQueue(${p.PatientID}, true)" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition transform active:scale-95">Send Queue</button>
+                    </div>
                 </div>
             `).join('');
         }, 300));
@@ -332,6 +368,77 @@ include '../includes/header.php';
                 fetchQueueAndStats();
             }
         }
+
+        async function removeFromQueue(queueId) {
+            if (!confirm("Remove this patient from today's queue?")) return;
+            const res = await fetch('../api/remove_queue.php', {
+                method: 'POST',
+                body: JSON.stringify({queue_id: queueId}),
+                headers: {'Content-Type': 'application/json'}
+            });
+            const result = await res.json();
+            showToast(result.success ? 'Removed from queue.' : `Error: ${result.error}`, result.success ? 'success' : 'error');
+            fetchQueueAndStats();
+        }
+
+        async function markPaid(visitId) {
+            const res = await fetch('../api/mark_paid.php', {
+                method: 'POST',
+                body: JSON.stringify({visit_id: visitId}),
+                headers: {'Content-Type': 'application/json'}
+            });
+            const result = await res.json();
+            showToast(result.success ? 'Marked paid.' : `Error: ${result.error}`, result.success ? 'success' : 'error');
+            fetchQueueAndStats();
+        }
+
+        async function openEditPatientModal(patientId) {
+            const res = await fetch(`../api/get_patient.php?id=${patientId}`);
+            const p = await res.json();
+            document.getElementById('editPatientId').value = p.PatientID;
+            document.getElementById('editFirstName').value = p.FirstName || '';
+            document.getElementById('editLastName').value = p.LastName || '';
+            document.getElementById('editDob').value = showDob(p.DOB);
+            document.getElementById('editGender').value = p.Gender || 'Male';
+            document.getElementById('editPhone').value = p.Phone || '';
+            document.getElementById('editNic').value = p.NIC || '';
+            document.getElementById('editAddress').value = p.Address || '';
+            document.getElementById('editPatientMsg').classList.add('hidden');
+            document.getElementById('editPatientModal').classList.remove('hidden');
+        }
+
+        function closeEditPatientModal() {
+            document.getElementById('editPatientModal').classList.add('hidden');
+        }
+
+        document.getElementById('editPatientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                patient_id: document.getElementById('editPatientId').value,
+                first_name: document.getElementById('editFirstName').value,
+                last_name: document.getElementById('editLastName').value,
+                dob: dbDob(document.getElementById('editDob').value),
+                gender: document.getElementById('editGender').value,
+                phone: document.getElementById('editPhone').value,
+                nic: document.getElementById('editNic').value,
+                address: document.getElementById('editAddress').value
+            };
+            const res = await fetch('../api/update_patient.php', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {'Content-Type': 'application/json'}
+            });
+            const result = await res.json();
+            const msg = document.getElementById('editPatientMsg');
+            msg.classList.remove('hidden');
+            msg.className = result.success ? 'text-green-600 text-sm font-bold text-center' : 'text-red-600 text-sm font-bold text-center';
+            msg.innerText = result.success ? 'Saved.' : `Error: ${result.error}`;
+            if (result.success) {
+                setTimeout(closeEditPatientModal, 600);
+                fetchQueueAndStats();
+                document.getElementById('searchInput').dispatchEvent(new Event('input'));
+            }
+        });
 
         // Fetch Queue & Stats Polling
         let lastQueueHTML = '';
@@ -379,11 +486,17 @@ include '../includes/header.php';
                                     <a href="#" onclick="openPatientHistoryModal(${q.PatientID}); return false;" class="hover:underline text-blue-600 dark:text-blue-400">${q.FirstName} ${q.LastName}</a>
                                 </div>
                                 <div class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">
-                                    ${q.Gender} &bull; ${q.DOB} &bull; 
+                                    ${q.Gender} &bull; ${showDob(q.DOB)} &bull; 
                                     <span class="text-blue-600 dark:text-blue-400 font-black ml-1 bg-blue-50 dark:bg-blue-900/30 px-1 py-0.5 rounded border border-blue-100 dark:border-blue-900">Visits: ${q.PreviousVisits || 0}</span>
                                 </div>
                             </td>
-                            <td class="p-3 text-right">${statusBadge}</td>
+                            <td class="p-3 text-right">
+                                ${statusBadge}
+                                <div class="mt-2 flex justify-end gap-1">
+                                    <button onclick="openEditPatientModal(${q.PatientID})" class="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-[10px] font-bold">Edit</button>
+                                    <button onclick="removeFromQueue(${q.QueueID})" class="px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded text-[10px] font-bold">Remove</button>
+                                </div>
+                            </td>
                         </tr>
                         `;
                     }).join('');
@@ -413,13 +526,14 @@ include '../includes/header.php';
                                     <a href="#" onclick="openPatientHistoryModal(${q.PatientID}); return false;" class="hover:underline text-blue-600 dark:text-blue-400">${q.FirstName} ${q.LastName}</a>
                                 </div>
                                 <div class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">
-                                    ${q.Gender} &bull; ${q.DOB}
+                                    ${q.Gender} &bull; ${showDob(q.DOB)}
                                 </div>
                             </td>
                             <td class="p-3 text-right">
                                 <button onclick="viewBillDetails(${q.VisitID})" class="text-xs font-black text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/30 hover:bg-green-100 dark:hover:bg-green-900/50 px-2.5 py-1.5 rounded-lg border border-green-200 dark:border-green-800 transition">
                                     ${billText}
                                 </button>
+                                ${q.IsPaid == 1 ? '<div class="mt-1 text-[10px] font-black text-green-700">Paid</div>' : `<button onclick="markPaid(${q.VisitID})" class="mt-1 text-[10px] font-black text-white bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded">Mark Paid</button>`}
                             </td>
                         </tr>
                         `;
@@ -507,6 +621,7 @@ include '../includes/header.php';
                         </div>
                         
                         <div class="pt-4">
+                            ${visit.IsPaid == 1 ? '<div class="w-full text-center bg-green-50 text-green-700 font-black py-2.5 rounded-xl mb-2">Paid</div>' : `<button onclick="markPaid(${visit.VisitID}); closeBillModal();" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl transition mb-2">Mark Paid</button>`}
                             <button onclick="closeBillModal()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 rounded-xl transition">Close Invoice</button>
                         </div>
                     `;

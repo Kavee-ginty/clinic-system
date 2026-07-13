@@ -16,6 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
+        $existingStmt = $pdo->prepare("SELECT VisitID FROM Visits WHERE QueueID = ? LIMIT 1");
+        $existingStmt->execute([$queueId]);
+        $existingVisit = $existingStmt->fetch();
+        if ($existingVisit) {
+            $pdo->commit();
+            echo json_encode(['success' => true, 'visit_id' => $existingVisit['VisitID']]);
+            exit;
+        }
+
         $stmt = $pdo->prepare("INSERT INTO Visits (PatientID, QueueID, Complaint, Examination, Investigation, Diagnosis, Treatment, Referals, Notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $patientId, 

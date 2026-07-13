@@ -48,7 +48,7 @@ $defaultVisitFee = $stmt->fetchColumn() ?: 500;
                             <tr>
                                 <th class="p-3 font-bold text-gray-700 w-1/4">Drug Name (Auto-suggest)</th>
                                 <th class="p-3 font-bold text-gray-700 w-1/6">Dose</th>
-                                <th class="p-3 font-bold text-gray-700">Frequency (e.g. 2 0 2)</th>
+                                <th class="p-3 font-bold text-gray-700">Frequency</th>
                                 <th class="p-3 font-bold text-gray-700 w-24">Days</th>
                                 <th class="p-3 font-bold text-gray-700 w-24 text-center">Total Pill<br>Count</th>
                                 <th class="p-3 font-bold text-gray-700 w-20 text-center">Action</th>
@@ -59,7 +59,7 @@ $defaultVisitFee = $stmt->fetchColumn() ?: 500;
                             <tr class="bg-blue-50/50 border-b-2 border-blue-100">
                                 <td class="p-2"><input list="inventoryList" id="tDrugName" class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm" placeholder="Type drug name..."></td>
                                 <td class="p-2"><input type="text" id="tDose" class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm" placeholder="500mg"></td>
-                                <td class="p-2"><input type="text" id="tFreq" class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm" placeholder="e.g. 2 2 2" oninput="calcPillCount()"></td>
+                                <td class="p-2"><input type="text" id="tFreq" class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm" placeholder="bd / tds / mane / nocte / custom" oninput="calcPillCount()"></td>
                                 <td class="p-2"><input type="number" id="tDays" class="w-full border-2 border-gray-200 p-2 rounded font-bold focus:border-teal-500 text-sm" placeholder="Days" min="1" oninput="calcPillCount()"></td>
                                 <td class="p-2"><input type="number" id="tTotalQty" class="w-full border-2 border-teal-500 bg-teal-50 p-2 rounded font-black focus:outline-none text-sm text-center" placeholder="Qty"></td>
                                 <td class="p-2 text-center"><button onclick="addTableDrug()" class="bg-teal-600 hover:bg-teal-700 text-white font-bold p-2 text-sm rounded shadow-md w-full">+</button></td>
@@ -129,24 +129,32 @@ $defaultVisitFee = $stmt->fetchColumn() ?: 500;
             }
         });
 
-        // Frequency helper to auto-pad input (e.g. 4 -> 0-0-0-4)
+        function isUnitDrug(name) {
+            return /\b(syrup|drop|drops|eye\s*drops?)\b/i.test(name || '');
+        }
+
+        function dailyDoseCount(freq) {
+            const key = (freq || '').trim().toLowerCase().replace(/\s+/g, '');
+            if (key === 'bd' || key === '1-0-1-0') return 2;
+            if (key === 'tds' || key === '1-1-1-0') return 3;
+            if (key === 'mane' || key === '1-0-0-0') return 1;
+            if (key === 'nocte' || key === '0-0-0-1') return 1;
+            let total = 0;
+            (freq || '').split(/[\s,+-]+/).forEach(p => {
+                const num = parseFloat(p);
+                if (!isNaN(num)) total += num;
+            });
+            return total;
+        }
+
+        // Frequency helper
         function formatFrequency(val) {
             let cleanVal = val.trim();
             if (!cleanVal) return '';
-            const parts = cleanVal.split(/[\s,+-]+/);
-            if (parts.length === 0 || (parts.length === 1 && parts[0] === '')) return '';
-            
-            const maxParts = 4;
-            const padded = Array(maxParts).fill('0');
-            
-            let fillIdx = maxParts - 1;
-            for (let i = parts.length - 1; i >= 0; i--) {
-                if (fillIdx >= 0) {
-                    padded[fillIdx] = parts[i] || '0';
-                    fillIdx--;
-                }
-            }
-            return padded.join('-');
+            const key = cleanVal.toLowerCase().replace(/\s+/g, '');
+            const map = {'1-0-1-0': 'BD', '1-1-1-0': 'TDS', '1-0-0-0': 'MANE', '0-0-0-1': 'NOCTE'};
+            if (['bd', 'tds', 'mane', 'nocte'].includes(key)) return key.toUpperCase();
+            return map[key] || cleanVal;
         }
 
         document.getElementById('tFreq')?.addEventListener('blur', (e) => {
@@ -162,18 +170,15 @@ $defaultVisitFee = $stmt->fetchColumn() ?: 500;
             const freq = document.getElementById('tFreq').value.trim();
             const days = parseInt(document.getElementById('tDays').value) || 0;
             const qtyBox = document.getElementById('tTotalQty');
+            const name = document.getElementById('tDrugName').value.trim();
             
             if(!freq && !days) return; // Keep manual entry if they don't use frequency
-            
-            // "2 2 2" -> [2, 2, 2] -> 6 per day
-            let dailyPills = 0;
-            if(freq) {
-                const parts = freq.split(/[\s,+-]+/); // match spaces, commas, plus
-                parts.forEach(p => {
-                    const num = parseInt(p);
-                    if(!isNaN(num)) dailyPills += num;
-                });
+            if (isUnitDrug(name)) {
+                if (!qtyBox.value) qtyBox.value = 1;
+                return;
             }
+            
+            const dailyPills = dailyDoseCount(freq);
 
             if(dailyPills > 0 && days > 0) {
                 qtyBox.value = dailyPills * days;
