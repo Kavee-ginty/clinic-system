@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 require_once '../config/db.php';
 session_start();
 
-if (!isset($_SESSION['admin_logged_in'])) {
+if (!isset($_SESSION['admin_logged_in']) && !isset($_SESSION['receptionist_view'])) {
     echo json_encode(['success' => false, 'error' => 'Unauthorized']);
     exit;
 }
@@ -19,6 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($data['phone'] ?? '');
     $address = trim($data['address'] ?? '');
 
+    $dob = str_replace('/', '-', $dob);
+
     if (!$patient_id || empty($firstName) || empty($lastName)) {
         echo json_encode(['success' => false, 'error' => 'Missing required data']);
         exit;
@@ -32,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $age = $dobDate->diff($today)->y;
         }
 
-        $stmt = $pdo->prepare("UPDATE Patients SET FirstName=?, LastName=?, DOB=?, Gender=?, Phone=?, Address=?, Age=? WHERE PatientID=?");
-        $stmt->execute([$firstName, $lastName, $dob, $gender, $phone, $address, $age, $patient_id]);
+        $stmt = $pdo->prepare("UPDATE Patients SET FirstName=?, LastName=?, DOB=?, Gender=?, Phone=?, Address=?, NIC=?, Age=? WHERE PatientID=?");
+        $stmt->execute([$firstName, $lastName, $dob, $gender, $phone, $address, trim($data['nic'] ?? ''), $age, $patient_id]);
         
         echo json_encode(['success' => true]);
     } catch (Exception $e) {

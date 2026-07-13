@@ -12,7 +12,7 @@ if (!$visitId) {
 try {
     // Fetch visit details
     $vStmt = $pdo->prepare("
-        SELECT v.VisitID, v.VisitDateTime, v.VisitFee, v.TotalBill, 
+        SELECT v.VisitID, v.VisitDateTime, v.VisitFee, v.TotalBill, COALESCE(v.IsPaid, 0) AS IsPaid,
                p.FirstName, p.LastName, p.PatientID
         FROM Visits v
         JOIN Patients p ON v.PatientID = p.PatientID

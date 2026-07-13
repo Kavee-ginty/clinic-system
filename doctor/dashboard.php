@@ -86,6 +86,7 @@ include '../includes/header.php';
 
     <script>
         let lastQueueHTML = '';
+        const showDob = (value) => (value || '').replace(/-/g, '/');
         async function fetchQueueAndStats() {
             try {
                 // Fetch Stats
@@ -145,7 +146,7 @@ include '../includes/header.php';
                         <td class="p-4">
                             <div class="font-bold text-lg text-gray-800">${q.FirstName} ${q.LastName}</div>
                             <div class="text-xs text-gray-500 font-semibold uppercase tracking-wider mt-1">
-                                ${q.Gender} &bull; DOB: ${q.DOB} &bull; 
+                                ${q.Gender} &bull; DOB: ${showDob(q.DOB)} &bull; 
                                 <span class="text-teal-600 font-bold ml-1 bg-teal-50 px-2 py-0.5 rounded border border-teal-100">Visits: ${q.PreviousVisits || 0}</span>
                             </div>
                         </td>

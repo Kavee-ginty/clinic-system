@@ -27,6 +27,7 @@ include '../includes/header.php';
                 <!-- Add New Drug -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <h2 class="text-xl font-black text-gray-800 mb-4 border-b border-gray-200 pb-2">Add New Drug</h2>
+                    <p class="text-xs text-gray-500 font-bold mb-3">For syrups and eye drops, include "syrup" or "drops" in the drug name so quantity is not auto-multiplied.</p>
                     <form id="addDrugForm" class="space-y-4">
                         <input type="text" id="dName" placeholder="Drug Name *" required class="w-full border-2 border-gray-200 p-3 rounded-lg font-bold focus:border-blue-500">
                         <input type="text" id="dDose" placeholder="Dose (e.g., 500mg) *" required class="w-full border-2 border-gray-200 p-3 rounded-lg font-bold focus:border-blue-500">

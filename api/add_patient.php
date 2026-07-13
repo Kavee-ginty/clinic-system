@@ -13,7 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = trim($data['address'] ?? '');
     $nic = trim($data['nic'] ?? '');
 
-    if (empty($firstName) || empty($lastName) || empty($dob) || empty($phone)) {
+    $dob = str_replace('/', '-', $dob);
+
+    if (empty($firstName) || empty($lastName) || empty($dob)) {
         echo json_encode(['success' => false, 'error' => 'Required fields missing']);
         exit;
     }

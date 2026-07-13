@@ -1,1 +1,7 @@
 /backups
+node_modules
+.next
+.vercel
+.env
+.env.local
+npm-debug.log*
