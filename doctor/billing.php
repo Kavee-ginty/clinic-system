@@ -216,31 +216,16 @@ $defaultVisitFee = $stmt->fetchColumn() ?: 500;
                 return;
             }
 
-            // Always add a new row in a prescription context usually, OR group them
-            const existing = billDrugs.find(d => d.name.toLowerCase() === name.toLowerCase());
-            if (existing && existing.drug_id) { // Group only if it's a known drug, custom drugs we might want separate lines
-                if (existing.qty + qty > stock) {
-                    err.innerText = `Adding this exceeds available stock (${stock}) for ${name}!`;
-                    err.classList.remove('hidden');
-                    return;
-                }
-                existing.qty += qty;
-                existing.cost = existing.qty * price;
-                existing.frequency = freq || existing.frequency;
-                existing.dose = dose || existing.dose;
-                existing.duration = dur ? dur + ' days' : existing.duration;
-            } else {
-                billDrugs.push({
-                    id: drugId, // backend supports null/0 for custom text
-                    name: name,
-                    qty: qty,
-                    unit_price: price,
-                    cost: qty * price,
-                    frequency: freq,
-                    dose: dose,
-                    duration: dur ? dur + ' days' : ''
-                });
-            }
+            billDrugs.push({
+                id: drugId, // backend supports null/0 for custom text
+                name: name,
+                qty: qty,
+                unit_price: price,
+                cost: qty * price,
+                frequency: freq,
+                dose: dose,
+                duration: dur ? dur + ' days' : ''
+            });
 
             // clear inputs
             nameInput.value = ''; doseInput.value = ''; freqInput.value = ''; daysInput.value = ''; qtyInput.value = '';

@@ -661,30 +661,16 @@ include '../includes/header.php';
                 showedWarning = true;
             }
 
-            const existing = billDrugs.find(d => d.name.toLowerCase() === name.toLowerCase());
-            if (existing && existing.id) {
-                if (qty > stock) {
-                    err.innerText = `Warning: Adding this exceeds available stock (${stock}) for ${name}! Added anyway.`;
-                    err.className = 'text-xs text-orange-500 font-bold mb-4 text-center';
-                    showedWarning = true;
-                }
-                existing.qty = qty; // Override in modal edit scenario
-                existing.cost = existing.qty * price;
-                existing.frequency = freq || existing.frequency;
-                existing.dose = dose || existing.dose;
-                existing.duration = dur ? dur + ' days' : existing.duration;
-            } else {
-                billDrugs.push({
-                    id: drugId,
-                    name: name,
-                    qty: qty,
-                    unit_price: price,
-                    cost: qty * price,
-                    frequency: freq,
-                    dose: dose,
-                    duration: dur ? dur + ' days' : ''
-                });
-            }
+            billDrugs.push({
+                id: drugId,
+                name: name,
+                qty: qty,
+                unit_price: price,
+                cost: qty * price,
+                frequency: freq,
+                dose: dose,
+                duration: dur ? dur + ' days' : ''
+            });
 
             nameInput.value = ''; doseInput.value = ''; freqInput.value = ''; daysInput.value = ''; qtyInput.value = '';
             document.getElementById('tDrugName').focus();
