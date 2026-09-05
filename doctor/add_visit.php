@@ -72,8 +72,15 @@ include '../includes/header.php';
                 <!-- Group 3 -->
                 <div>
                     <div class="flex justify-between items-center mb-2 flex-wrap gap-2">
-                        <label class="block font-bold text-gray-700">Treatment / Prescription <span
-                                class="text-red-500">*</span></label>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <label class="block font-bold text-gray-700 dark:text-gray-200">Treatment / Prescription <span
+                                    class="text-red-500">*</span></label>
+                            <select id="quickTemplateSelect" onchange="handleQuickTemplateSelect(this.value)"
+                                class="border-2 border-teal-200 dark:border-teal-700 dark:bg-gray-800 dark:text-teal-200 bg-teal-50 text-teal-900 rounded-lg px-2.5 py-1 text-xs font-bold focus:outline-none focus:border-teal-500 transition shadow-sm max-w-[320px] truncate"
+                                title="Select a saved template by diagnosis name">
+                                <option value="">⚡ Quick Template (by Diagnosis)...</option>
+                            </select>
+                        </div>
                         <div class="flex gap-2">
                             <button type="button" onclick="saveCurrentAsTemplate()"
                                 class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded font-bold text-xs flex items-center gap-1 shadow-sm transition">
@@ -205,17 +212,47 @@ include '../includes/header.php';
         </div>
     </div>
 
+    <!-- Save Template Modal -->
+    <div id="saveTemplateModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-gray-800 dark:text-white rounded-2xl shadow-xl w-full max-w-md p-6 m-4 relative border border-gray-100 dark:border-gray-700">
+            <button onclick="closeSaveTemplateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl font-bold">&times;</button>
+            <h3 class="text-xl font-black text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+                <span>💾</span> <span id="saveTemplateHeading">Save Treatment Template</span>
+            </h3>
+            <form id="saveTemplateForm" onsubmit="handleSaveTemplateSubmit(event)" class="space-y-4">
+                <input type="hidden" id="tplEditIndex" value="-1">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Diagnosis Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="tplDiagnosis" required placeholder="e.g. Dengue, Viral Fever, Gastritis" class="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg p-2.5 text-sm font-bold focus:border-teal-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Template Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="tplName" required placeholder="e.g. Standard Protocol, Mild Course, Inpatient" class="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg p-2.5 text-sm font-bold focus:border-teal-500 focus:outline-none">
+                </div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 bg-teal-50 dark:bg-teal-950/40 p-3 rounded-lg border border-teal-100 dark:border-teal-900">
+                    Saves current diagnosis, treatment text, and prescribed items so you can quickly identify and re-apply them later.
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeSaveTemplateModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold rounded-lg text-sm">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg text-sm transition shadow-sm">Save Template</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Templates Modal -->
     <div id="templatesModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-        <div class="bg-white dark:bg-gray-800 dark:text-white rounded-2xl shadow-xl w-full max-w-lg p-6 m-4 relative border border-gray-100 dark:border-gray-700">
-            <button onclick="closeTemplatesModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-650 text-2xl font-bold">&times;</button>
+        <div class="bg-white dark:bg-gray-800 dark:text-white rounded-2xl shadow-xl w-full max-w-xl p-6 m-4 relative border border-gray-100 dark:border-gray-700">
+            <button onclick="closeTemplatesModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl font-bold">&times;</button>
             <h3 class="text-xl font-black text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
                 <span>📋</span> Treatment Templates
             </h3>
+            <input type="text" id="tplFilterInput" oninput="renderTemplatesList(this.value)" placeholder="🔍 Search templates by diagnosis or name..." class="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg p-2.5 text-sm font-semibold mb-3 focus:outline-none focus:border-teal-500">
             <div id="templatesList" class="space-y-3 max-h-80 overflow-y-auto pr-1">
                 <!-- Populated via JS -->
             </div>
-            <div class="pt-4 border-t dark:border-gray-700 mt-4 flex justify-end">
+            <div class="pt-4 border-t dark:border-gray-700 mt-4 flex justify-between items-center">
+                <span class="text-xs text-gray-400" id="tplCountText"></span>
                 <button onclick="closeTemplatesModal()" class="bg-gray-600 hover:bg-gray-700 text-white font-bold px-4 py-2 rounded-lg transition text-sm">Close</button>
             </div>
         </div>
@@ -227,9 +264,17 @@ include '../includes/header.php';
             <h3 class="text-lg font-black text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-2">
                 <span>💡</span> Pre-saved Treatment Found
             </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
-                Pre saved Treatment for <strong id="templateMatchName" class="text-teal-700 dark:text-teal-400"></strong> saved, do u want to apply?
-            </p>
+            <div class="text-sm text-gray-600 dark:text-gray-300 mb-6 space-y-1">
+                <p>Pre-saved treatment template found for:</p>
+                <div class="p-3 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 rounded-lg">
+                    <div class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">Diagnosis</div>
+                    <div id="templateMatchDiag" class="text-base font-black text-teal-800 dark:text-teal-300"></div>
+                    <div class="text-xs text-gray-600 dark:text-gray-400 font-semibold mt-1">
+                        Template: <span id="templateMatchName" class="font-bold text-gray-800 dark:text-gray-200"></span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Do you want to apply this treatment template?</p>
+            </div>
             <div class="flex justify-end gap-3">
                 <button id="btnCancelTemplate" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold rounded-lg transition text-sm">No</button>
                 <button id="btnApplyTemplate" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg transition text-sm">Yes, Apply</button>
@@ -785,15 +830,24 @@ include '../includes/header.php';
         // ----------------------------------------------------
         let pendingTemplate = null;
 
+        const escapeHtml = (str) => {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        };
+
         document.getElementById('diagnosis').addEventListener('blur', (e) => {
             const diagVal = e.target.value.trim().toLowerCase();
             if (!diagVal) return;
             
             const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
-            const match = templates.find(t => t.name.toLowerCase() === diagVal || t.diagnosis.toLowerCase() === diagVal);
+            const match = templates.find(t => 
+                (t.diagnosis && t.diagnosis.toLowerCase() === diagVal) || 
+                (t.name && t.name.toLowerCase() === diagVal)
+            );
             
             if (match) {
                 pendingTemplate = match;
+                document.getElementById('templateMatchDiag').innerText = match.diagnosis || match.name;
                 document.getElementById('templateMatchName').innerText = match.name;
                 document.getElementById('templateConfirmModal').classList.remove('hidden');
             }
@@ -813,63 +867,178 @@ include '../includes/header.php';
         });
 
         window.saveCurrentAsTemplate = function() {
-            const diag = document.getElementById('diagnosis').value.trim();
-            const name = prompt("Enter a name/diagnosis for this template:", diag || "Dengue");
-            if (!name) return;
-            
-            const treatment = document.getElementById('treatment').value;
-            const notes = document.getElementById('notes').value;
-            
+            const currentDiag = document.getElementById('diagnosis').value.trim();
+            document.getElementById('tplEditIndex').value = '-1';
+            document.getElementById('saveTemplateHeading').innerText = 'Save Treatment Template';
+            document.getElementById('tplDiagnosis').value = currentDiag;
+            document.getElementById('tplName').value = currentDiag ? `${currentDiag} Protocol` : '';
+            document.getElementById('saveTemplateModal').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById(currentDiag ? 'tplName' : 'tplDiagnosis')?.focus();
+            }, 50);
+        };
+
+        window.closeSaveTemplateModal = function() {
+            document.getElementById('saveTemplateModal').classList.add('hidden');
+        };
+
+        window.editTemplateByIndex = function(idx) {
             const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
-            const existingIdx = templates.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
+            const t = templates[idx];
+            if (!t) return;
+
+            document.getElementById('tplEditIndex').value = idx;
+            document.getElementById('saveTemplateHeading').innerText = 'Edit Treatment Template';
+            document.getElementById('tplDiagnosis').value = t.diagnosis || '';
+            document.getElementById('tplName').value = t.name || '';
             
-            const newTemplate = {
-                name: name,
-                diagnosis: name,
-                treatment: treatment,
-                drugs: billDrugs,
-                notes: notes
-            };
-            
-            if (existingIdx >= 0) {
-                if (confirm(`Template for "${name}" already exists. Overwrite?`)) {
-                    templates[existingIdx] = newTemplate;
-                } else {
-                    return;
-                }
+            // Close list modal and open edit modal
+            closeTemplatesModal();
+            document.getElementById('saveTemplateModal').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('tplDiagnosis')?.focus();
+            }, 50);
+        };
+
+        window.handleSaveTemplateSubmit = function(e) {
+            e.preventDefault();
+            const diag = document.getElementById('tplDiagnosis').value.trim();
+            const name = document.getElementById('tplName').value.trim();
+            if (!name || !diag) return;
+
+            const editIndex = parseInt(document.getElementById('tplEditIndex').value);
+            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
+
+            if (editIndex >= 0 && editIndex < templates.length) {
+                // Updating existing template
+                templates[editIndex].diagnosis = diag;
+                templates[editIndex].name = name;
+                // Update treatment/drugs if current form has values, or preserve existing
+                const curTreatment = document.getElementById('treatment').value;
+                if (curTreatment) templates[editIndex].treatment = curTreatment;
+                if (billDrugs && billDrugs.length > 0) templates[editIndex].drugs = [...billDrugs];
+                const curNotes = document.getElementById('notes').value;
+                if (curNotes) templates[editIndex].notes = curNotes;
+
+                localStorage.setItem('clinic_treatment_templates', JSON.stringify(templates));
+                closeSaveTemplateModal();
+                showToast(`Template "${name}" for Diagnosis "${diag}" updated!`);
             } else {
-                templates.push(newTemplate);
+                // Saving new template
+                const treatment = document.getElementById('treatment').value;
+                const notes = document.getElementById('notes').value;
+                
+                const existingIdx = templates.findIndex(t => 
+                    t.name.toLowerCase() === name.toLowerCase() && 
+                    (t.diagnosis || '').toLowerCase() === diag.toLowerCase()
+                );
+                
+                const newTemplate = {
+                    name: name,
+                    diagnosis: diag,
+                    treatment: treatment,
+                    drugs: billDrugs,
+                    notes: notes
+                };
+                
+                if (existingIdx >= 0) {
+                    if (confirm(`Template "${name}" for "${diag}" already exists. Overwrite?`)) {
+                        templates[existingIdx] = newTemplate;
+                    } else {
+                        return;
+                    }
+                } else {
+                    templates.push(newTemplate);
+                }
+                
+                localStorage.setItem('clinic_treatment_templates', JSON.stringify(templates));
+                closeSaveTemplateModal();
+                showToast(`Template "${name}" for Diagnosis "${diag}" saved!`);
             }
             
-            localStorage.setItem('clinic_treatment_templates', JSON.stringify(templates));
-            showToast(`Template "${name}" saved successfully!`);
+            renderQuickTemplateDropdown();
+            renderTemplatesList(document.getElementById('tplFilterInput')?.value || '');
         };
 
         window.openTemplatesModal = function() {
             const modal = document.getElementById('templatesModal');
-            const list = document.getElementById('templatesList');
+            const filterInput = document.getElementById('tplFilterInput');
+            if (filterInput) filterInput.value = '';
             modal.classList.remove('hidden');
-            
+            renderTemplatesList('');
+            setTimeout(() => {
+                filterInput?.focus();
+            }, 50);
+        };
+
+        window.renderTemplatesList = function(filterQuery = '') {
+            const list = document.getElementById('templatesList');
+            const countText = document.getElementById('tplCountText');
             const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
+            
             if (templates.length === 0) {
                 list.innerHTML = `<p class="text-gray-500 italic text-center py-6">No saved templates yet. Fill a prescription and click "Save Template" to create one.</p>`;
+                if (countText) countText.innerText = '0 templates';
                 return;
             }
-            
-            list.innerHTML = templates.map((t, idx) => `
-                <div class="p-3 border border-gray-150 rounded-xl flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition mb-2 text-sm text-gray-800 dark:text-gray-200">
-                    <div>
-                        <div class="font-bold">${t.name}</div>
-                        <div class="text-[10px] text-gray-500 font-semibold mt-1">
-                            Drugs: ${t.drugs && t.drugs.length > 0 ? t.drugs.map(d => d.name).join(', ') : 'None'}
+
+            const q = (filterQuery || '').trim().toLowerCase();
+            const filtered = templates.map((t, idx) => ({ ...t, originalIndex: idx })).filter(t => {
+                if (!q) return true;
+                const diag = (t.diagnosis || '').toLowerCase();
+                const name = (t.name || '').toLowerCase();
+                const treat = (t.treatment || '').toLowerCase();
+                const drugs = (t.drugs || []).map(d => (d.name || '').toLowerCase()).join(' ');
+                return diag.includes(q) || name.includes(q) || treat.includes(q) || drugs.includes(q);
+            });
+
+            if (countText) {
+                countText.innerText = `${filtered.length} of ${templates.length} template${templates.length === 1 ? '' : 's'}`;
+            }
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<p class="text-gray-400 italic text-center py-6">No templates match "${escapeHtml(filterQuery)}".</p>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map(t => {
+                const diagDisplay = t.diagnosis || '⚠️ Not Specified (Click Edit)';
+                const isNoDiag = !t.diagnosis;
+                const badgeStyle = isNoDiag 
+                    ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800' 
+                    : 'bg-teal-100 dark:bg-teal-900/60 text-teal-900 dark:text-teal-200 border-teal-200 dark:border-teal-800';
+
+                const drugsList = t.drugs && t.drugs.length > 0 
+                    ? t.drugs.map(d => `<span class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 px-1.5 py-0.5 rounded text-[10px] font-bold text-gray-700 dark:text-gray-300">${escapeHtml(d.name)} (${d.qty})</span>`).join(' ') 
+                    : '<span class="italic text-gray-400">None</span>';
+
+                return `
+                <div class="p-3.5 border border-gray-150 dark:border-gray-700 rounded-xl flex justify-between items-start bg-gray-50 dark:bg-gray-750 hover:bg-teal-50/50 dark:hover:bg-gray-700/50 transition mb-2 text-sm text-gray-800 dark:text-gray-200">
+                    <div class="flex-1 pr-3">
+                        <div class="flex items-center gap-2 flex-wrap mb-1.5">
+                            <span class="px-2.5 py-1 ${badgeStyle} rounded-lg font-black text-xs border flex items-center gap-1 shadow-xs">
+                                <span class="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400">Diagnosis:</span>
+                                <span>${escapeHtml(diagDisplay)}</span>
+                            </span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-sm flex items-center gap-1">
+                                <span class="text-[10px] text-gray-400 dark:text-gray-500 font-semibold uppercase">Template:</span>
+                                <span>${escapeHtml(t.name)}</span>
+                            </span>
+                        </div>
+                        ${t.treatment ? `<div class="text-xs text-gray-600 dark:text-gray-300 italic truncate max-w-md mt-1">${escapeHtml(t.treatment)}</div>` : ''}
+                        <div class="text-[11px] text-gray-500 dark:text-gray-400 font-semibold mt-1.5 flex items-center gap-1 flex-wrap">
+                            <span class="font-bold text-gray-400 uppercase text-[9px] tracking-wider">Drugs:</span>
+                            ${drugsList}
                         </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="applyTemplateByIndex(${idx})" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-2.5 py-1.5 rounded transition">Apply</button>
-                        <button onclick="deleteTemplateByIndex(${idx})" class="bg-red-500 hover:bg-red-650 text-white text-xs font-bold px-2.5 py-1.5 rounded transition">Delete</button>
+                    <div class="flex gap-1.5 flex-shrink-0 pt-0.5">
+                        <button onclick="applyTemplateByIndex(${t.originalIndex})" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm">Apply</button>
+                        <button onclick="editTemplateByIndex(${t.originalIndex})" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg transition shadow-sm">Edit</button>
+                        <button onclick="deleteTemplateByIndex(${t.originalIndex})" class="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg transition">Delete</button>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         };
 
         window.closeTemplatesModal = function() {
@@ -886,22 +1055,67 @@ include '../includes/header.php';
 
         window.deleteTemplateByIndex = function(idx) {
             const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
-            if (confirm(`Are you sure you want to delete template "${templates[idx].name}"?`)) {
+            const tName = templates[idx]?.name || 'this template';
+            const tDiag = templates[idx]?.diagnosis || '';
+            const confirmMsg = tDiag ? `Delete template "${tName}" for diagnosis "${tDiag}"?` : `Delete template "${tName}"?`;
+            if (confirm(confirmMsg)) {
                 templates.splice(idx, 1);
                 localStorage.setItem('clinic_treatment_templates', JSON.stringify(templates));
-                openTemplatesModal();
+                renderQuickTemplateDropdown();
+                renderTemplatesList(document.getElementById('tplFilterInput')?.value || '');
             }
         };
 
+        window.renderQuickTemplateDropdown = function() {
+            const sel = document.getElementById('quickTemplateSelect');
+            if (!sel) return;
+            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
+            if (templates.length === 0) {
+                sel.innerHTML = '<option value="">⚡ No Templates Saved</option>';
+                sel.disabled = true;
+                return;
+            }
+            sel.disabled = false;
+            let html = '<option value="">⚡ Quick Template (by Diagnosis)...</option>';
+
+            const sorted = templates.map((t, idx) => ({ ...t, originalIndex: idx })).sort((a, b) => {
+                const diagA = (a.diagnosis || a.name || '').toLowerCase();
+                const diagB = (b.diagnosis || b.name || '').toLowerCase();
+                return diagA.localeCompare(diagB);
+            });
+
+            sorted.forEach(t => {
+                const diag = t.diagnosis || 'General';
+                html += `<option value="${t.originalIndex}">🩺 [${escapeHtml(diag)}] — ${escapeHtml(t.name)}</option>`;
+            });
+            sel.innerHTML = html;
+        };
+
+        window.handleQuickTemplateSelect = function(idxStr) {
+            if (idxStr === '') return;
+            const idx = parseInt(idxStr);
+            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
+            if (templates[idx]) {
+                applyTemplate(templates[idx]);
+            }
+            document.getElementById('quickTemplateSelect').value = '';
+        };
+
         function applyTemplate(t) {
+            if (t.diagnosis && !document.getElementById('diagnosis').value.trim()) {
+                document.getElementById('diagnosis').value = t.diagnosis;
+            }
             document.getElementById('treatment').value = t.treatment || '';
             document.getElementById('notes').value = t.notes || '';
             if (t.drugs && t.drugs.length > 0) {
                 billDrugs = [...t.drugs];
                 renderBill();
             }
-            showToast(`Template "${t.name}" applied!`);
+            showToast(`Template "${t.name}" for Diagnosis "${t.diagnosis || 'General'}" applied!`);
         }
+
+        // Initialize quick template dropdown on page load
+        renderQuickTemplateDropdown();
 
     </script>
     <script src="../assets/js/toast.js"></script>

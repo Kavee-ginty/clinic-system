@@ -9,6 +9,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     </div>
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
         <a href="dashboard.php" class="flex items-center gap-3 p-3 <?= $currentPage === 'dashboard.php' ? 'bg-teal-800 dark:bg-gray-800 text-white' : 'text-teal-200 hover:text-white hover:bg-teal-800 dark:hover:bg-gray-800' ?> rounded-lg font-bold transition">Live Dashboard</a>
+        <a href="reception.php" class="flex items-center gap-3 p-3 <?= $currentPage === 'reception.php' ? 'bg-teal-800 dark:bg-gray-800 text-white' : 'text-teal-200 hover:text-white hover:bg-teal-800 dark:hover:bg-gray-800' ?> rounded-lg font-bold transition">Receptionist Desk</a>
         <a href="search.php" class="flex items-center gap-3 p-3 <?= $currentPage === 'search.php' ? 'bg-teal-800 dark:bg-gray-800 text-white' : 'text-teal-200 hover:text-white hover:bg-teal-800 dark:hover:bg-gray-800' ?> rounded-lg font-bold transition">Search Patient</a>
         <a href="inventory.php" class="flex items-center gap-3 p-3 <?= $currentPage === 'inventory.php' ? 'bg-teal-800 dark:bg-gray-800 text-white' : 'text-teal-200 hover:text-white hover:bg-teal-800 dark:hover:bg-gray-800' ?> rounded-lg font-bold transition">Manage Inventory</a>
         <a href="settings.php" class="flex items-center gap-3 p-3 <?= $currentPage === 'settings.php' ? 'bg-teal-800 dark:bg-gray-800 text-white' : 'text-teal-200 hover:text-white hover:bg-teal-800 dark:hover:bg-gray-800' ?> rounded-lg font-bold transition">Print Settings</a>

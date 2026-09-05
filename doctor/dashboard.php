@@ -17,7 +17,10 @@ include '../includes/header.php';
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <nav class="bg-teal-900 text-white p-4 md:hidden flex justify-between items-center shadow-md">
             <h1 class="text-xl font-bold">Doctor Dashboard</h1>
-            <a href="logout.php" class="px-3 py-1 bg-red-600 rounded font-bold text-sm">Logout</a>
+            <div class="flex items-center gap-2">
+                <a href="reception.php" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 rounded font-bold text-xs">Reception</a>
+                <a href="logout.php" class="px-3 py-1 bg-red-600 rounded font-bold text-xs">Logout</a>
+            </div>
         </nav>
 
         <main class="flex-1 overflow-y-auto p-4 md:p-8">
@@ -27,46 +30,59 @@ include '../includes/header.php';
                     <h2 class="text-3xl font-black text-gray-800 dark:text-white">My Dashboard</h2>
                     <p class="text-gray-500 font-semibold mt-1">Real-time daily operations</p>
                 </div>
-                <div>
+                <div class="flex items-center gap-3">
+                    <a href="reception.php" class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-2 text-sm focus:outline-none">
+                        <span>➕</span> Register / Queue Patient
+                    </a>
                     <button id="btnDashboardUploadDrive" class="bg-purple-650 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-2 text-sm focus:outline-none">
                         <span>☁️</span> Backup to Drive
                     </button>
                 </div>
             </div>
 
+            <!-- View Mode Switcher Tabs -->
+            <div class="flex items-center gap-2 mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+                <a href="dashboard.php" class="px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 bg-teal-600 text-white shadow-md shadow-teal-500/20">
+                    <span>🩺</span> Doctor Live Queue
+                </a>
+                <a href="reception.php" class="px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <span>📋</span> Receptionist Desk (Intake & Queue)
+                </a>
+            </div>
+
             <!-- Stats Module -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="statsGrid">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-between">
                     <div><p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Visits Today</p><p class="text-2xl font-black text-teal-600" id="stat_visits">-</p></div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-between">
                     <div><p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Waiting Now</p><p class="text-2xl font-black text-yellow-500 animate-pulse" id="stat_waiting">-</p></div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-between">
                     <div><p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Registered Today</p><p class="text-2xl font-black text-purple-600" id="stat_registered">-</p></div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div><p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Total Patients</p><p class="text-2xl font-black text-gray-700" id="stat_total">-</p></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                    <div><p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Total Patients</p><p class="text-2xl font-black text-gray-700 dark:text-gray-300" id="stat_total">-</p></div>
                 </div>
             </div>
 
             <!-- Live Queue -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-teal-500 border-x border-b border-gray-100 min-h-[500px]">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-t-4 border-teal-500 border-x border-b border-gray-100 dark:border-gray-700 min-h-[500px]">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Live Queue Window</h2>
-                    <div class="flex items-center gap-2 bg-teal-50 px-3 py-1 rounded-full border border-teal-100">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Live Queue Window</h2>
+                    <div class="flex items-center gap-2 bg-teal-50 dark:bg-teal-900/30 px-3 py-1 rounded-full border border-teal-100 dark:border-teal-800">
                         <span class="relative flex h-2 w-2">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
                           <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
                         </span>
-                        <span class="text-xs font-bold text-teal-700 uppercase tracking-widest">Live Syncing</span>
+                        <span class="text-xs font-bold text-teal-700 dark:text-teal-300 uppercase tracking-widest">Live Syncing</span>
                     </div>
                 </div>
 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="text-gray-400 text-xs uppercase tracking-widest border-b-2 border-gray-100">
+                            <tr class="text-gray-400 text-xs uppercase tracking-widest border-b-2 border-gray-100 dark:border-gray-700">
                                 <th class="p-4 font-black">No.</th>
                                 <th class="p-4 font-black">Patient Data</th>
                                 <th class="p-4 font-black">Current Status</th>
@@ -138,16 +154,16 @@ include '../includes/header.php';
                     }
 
                     // Ghosting out completed patients so waiting patients stand out
-                    const rowClass = q.Status === 'completed' ? 'opacity-50 hover:opacity-100' : 'bg-white shadow-sm';
+                    const rowClass = q.Status === 'completed' ? 'opacity-50 hover:opacity-100 dark:bg-gray-800' : 'bg-white dark:bg-gray-800 shadow-sm';
 
                     return `
-                    <tr class="hover:bg-gray-50 transition border-b border-gray-100 group ${rowClass}">
-                        <td class="p-4 font-black text-3xl text-gray-300 group-hover:text-teal-500 transition">${q.QueueNumber}</td>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition border-b border-gray-100 dark:border-gray-700 group ${rowClass}">
+                        <td class="p-4 font-black text-3xl text-gray-300 dark:text-gray-600 group-hover:text-teal-500 transition">${q.QueueNumber}</td>
                         <td class="p-4">
-                            <div class="font-bold text-lg text-gray-800">${q.FirstName} ${q.LastName}</div>
-                            <div class="text-xs text-gray-500 font-semibold uppercase tracking-wider mt-1">
+                            <div class="font-bold text-lg text-gray-800 dark:text-gray-100">${q.FirstName} ${q.LastName}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider mt-1">
                                 ${q.Gender} &bull; DOB: ${showDob(q.DOB)} &bull; 
-                                <span class="text-teal-600 font-bold ml-1 bg-teal-50 px-2 py-0.5 rounded border border-teal-100">Visits: ${q.PreviousVisits || 0}</span>
+                                <span class="text-teal-600 dark:text-teal-400 font-bold ml-1 bg-teal-50 dark:bg-teal-900/30 px-2 py-0.5 rounded border border-teal-100 dark:border-teal-800">Visits: ${q.PreviousVisits || 0}</span>
                             </div>
                         </td>
                         <td class="p-4">${statusBadge}</td>

@@ -62,7 +62,12 @@ $isEmbedded = isset($_GET['embed']) && $_GET['embed'] === 'true';
             const p = await pRes.json();
             document.getElementById('patientInfo').innerHTML = `
                 <div>
-                    <h2 class="text-2xl font-bold dark:text-white">${p.FirstName} ${p.LastName}</h2>
+                    <h2 class="text-2xl font-bold dark:text-white flex items-center gap-2 flex-wrap">
+                        ${p.FirstName} ${p.LastName} 
+                        <span class="text-xs font-black bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 px-2 py-0.5 rounded border border-teal-200 dark:border-teal-800">
+                            ID: ${p.PatientNumber || ('PT-' + String(p.PatientID).padStart(5, '0'))}
+                        </span>
+                    </h2>
                     <p class="text-gray-600 dark:text-gray-400">DOB: ${p.DOB} | Gender: ${p.Gender} | Phone: ${p.Phone}</p>
                     <p class="text-gray-500 dark:text-gray-500 text-sm">${p.Address}</p>
                 </div>

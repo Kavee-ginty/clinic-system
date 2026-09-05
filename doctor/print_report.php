@@ -11,7 +11,7 @@ if (!$visitId)
     die("Visit ID required.");
 
 // Fetch Data
-$stmt = $pdo->prepare("SELECT * FROM Visits v JOIN Patients p ON v.PatientID = p.PatientID WHERE v.VisitID = ?");
+$stmt = $pdo->prepare("SELECT v.*, p.PatientID AS RegisteredPatientID, p.PatientNumber, p.FirstName, p.LastName, p.DOB, p.Gender, p.Phone, p.Address, p.RegisteredDate, p.NIC, p.Age FROM Visits v JOIN Patients p ON v.PatientID = p.PatientID WHERE v.VisitID = ?");
 $stmt->execute([$visitId]);
 $visit = $stmt->fetch();
 
@@ -21,6 +21,10 @@ $drugs = $drugStmt->fetchAll();
 
 if (!$visit)
     die("Record not found.");
+
+$patientRegId = !empty($visit['PatientNumber']) 
+    ? $visit['PatientNumber'] 
+    : ('PT-' . str_pad($visit['RegisteredPatientID'] ?? $visit['PatientID'], 5, '0', STR_PAD_LEFT));
 
 // Fetch Settings
 $settingsStmt = $pdo->query("SELECT * FROM Settings");
@@ -51,7 +55,7 @@ function prettyFrequency($freq) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Report</title>
+    <title>Medical Report - <?= htmlspecialchars($patientRegId) ?> - <?= htmlspecialchars($visit['FirstName'] . ' ' . $visit['LastName']) ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @page {
@@ -140,14 +144,15 @@ function prettyFrequency($freq) {
         <!-- Patient & Visit Info -->
         <div class="flex justify-between items-start mb-3 border-b border-gray-300 pb-2">
             <div class="w-[60%]">
-                <p class="text-[12px] font-bold text-gray-700 leading-tight">ID:
-                    <?= htmlspecialchars($visit['VisitID']) ?> -
+                <p class="text-[12px] font-bold text-gray-700 leading-tight">Patient ID:
+                    <?= htmlspecialchars($patientRegId) ?> -
                     <?= htmlspecialchars(strtoupper($visit['FirstName'] . ' ' . $visit['LastName'])) ?>
                     (<?= substr($visit['Gender'], 0, 1) ?>) / <?= htmlspecialchars($visit['Age']) ?> Y</p>
             </div>
             <div class="w-[40%] text-right">
                 <p class="text-[12px] font-bold text-gray-700 leading-tight">Date of Visit:
                     <br><?= date('d-M-Y, h:i A', strtotime($visit['VisitDateTime'])) ?></p>
+                <p class="text-[10px] text-gray-500 font-semibold mt-0.5">Visit Record #: <?= htmlspecialchars($visit['VisitID']) ?></p>
             </div>
         </div>
 

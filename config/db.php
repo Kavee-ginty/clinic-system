@@ -54,6 +54,7 @@ try {
 
     // Add new columns to Patients table dynamically if they don't exist
     try { $pdo->exec("ALTER TABLE Patients ADD COLUMN PatientNumber VARCHAR(50) DEFAULT ''"); } catch (\Exception $e) {}
+    try { $pdo->exec("UPDATE Patients SET PatientNumber = CONCAT('PT-', LPAD(PatientID, 5, '0')) WHERE PatientNumber IS NULL OR PatientNumber = ''"); } catch (\Exception $e) {}
     try { $pdo->exec("ALTER TABLE Patients ADD COLUMN NIC VARCHAR(20) DEFAULT ''"); } catch (\Exception $e) {}
     try { $pdo->exec("ALTER TABLE Patients ADD COLUMN Age INT DEFAULT 0"); } catch (\Exception $e) {}
 

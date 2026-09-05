@@ -5,7 +5,7 @@ require_once '../config/db.php';
 try {
     $stmt = $pdo->query("
         SELECT q.QueueID, q.QueueNumber, q.Status, q.PatientID, 
-               p.FirstName, p.LastName, p.Gender, p.DOB,
+               p.FirstName, p.LastName, p.Gender, p.DOB, p.PatientNumber,
                (SELECT COUNT(*) FROM Visits v WHERE v.PatientID = q.PatientID AND DATE(v.VisitDateTime) < CURRENT_DATE) as PreviousVisits,
                v3.VisitID, v3.TotalBill, v3.VisitFee, COALESCE(v3.IsPaid, 0) AS IsPaid
         FROM Queue q

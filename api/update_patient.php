@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 require_once '../config/db.php';
 session_start();
 
-if (!isset($_SESSION['admin_logged_in']) && !isset($_SESSION['receptionist_view'])) {
+if (!isset($_SESSION['admin_logged_in']) && !isset($_SESSION['receptionist_view']) && !isset($_SESSION['doctor_logged_in'])) {
     echo json_encode(['success' => false, 'error' => 'Unauthorized']);
     exit;
 }
