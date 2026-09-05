@@ -31,9 +31,6 @@ include '../includes/header.php';
                     <p class="text-gray-500 font-semibold mt-1">Real-time daily operations</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <a href="reception.php" class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-2 text-sm focus:outline-none">
-                        <span>➕</span> Register / Queue Patient
-                    </a>
                     <button id="btnDashboardUploadDrive" class="bg-purple-650 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-2 text-sm focus:outline-none">
                         <span>☁️</span> Backup to Drive
                     </button>

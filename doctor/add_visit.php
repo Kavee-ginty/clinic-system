@@ -72,15 +72,8 @@ include '../includes/header.php';
                 <!-- Group 3 -->
                 <div>
                     <div class="flex justify-between items-center mb-2 flex-wrap gap-2">
-                        <div class="flex items-center gap-3 flex-wrap">
-                            <label class="block font-bold text-gray-700 dark:text-gray-200">Treatment / Prescription <span
-                                    class="text-red-500">*</span></label>
-                            <select id="quickTemplateSelect" onchange="handleQuickTemplateSelect(this.value)"
-                                class="border-2 border-teal-200 dark:border-teal-700 dark:bg-gray-800 dark:text-teal-200 bg-teal-50 text-teal-900 rounded-lg px-2.5 py-1 text-xs font-bold focus:outline-none focus:border-teal-500 transition shadow-sm max-w-[320px] truncate"
-                                title="Select a saved template by diagnosis name">
-                                <option value="">⚡ Quick Template (by Diagnosis)...</option>
-                            </select>
-                        </div>
+                        <label class="block font-bold text-gray-700 dark:text-gray-200">Treatment / Prescription <span
+                                class="text-red-500">*</span></label>
                         <div class="flex gap-2">
                             <button type="button" onclick="saveCurrentAsTemplate()"
                                 class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded font-bold text-xs flex items-center gap-1 shadow-sm transition">
@@ -956,7 +949,6 @@ include '../includes/header.php';
                 showToast(`Template "${name}" for Diagnosis "${diag}" saved!`);
             }
             
-            renderQuickTemplateDropdown();
             renderTemplatesList(document.getElementById('tplFilterInput')?.value || '');
         };
 
@@ -1061,44 +1053,8 @@ include '../includes/header.php';
             if (confirm(confirmMsg)) {
                 templates.splice(idx, 1);
                 localStorage.setItem('clinic_treatment_templates', JSON.stringify(templates));
-                renderQuickTemplateDropdown();
                 renderTemplatesList(document.getElementById('tplFilterInput')?.value || '');
             }
-        };
-
-        window.renderQuickTemplateDropdown = function() {
-            const sel = document.getElementById('quickTemplateSelect');
-            if (!sel) return;
-            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
-            if (templates.length === 0) {
-                sel.innerHTML = '<option value="">⚡ No Templates Saved</option>';
-                sel.disabled = true;
-                return;
-            }
-            sel.disabled = false;
-            let html = '<option value="">⚡ Quick Template (by Diagnosis)...</option>';
-
-            const sorted = templates.map((t, idx) => ({ ...t, originalIndex: idx })).sort((a, b) => {
-                const diagA = (a.diagnosis || a.name || '').toLowerCase();
-                const diagB = (b.diagnosis || b.name || '').toLowerCase();
-                return diagA.localeCompare(diagB);
-            });
-
-            sorted.forEach(t => {
-                const diag = t.diagnosis || 'General';
-                html += `<option value="${t.originalIndex}">🩺 [${escapeHtml(diag)}] — ${escapeHtml(t.name)}</option>`;
-            });
-            sel.innerHTML = html;
-        };
-
-        window.handleQuickTemplateSelect = function(idxStr) {
-            if (idxStr === '') return;
-            const idx = parseInt(idxStr);
-            const templates = JSON.parse(localStorage.getItem('clinic_treatment_templates') || '[]');
-            if (templates[idx]) {
-                applyTemplate(templates[idx]);
-            }
-            document.getElementById('quickTemplateSelect').value = '';
         };
 
         function applyTemplate(t) {
@@ -1113,9 +1069,6 @@ include '../includes/header.php';
             }
             showToast(`Template "${t.name}" for Diagnosis "${t.diagnosis || 'General'}" applied!`);
         }
-
-        // Initialize quick template dropdown on page load
-        renderQuickTemplateDropdown();
 
     </script>
     <script src="../assets/js/toast.js"></script>
